@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sql import get_user
 from fastapi.security import OAuth2PasswordRequestForm
-from authentication.authentication import get_current_active_user, authenticate_user, create_access_token
+from authentication.authentication import get_current_active_user, authenticate_user, create_access_token, create_new_user
 from custom_types import Token
 from datetime import datetime, timedelta, timezone
 from fastapi.responses import JSONResponse
