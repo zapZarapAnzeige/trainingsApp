@@ -10,6 +10,7 @@ import {
   Alert,
   Link,
   createTheme,
+  SvgIcon,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { FC, useEffect, useState } from "react";
@@ -137,6 +138,7 @@ export const LoginScreen: FC = () => {
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
+        <SvgIcon path="../../public/app.svg"></SvgIcon>
         <Typography component="h1" variant="h5">
           {isSignIn ? "Sign in" : "Sign Up"}
         </Typography>
