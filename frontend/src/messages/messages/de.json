@@ -1,0 +1,17 @@
+{
+  "loginScreen.password": "Passwort",
+  "loginScreen.username": "Benutzername",
+  "loginScreen.repeatPassword": "Passwort Wiederholen",
+  "loginScreen.signUp": "Neuen Account erstellen",
+  "loginScreen.signIn": "Einloggen",
+  "loginScreen.error.noPassword": "Passwort eingeben",
+  "loginScreen.error.noUsername": "Benutzername eingeben",
+  "loginScreen.error.notMatchingPassword": "Die Passwörter stimmen nicht überein",
+  "loginScreen.error.wrongCredentials": "Nutzername oder Passwort sind Falsch",
+  "loginScreen.usernameAlreadyExists": "Benutzername existiert bereits",
+  "confirmAbortDialog.confirm": "Bestätigen",
+  "confirmAbortDialog.abort": "Abbrechen",
+  "errorDialog.close": "Schließen",
+  "error.tokenExpired": "Der Sessiontoken ist abgelaufen, bitte melden sie sich erneut an.",
+  "error.unknown": "Ein unbekannter Fehler ist aufgetreten"
+}

@@ -1,0 +1,5 @@
+USE trainings_DB;
+
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INT AUTO_INCREMENT, user_name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, expired BOOLEAN DEFAULT FALSE, PRIMARY KEY (user_id)
+);
