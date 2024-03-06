@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Request, WebSocket
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -13,8 +13,16 @@ load_dotenv("../.env")
 
 getenv("SECRET_KEY")
 
+
+class CustomOAuth2PasswordBearer(OAuth2PasswordBearer):
+    async def __call__(self, request: Request = None, websocket: WebSocket = None):
+        return await super().__call__(request or websocket)
+
+
 pwd_context = CryptContext(schemes=[bcrypt], deprecated="auto")
-oauth_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/login")
+oauth_scheme = CustomOAuth2PasswordBearer(
+    tokenUrl="api/v1/login", auto_error=False)
+
 
 ALGORITHM = 'HS256'
 

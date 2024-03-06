@@ -11,6 +11,7 @@ pip3 install sqlalchemy
 pip3 install pymysql
 pip3 install python-dotenv
 pip3 install schedule
+pip3 install websockets
 else
     echo "Please execute the script as root"
 fi
