@@ -34,10 +34,9 @@ async def get_cookie_or_token(
 async def handle_session(websocket,  current_user):
     connected_users[current_user["user_name"]] = websocket
     while True:
-        data = await websocket.receive_text()
-
-        await websocket.send_text(
-            f"Session cookie or query token value is: {current_user}"
-        )
+        # data = await websocket.receive_text()
+        data = await websocket.receive_json()
+        print(data)
         for k, v in connected_users.items():
-            await v.send_text(f"{data}")
+            if (k == data.get('recipient')):
+                await v.send_text(f"{data.get('message')}")

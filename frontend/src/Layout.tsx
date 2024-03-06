@@ -6,6 +6,7 @@ import { useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { Header } from "./Header/Header";
+import { SingleChat } from "./Chat/SingleChat";
 
 export const Layout: React.FC = () => {
   type RequireAuthProps = {
@@ -25,7 +26,7 @@ export const Layout: React.FC = () => {
     <RequireAuth>
       <ApiErrorInterceptor />
       <Box>
-        <Header />
+        <SingleChat />
       </Box>
     </RequireAuth>
   );

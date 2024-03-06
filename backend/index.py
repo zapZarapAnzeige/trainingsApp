@@ -25,7 +25,7 @@ app.add_middleware(
 )
 
 
-@app.websocket("/items")
+@app.websocket("/chat")
 async def chat(*,
                websocket: WebSocket,
                current_user=Depends(get_cookie_or_token)):
@@ -82,7 +82,7 @@ html = """
             function connect(event) {
                 var itemId = document.getElementById("itemId")
                 var token = document.getElementById("token")
-                ws = new WebSocket("ws://localhost:8000/items?token=" + token.value);
+                ws = new WebSocket("ws://localhost:8000/chat?token=" + token.value);
                 ws.onmessage = function(event) {
                     var messages = document.getElementById('messages')
                     var message = document.createElement('li')
