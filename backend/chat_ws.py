@@ -4,9 +4,10 @@ from fastapi import Depends, WebSocket, Cookie, Query, WebSocketException, statu
 from fastapi.exceptions import HTTPException
 from fastapi.responses import HTMLResponse
 from authentication.authentication import get_current_active_user, get_current_user
+from typing import Dict
 
 
-connected_users = {}
+connected_users: Dict[str, WebSocket] = {}
 
 
 async def get_cookie_or_token(
@@ -32,11 +33,19 @@ async def get_cookie_or_token(
 
 
 async def handle_session(websocket,  current_user):
-    connected_users[current_user["user_name"]] = websocket
+    user_name = current_user["user_name"]
+    connected_users[user_name] = websocket
     while True:
-        # data = await websocket.receive_text()
-        data = await websocket.receive_json()
-        print(data)
-        for k, v in connected_users.items():
-            if (k == data.get('recipient')):
-                await v.send_text(f"{data.get('message')}")
+        try:
+            # data = await websocket.receive_text()
+            data = await websocket.receive_json()
+            print(connected_users)
+            for k, v in connected_users.items():
+                if (k == data.get('recipient')):
+                    await v.send_text(f"{data.get('message')}")
+
+        except Exception as e:
+            # print(e)
+            print(connected_users)
+            connected_users.pop(user_name)
+            # await websocket.close()

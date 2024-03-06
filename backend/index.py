@@ -8,6 +8,7 @@ from custom_types import Token
 from datetime import datetime, timedelta, timezone
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
+from no_sql import test
 
 app = FastAPI()
 
@@ -106,4 +107,5 @@ html = """
 
 @app.get("/")
 async def get():
+    await test()
     return HTMLResponse(html)

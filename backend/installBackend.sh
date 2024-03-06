@@ -12,6 +12,7 @@ pip3 install pymysql
 pip3 install python-dotenv
 pip3 install schedule
 pip3 install websockets
+pip3 install motor
 else
     echo "Please execute the script as root"
 fi
