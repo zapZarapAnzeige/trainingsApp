@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Depends, WebSocket
+from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_user
+from sql import get_user, find_trainingspartner
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 from authentication.authentication import get_current_active_user, authenticate_user, create_access_token, create_new_user, get_current_user
@@ -8,7 +8,7 @@ from custom_types import Token
 from datetime import datetime, timedelta, timezone
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
-from no_sql import test
+from no_sql import test, upload_video, get_video_by_id
 
 app = FastAPI()
 
@@ -26,12 +26,28 @@ app.add_middleware(
 )
 
 
-@app.websocket("/chat")
+@app.websocket("/chat/{chat_id}")
 async def chat(*,
+               chat_id,
                websocket: WebSocket,
                current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket,  current_user)
+    await handle_session(websocket,  current_user, chat_id)
+
+
+@app.post("/chat")
+async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
+    return await find_trainingspartner(plz, current_user.get("user_name"))
+
+
+@app.post("/video")
+async def upload_file(file: UploadFile = File(...)):
+    return await upload_video(file)
+
+
+@app.get("/files/{file_id}")
+async def get_video(file_id: str):
+    return await get_video_by_id(file_id)
 
 
 @app.get("/users")

@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, MetaData
 import os
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
 
 load_dotenv()
 
@@ -31,3 +31,6 @@ client = AsyncIOMotorClient(mongo_uri)
 
 
 database = client.get_database('trainingsApp_Mongo_DB')
+
+
+grid_fs_bucket = AsyncIOMotorGridFSBucket(database, bucket_name="videos")
