@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 
 
+class Message_json(BaseModel):
+    content: str
+    recipiant: str
+
 
 class Token(BaseModel):
     access_token: str

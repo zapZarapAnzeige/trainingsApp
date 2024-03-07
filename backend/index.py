@@ -8,7 +8,9 @@ from custom_types import Token
 from datetime import datetime, timedelta, timezone
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
-from no_sql import test, upload_video, get_video_by_id
+from no_sql import get_all_chats_from_user, get_content_of_chat, insert_new_partner, save_new_message, upload_video, get_video_by_id
+# temp
+from datetime import datetime
 
 app = FastAPI()
 
@@ -37,7 +39,15 @@ async def chat(*,
 
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
-    return await find_trainingspartner(plz, current_user.get("user_name"))
+    user_name = current_user.get("user_name")
+    users_chats = await get_all_chats_from_user(user_name)
+    trainingspartner_name = await find_trainingspartner(plz,  users_chats)
+    return await insert_new_partner(user_name, trainingspartner_name)
+
+
+@app.get("/chat/content")
+async def get_chat_content(partner: str, current_user=Depends(get_current_active_user)):
+    return await get_content_of_chat(partner, current_user.get("user_name"))
 
 
 @app.post("/video")
@@ -123,5 +133,5 @@ html = """
 
 @app.get("/")
 async def get():
-    await test()
+    await save_new_message("lol", "abc", "a", datetime.now())
     return HTMLResponse(html)

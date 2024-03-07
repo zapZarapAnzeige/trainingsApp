@@ -39,7 +39,7 @@ export const SingleChat: FC = () => {
   const sendMessage = (message: string) => {
     if (websocket) {
       websocket.send(
-        JSON.stringify({ sender: "hey", recipient: "a", message: message })
+        JSON.stringify({ sender: "hey", recipient: "a", content: message })
       );
     }
   };

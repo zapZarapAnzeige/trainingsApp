@@ -8,6 +8,7 @@ from bson import ObjectId
 
 
 chats = database.get_collection("chats")
+messages = database.get_collection("messages")
 videos = database.get_collection("videos")
 
 
@@ -34,9 +35,39 @@ async def get_video_by_id(file_id: str):
 
 async def get_all_chats_from_user(user_name: str):
     all_chats = await chats.find(
-        {"$or": [{"user1": user_name}, {"user2": user_name}]}).to_list(length=None)
-    return [all_chats.get("user1") if chat.get("user2") ==
-            user_name else chat.get("user2") for chat in all_chats]
+        {"participants": user_name}).to_list(length=None)
+
+    all_chats = [
+        chat for participants in all_chats for chat in participants.get("participants")]
+    all_chats.append(user_name)
+    return list(dict.fromkeys(all_chats))
+
+
+async def insert_new_partner(user_name: str, partner_name: str):
+    if (partner_name):
+        insert = await chats.insert_one({"participants": [user_name, partner_name]})
+        return insert.acknowledged
+    else:
+        # TODO: correct response
+        return "No people to match found"
+
+
+async def find_chat_by_participants(user1: str, user2: str):
+    return await chats.find_one({"participants": {"$in": [user1, user2]}})
+
+
+async def save_new_message(message: str, sender: str, recipiant: str, timestamp):
+    chat = find_chat_by_participants(sender, recipiant)
+    insert = await messages.insert_one({"sender": sender, "content": message, "chat_id": chat.get("_id"), "timestamp": timestamp})
+    return insert.acknowledged
+
+
+async def get_content_of_chat(partner: str, user: str):
+    chat = await find_chat_by_participants(partner, user)
+    m = await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
+    print(m)
+    return {"chat": [{"content": message.get("content"), 'sender': message.get(
+        'sender'), 'timestamp': message.get('timestamp')} for message in m]}
 
 
 async def test():

@@ -1,10 +1,12 @@
 
 from typing import Annotated
-from fastapi import Depends, WebSocket, Cookie, Query, WebSocketException, status
+from fastapi import WebSocket, Cookie, Query,  status, WebSocketDisconnect
 from fastapi.exceptions import HTTPException
-from fastapi.responses import HTMLResponse
 from authentication.authentication import get_current_active_user, get_current_user
 from typing import Dict
+from custom_types import Message_json
+from no_sql import save_new_message
+from datetime import datetime
 
 
 connected_users: Dict[str, WebSocket] = {}
@@ -38,11 +40,12 @@ async def handle_session(websocket,  current_user):
     while True:
         try:
             # data = await websocket.receive_text()
-            data = await websocket.receive_json()
-            print(connected_users)
+            data: Dict[Message_json] = await websocket.receive_json()
+            timestamp = datetime.now()
+            await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)
             for k, v in connected_users.items():
                 if (k == data.get('recipient')):
-                    await v.send_text(f"{data.get('message')}")
+                    await v.send_json({"sender": user_name, "content": data.get('content'), timestamp: timestamp})
 
         except Exception as e:
             # print(e)

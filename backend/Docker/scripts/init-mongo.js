@@ -49,14 +49,10 @@ db.runCommand({
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["user1", "user2"],
+      required: ["participants"],
       properties: {
-        user1: {
-          bsonType: "string",
-          description: "must be a string and is required",
-        },
-        user2: {
-          bsonType: "string",
+        participants: {
+          bsonType: "array",
           description: "must be a string and is required",
         },
       },
