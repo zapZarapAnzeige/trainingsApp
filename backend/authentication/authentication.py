@@ -70,6 +70,8 @@ async def get_current_user(token: str = Depends(oauth_scheme)):
                                          detail="Could not Authenticate User", headers={"WWW-Authenticate": "Bearer"})
 
     try:
+        if (not token):
+            raise JWTError()
         payload = jwt.decode(token, getenv("SECRET_KEY"),
                              algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -79,7 +81,7 @@ async def get_current_user(token: str = Depends(oauth_scheme)):
     except JWTError as err:
         print(err)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Token has expired", headers={"WWW-Authenticate": "Bearer"})
+                            detail="Token has expired or is not present", headers={"WWW-Authenticate": "Bearer"})
 
     user = get_user(username)
 

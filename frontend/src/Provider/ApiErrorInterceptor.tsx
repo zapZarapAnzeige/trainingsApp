@@ -41,7 +41,7 @@ export const ApiErrorInterceptor: FC = () => {
       return getMessage("error.unknown");
     } else {
       if ((code = 401)) {
-        if (message === "Token has expired") {
+        if (message === "Token has expired or is not present") {
           logOut();
           return getMessage("error.tokenExpired");
         } else if (

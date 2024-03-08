@@ -9,6 +9,7 @@ import { getBrowserLocales } from "./messages/tools";
 import store from "./Redux/store";
 import { customTheme } from "./Theme/theme";
 import { ErrorDialogProvider } from "./Provider/ErrorDialogProvider";
+import { WebSocketProvider } from "./Provider/WebSocketProvider";
 
 export const App: React.FC = () => {
   return (

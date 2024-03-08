@@ -6,7 +6,8 @@ import { useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { Header } from "./Header/Header";
-import { SingleChat } from "./Chat/SingleChat";
+import { ActiveChat } from "./Chat/ActiveChat";
+import { WebSocketProvider } from "./Provider/WebSocketProvider";
 
 export const Layout: React.FC = () => {
   type RequireAuthProps = {
@@ -25,9 +26,11 @@ export const Layout: React.FC = () => {
   return (
     <RequireAuth>
       <ApiErrorInterceptor />
-      <Box>
-        <SingleChat />
-      </Box>
+      <WebSocketProvider>
+        <Box minHeight={"100vh"}>
+          <ActiveChat />
+        </Box>
+      </WebSocketProvider>
     </RequireAuth>
   );
 };

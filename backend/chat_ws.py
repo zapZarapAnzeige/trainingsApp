@@ -39,7 +39,6 @@ async def handle_session(websocket,  current_user):
     connected_users[user_name] = websocket
     while True:
         try:
-            # data = await websocket.receive_text()
             data: Dict[Message_json] = await websocket.receive_json()
             timestamp = datetime.now()
             await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)

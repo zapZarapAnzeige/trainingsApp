@@ -57,7 +57,8 @@ async def find_chat_by_participants(user1: str, user2: str):
 
 
 async def save_new_message(message: str, sender: str, recipiant: str, timestamp):
-    chat = find_chat_by_participants(sender, recipiant)
+    chat = await find_chat_by_participants(sender, recipiant)
+    print(chat)
     insert = await messages.insert_one({"sender": sender, "content": message, "chat_id": chat.get("_id"), "timestamp": timestamp})
     return insert.acknowledged
 

@@ -28,13 +28,12 @@ app.add_middleware(
 )
 
 
-@app.websocket("/chat/{chat_id}")
+@app.websocket("/chat")
 async def chat(*,
-               chat_id,
                websocket: WebSocket,
                current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket,  current_user, chat_id)
+    await handle_session(websocket,  current_user)
 
 
 @app.post("/chat")
