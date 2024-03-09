@@ -1,56 +1,127 @@
-import { Box, createTheme, IconButton, Paper, TextField } from "@mui/material";
-import { useState, FC } from "react";
+import { Box, IconButton, Paper, TextField } from "@mui/material";
+import { useState, FC, useEffect } from "react";
 import { useWebsocket } from "../Provider/WebSocketProvider";
 import SendIcon from "@mui/icons-material/Send";
+import { ChatSidebar } from "./ChatSidebar";
+import { ChatOverview, SingleChatHistory } from "../types";
+import { useAuthHeader } from "react-auth-kit";
+import { getChatHistory } from "../api";
+import { Message } from "./Message";
+import { useSelector } from "react-redux";
+import { selectUser } from "../Redux/selector";
+import dayjs, { Dayjs } from "dayjs";
+
 export const ActiveChat: FC = () => {
+  //user needs to be initialized correctly
+  const user = useSelector(selectUser);
   const [message, setMessage] = useState<string>("");
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
-  const websocket = useWebsocket();
+  const [chatOverview, setChatOverview] = useState<ChatOverview[]>([
+    { partnerName: "abc", lastMessage: "lol" },
+    { partnerName: "a", lastMessage: "lol" },
+    { partnerName: "c", lastMessage: "losadasdasdasdsadasdadasl" },
+  ]);
+
+  const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
+  const websocket = useWebsocket((e) => {
+    console.log("here");
+    chatHistory.push({
+      content: e.data.content,
+      sender: e.data.sender,
+      timestamp: e.data.timestamp,
+    });
+  });
+
   const [currentActiveChat, setCurrentActiveChat] = useState<string>("a");
+  const auth = useAuthHeader();
+
+  useEffect(() => {
+    setChatHistory([]);
+    getChatHistory(auth(), currentActiveChat).then((res) => {
+      setChatHistory(res.data.chat);
+    });
+  }, [currentActiveChat]);
 
   const sendMessage = () => {
     if (websocket) {
+      chatHistory.push({
+        content: message,
+        sender: user,
+        timestamp: Date.now().toString(),
+      });
       websocket.send(
         JSON.stringify({ recipient: currentActiveChat, content: message })
       );
+      setMessage("");
     }
   };
-  const theme = createTheme();
 
   return (
-    <Box height="100vh" display="flex" flexDirection="column">
-      <Paper
-        sx={{ flexGrow: 1, bgcolor: theme.palette.grey[50], p: "0.5rem" }}
-      ></Paper>
+    <Box height="100vh" display="flex" flexDirection="row" width={"100%"}>
       <Paper
         sx={{
-          overflowY: "auto",
-          mt: "auto",
-          bgcolor: theme.palette.grey[50],
-          flexDirection: "column",
-          display: "flex",
-          p: "0.5rem",
+          width: "8rem",
+          height: "100%",
+          overflow: "hidden",
         }}
       >
-        <TextField
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-          sx={{
-            width: "100%",
-            backgroundColor: theme.palette.grey[300],
-            marginTop: "auto",
-          }}
-          variant="outlined"
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={sendMessage} color="secondary">
-                <SendIcon />
-              </IconButton>
-            ),
-          }}
-        ></TextField>
+        {chatOverview.map(({ partnerName, lastMessage }) => {
+          return (
+            <ChatSidebar
+              key={partnerName}
+              partnerName={partnerName}
+              lastMessage={lastMessage}
+              setCurrentActiveChat={setCurrentActiveChat}
+            />
+          );
+        })}
       </Paper>
+      <Box display="flex" flexDirection="column" width="100%" overflow="auto">
+        <Paper
+          sx={{
+            overflow: "auto",
+            height: "100%",
+          }}
+        >
+          {chatHistory.map((chat) => (
+            <Message
+              content={chat.content}
+              partnerName={currentActiveChat}
+              sender={chat.sender}
+            />
+          ))}
+        </Paper>
+        <Paper
+          sx={{
+            mt: "auto",
+
+            flexDirection: "column",
+            display: "flex",
+            p: "0",
+          }}
+        >
+          <TextField
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
+            multiline
+            value={message}
+            sx={{
+              width: "100%",
+              backgroundColor: "inherit",
+              color: "black",
+            }}
+            variant="outlined"
+            InputProps={{
+              style: { color: "black" },
+              endAdornment: (
+                <IconButton onClick={sendMessage} color="secondary">
+                  <SendIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        </Paper>
+      </Box>
     </Box>
   );
 };

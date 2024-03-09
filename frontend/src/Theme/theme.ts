@@ -17,13 +17,21 @@ export const customTheme = createTheme({
         }),
       },
     },
-  },
-
-  typography: {
-    allVariants: {
-      color: "#fff",
+    MuiPaper: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          backgroundColor: theme.palette.grey[50],
+          margin: "0.3rem"
+        }),
+      },
     },
   },
+
+//  typography: {
+  //  allVariants: {
+    //  color: "#fff",
+    //},
+  //},
 
   palette: {
     mode: "dark",

@@ -64,13 +64,17 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
   );
 };
 
-const useWebsocket = () => {
+const useWebsocket = (
+  onmessage?: ((this: WebSocket, ev: MessageEvent<any>) => any) | null
+) => {
   const socket = useContext(WebSocketContext);
 
   if (!socket) {
     throw new Error("useWebsocket must be used within a WebSocketProvider");
   }
-
+  if (onmessage) {
+    socket.onmessage = onmessage;
+  }
   return socket;
 };
 

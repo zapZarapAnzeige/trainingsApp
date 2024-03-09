@@ -44,6 +44,7 @@ async def handle_session(websocket,  current_user):
             await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)
             for k, v in connected_users.items():
                 if (k == data.get('recipient')):
+                    # v.close closes correct Socket should be a problem with the frontends onMessage
                     await v.send_json({"sender": user_name, "content": data.get('content'), timestamp: timestamp})
 
         except Exception as e:
