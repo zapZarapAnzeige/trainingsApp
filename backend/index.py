@@ -1,14 +1,29 @@
+from typing import Optional
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_user, find_trainingspartner
+from sql import get_overview, get_profile_pic, get_user, find_trainingspartner, update_user_data
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
-from authentication.authentication import get_current_active_user, authenticate_user, create_access_token, create_new_user, get_current_user
+from authentication.authentication import (
+    get_current_active_user,
+    authenticate_user,
+    create_access_token,
+    create_new_user,
+)
 from custom_types import Token
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
-from no_sql import get_all_chats_from_user, get_content_of_chat, insert_new_partner, save_new_message, upload_video, get_video_by_id
+from no_sql import (
+    get_chat_partners,
+    get_all_chats_from_user,
+    get_content_of_chat,
+    insert_new_partner,
+    save_new_message,
+    upload_video,
+    get_video_by_id,
+)
+
 # temp
 from datetime import datetime
 
@@ -28,20 +43,35 @@ app.add_middleware(
 )
 
 
+@app.put("/user")
+async def upload_user_data(profile_picture: Optional[UploadFile] = File(None), plz: str = None, searching_for_partner: bool = None, current_user=Depends(get_current_active_user)):
+    user_data = {}
+
+    if plz and len(plz) == 5:
+        user_data['plz'] = plz
+    if searching_for_partner:
+        user_data['searching_for_partner'] = searching_for_partner
+    await update_user_data(profile_picture, current_user.get("user_name"), user_data)
+
+
 @app.websocket("/chat")
-async def chat(*,
-               websocket: WebSocket,
-               current_user=Depends(get_cookie_or_token)):
+async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket,  current_user)
+    await handle_session(websocket, current_user)
 
 
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     user_name = current_user.get("user_name")
     users_chats = await get_all_chats_from_user(user_name)
-    trainingspartner_name = await find_trainingspartner(plz,  users_chats)
+    trainingspartner_name = await find_trainingspartner(plz, users_chats)
     return await insert_new_partner(user_name, trainingspartner_name)
+
+
+@app.get("/chats")
+async def get_chat_overview(current_user=Depends(get_current_active_user)):
+    partners = await get_chat_partners(current_user.get("user_name"))
+    return await get_overview(partners)
 
 
 @app.get("/chat/content")
@@ -59,9 +89,9 @@ async def get_video(file_id: str):
     return await get_video_by_id(file_id)
 
 
-@app.get("/users")
-async def get_users(subcategory_id: int, current_user=Depends(get_current_active_user)):
-    return get_user(subcategory_id)
+@app.get("/picture")
+async def get_users(current_user=Depends(get_current_active_user)):
+    return get_profile_pic(current_user.get("user_name"))
 
 
 @app.post("/api/v1/signUp")
@@ -73,15 +103,22 @@ async def sign_up(form_data: OAuth2PasswordRequestForm = Depends()):
 async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     access_token_expires = timedelta(hours=8)
     access_token = create_access_token(
-        data={"sub": user['user_name']}, expires_delta=access_token_expires)
-    response = JSONResponse(content={"access_token": access_token,
-                            "expires_in": access_token_expires.seconds, "token_type": "Bearer"})
-    expiry = datetime.now() + timedelta(seconds=access_token_expires.seconds)
-    expiry_utc = expiry.replace(tzinfo=timezone.utc)
+        data={"sub": user["user_name"]}, expires_delta=access_token_expires
+    )
+    response = JSONResponse(
+        content={
+            "access_token": access_token,
+            "expires_in": access_token_expires.seconds,
+            "token_type": "Bearer",
+        }
+    )
     return response
 
 

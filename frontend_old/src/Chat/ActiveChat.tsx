@@ -22,23 +22,35 @@ export const ActiveChat: FC = () => {
   ]);
 
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
-  const websocket = useWebsocket((e) => {
-    console.log("here");
-    chatHistory.push({
-      content: e.data.content,
-      sender: e.data.sender,
-      timestamp: e.data.timestamp,
-    });
-  });
-
-  const [currentActiveChat, setCurrentActiveChat] = useState<string>("a");
+  const [currentActiveChat, setCurrentActiveChat] = useState<string>("");
   const auth = useAuthHeader();
+
+  const websocket = useWebsocket((e) => {
+    const data: SingleChatHistory = JSON.parse(e.data);
+    if (currentActiveChat == data.sender) {
+      setChatHistory([...chatHistory, data]);
+    }
+    setChatOverview(
+      chatOverview.map((overview) => {
+        if (overview.partnerName === data.sender) {
+          return {
+            lastMessage: data.content,
+            partnerName: overview.partnerName,
+          };
+        } else {
+          return overview;
+        }
+      })
+    );
+  });
 
   useEffect(() => {
     setChatHistory([]);
-    getChatHistory(auth(), currentActiveChat).then((res) => {
-      setChatHistory(res.data.chat);
-    });
+    if (currentActiveChat !== "") {
+      getChatHistory(auth(), currentActiveChat).then((res) => {
+        setChatHistory(res.data.chat);
+      });
+    }
   }, [currentActiveChat]);
 
   const sendMessage = () => {
@@ -82,8 +94,9 @@ export const ActiveChat: FC = () => {
             height: "100%",
           }}
         >
-          {chatHistory.map((chat) => (
+          {chatHistory.map((chat, i) => (
             <Message
+              key={i}
               content={chat.content}
               partnerName={currentActiveChat}
               sender={chat.sender}
