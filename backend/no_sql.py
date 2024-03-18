@@ -1,3 +1,5 @@
+from datetime import datetime
+from typing import Dict
 from db_connection import database
 from db_connection import client
 from fastapi import UploadFile, HTTPException
@@ -16,17 +18,13 @@ async def get_last_message_of_chat(chat_id):
     pass
 
 
-async def get_chat_overview_of_user(user_name: str):
-    all_chats = await chats.find({"participants": user_name}).to_list(length=None)
-    all_chats = [
-        {"partnerName": chat, "id": participants.get("_id")}
-        for participants in all_chats
+async def get_chat_partners(user_name: str):
+    return [
+        chat
+        for participants in await chats.find({"participants": user_name}).to_list(length=None)
         for chat in participants.get("participants")
         if chat != user_name
     ]
-
-    print([a.get("partnerName") for a in all_chats])
-    pass
 
 
 async def upload_video(file: UploadFile):
@@ -42,7 +40,6 @@ async def upload_video(file: UploadFile):
 
 async def get_video_by_id(file_id: str):
     try:
-        print(file_id)
         grid_fs_download_stream = await grid_fs_bucket.open_download_stream(
             ObjectId(file_id)
         )
@@ -67,19 +64,22 @@ async def get_all_chats_from_user(user_name: str):
 
 async def insert_new_partner(user_name: str, partner_name: str):
     if partner_name:
-        insert = await chats.insert_one({"participants": [user_name, partner_name]})
+        insert = await chats.insert_one({"participants": [user_name, partner_name],
+                                         "last_message_content": "",
+                                         "last_message_timestamp": datetime.now(),
+                                         "unread_messages": 0})
         return insert.acknowledged
     else:
         # TODO: correct response
         return "No people to match found"
 
 
-async def find_chat_by_participants(user1: str, user2: str):
-    return await chats.find_one({"participants": {"$in": [user1, user2]}})
+async def find_chat_by_participants(user1: str, user2: str, update_clause: Dict):
+    return await chats.find_one_and_update({"participants": {"$in": [user1, user2]}}, update_clause)
 
 
 async def save_new_message(message: str, sender: str, recipiant: str, timestamp):
-    chat = await find_chat_by_participants(sender, recipiant)
+    chat = await find_chat_by_participants(sender, recipiant, {"$inc": {"unread_messages": 1}, "$set": {"last_message_timestamp": timestamp, "last_message_content": message}})
     print(chat)
     insert = await messages.insert_one(
         {
@@ -93,9 +93,9 @@ async def save_new_message(message: str, sender: str, recipiant: str, timestamp)
 
 
 async def get_content_of_chat(partner: str, user: str):
-    chat = await find_chat_by_participants(partner, user)
+    chat = await find_chat_by_participants(partner, user, {"$set": {"unread_messages": 0}})
+    print(chat)
     m = await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
-    print(m)
     return {
         "chat": [
             {

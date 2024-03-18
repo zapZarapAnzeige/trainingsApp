@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_user, find_trainingspartner, insert_additional_user_data
+from sql import get_overview, get_profile_pic, get_user, find_trainingspartner, update_user_data
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 from authentication.authentication import (
@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
 from no_sql import (
-    get_chat_overview_of_user,
+    get_chat_partners,
     get_all_chats_from_user,
     get_content_of_chat,
     insert_new_partner,
@@ -43,9 +43,15 @@ app.add_middleware(
 )
 
 
-@app.post("/user")
-async def upload_user_data(profile_picture: Optional[UploadFile] = File(...)):
-    await insert_additional_user_data(profile_picture)
+@app.put("/user")
+async def upload_user_data(profile_picture: Optional[UploadFile] = File(None), plz: str = None, searching_for_partner: bool = None, current_user=Depends(get_current_active_user)):
+    user_data = {}
+
+    if plz and len(plz) == 5:
+        user_data['plz'] = plz
+    if searching_for_partner:
+        user_data['searching_for_partner'] = searching_for_partner
+    await update_user_data(profile_picture, current_user.get("user_name"), user_data)
 
 
 @app.websocket("/chat")
@@ -64,7 +70,8 @@ async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
 
 @app.get("/chats")
 async def get_chat_overview(current_user=Depends(get_current_active_user)):
-    await get_chat_overview_of_user(current_user.get("user_name"))
+    partners = await get_chat_partners(current_user.get("user_name"))
+    return await get_overview(partners)
 
 
 @app.get("/chat/content")
@@ -82,9 +89,9 @@ async def get_video(file_id: str):
     return await get_video_by_id(file_id)
 
 
-@app.get("/users")
-async def get_users(subcategory_id: int, current_user=Depends(get_current_active_user)):
-    return get_user(subcategory_id)
+@app.get("/picture")
+async def get_users(current_user=Depends(get_current_active_user)):
+    return get_profile_pic(current_user.get("user_name"))
 
 
 @app.post("/api/v1/signUp")

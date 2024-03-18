@@ -49,11 +49,26 @@ db.runCommand({
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["participants"],
+      required: [
+        "participants",
+        "unread_messages",
+        "last_message_content",
+        "last_message_timestamp",
+      ],
       properties: {
         participants: {
           bsonType: "array",
           description: "must be a string and is required",
+        },
+        unread_messages: {
+          bsonType: "integer",
+          default: 0,
+        },
+        last_message_content: {
+          bsonType: "string",
+        },
+        last_message_timestamp: {
+          bsonType: "date",
         },
       },
     },
