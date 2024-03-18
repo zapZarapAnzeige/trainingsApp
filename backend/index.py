@@ -1,6 +1,7 @@
+from typing import Optional
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_user, find_trainingspartner
+from sql import get_user, find_trainingspartner, insert_additional_user_data
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 from authentication.authentication import (
@@ -40,6 +41,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.post("/user")
+async def upload_user_data(profile_picture: Optional[UploadFile] = File(...)):
+    await insert_additional_user_data(profile_picture)
 
 
 @app.websocket("/chat")
