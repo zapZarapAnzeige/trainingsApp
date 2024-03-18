@@ -1,121 +1,34 @@
+"use client";
+
 import React from "react";
+import { sidebarUrls } from "@/config/sidebarUrls";
+import useTranslation from "next-translate/useTranslation";
 
 const Sidebar: React.FC = () => {
-  let chats = ["Clemens", "Daniel", "Mira", "Jenny"];
-  let exercises = ["Liegestütze", "Sit-Ups"];
+  const { t } = useTranslation("common");
   let user = "Daniel Jaufmann";
   let email = "daniel@training.com";
 
   return (
-    <div className="flex flex-col h-screen justify-between border-e bg-white w-1/5">
+    <div className="flex flex-col h-screen justify-between border-e bg-primary w-1/5">
       <div className="px-4 py-6">
         <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
           Logo
         </span>
 
         <ul className="mt-6 space-y-1">
-          <li>
-            <a
-              href="#"
-              className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
-            >
-              Mein Kalender
-            </a>
-          </li>
-
-          <li>
-            <a
-              href="#"
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-              Mein Trainingsplan
-            </a>
-          </li>
-
-          <li>
-            <details className="group [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                <span className="text-sm font-medium"> Meine Chats </span>
-
-                <span className="shrink-0 transition duration-300 group-open:-rotate-180">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <ul className="mt-2 space-y-1 px-4">
-                {chats.map((chat) => {
-                  return (
-                    <li>
-                      <a
-                        href="#"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        {chat}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          </li>
-
-          <li>
-            <details className="group [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                <span className="text-sm font-medium"> Meine Übungen </span>
-
-                <span className="shrink-0 transition duration-300 group-open:-rotate-180">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </summary>
-
-              <ul className="mt-2 space-y-1 px-4">
-                {exercises.map((exercise) => {
-                  return (
-                    <li>
-                      <a
-                        href="#"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        {exercise}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          </li>
-
-          <li>
-            <a
-              href="#"
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-              Über
-            </a>
-          </li>
+          {sidebarUrls.map((url, index) => {
+            return (
+              <li>
+                <a
+                  href={url}
+                  className="block rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-black mb-3"
+                >
+                  {t("lol")}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
@@ -132,9 +45,7 @@ const Sidebar: React.FC = () => {
 
           <div>
             <p className="text-xs">
-              <strong className="block font-medium text-gray-700">
-                {user}
-              </strong>
+              <strong className="block font-medium text-white">{user}</strong>
 
               <span className="text-gray-700"> {email} </span>
             </p>
