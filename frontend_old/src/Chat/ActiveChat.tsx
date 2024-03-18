@@ -46,9 +46,11 @@ export const ActiveChat: FC = () => {
 
   useEffect(() => {
     setChatHistory([]);
-    getChatHistory(auth(), currentActiveChat).then((res) => {
-      setChatHistory(res.data.chat);
-    });
+    if (currentActiveChat !== "") {
+      getChatHistory(auth(), currentActiveChat).then((res) => {
+        setChatHistory(res.data.chat);
+      });
+    }
   }, [currentActiveChat]);
 
   const sendMessage = () => {
