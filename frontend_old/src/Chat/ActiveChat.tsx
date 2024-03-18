@@ -23,12 +23,10 @@ export const ActiveChat: FC = () => {
 
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
   const websocket = useWebsocket((e) => {
-    console.log("here");
-    chatHistory.push({
-      content: e.data.content,
-      sender: e.data.sender,
-      timestamp: e.data.timestamp,
-    });
+    console.log(JSON.parse(e.data));
+    console.log(e.data.content);
+    setChatHistory([...chatHistory, JSON.parse(e.data)]);
+    console.log(chatHistory);
   });
 
   const [currentActiveChat, setCurrentActiveChat] = useState<string>("a");
