@@ -22,15 +22,27 @@ export const ActiveChat: FC = () => {
   ]);
 
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
-  const websocket = useWebsocket((e) => {
-    console.log(JSON.parse(e.data));
-    console.log(e.data.content);
-    setChatHistory([...chatHistory, JSON.parse(e.data)]);
-    console.log(chatHistory);
-  });
-
-  const [currentActiveChat, setCurrentActiveChat] = useState<string>("a");
+  const [currentActiveChat, setCurrentActiveChat] = useState<string>("");
   const auth = useAuthHeader();
+
+  const websocket = useWebsocket((e) => {
+    const data: SingleChatHistory = JSON.parse(e.data);
+    if (currentActiveChat == data.sender) {
+      setChatHistory([...chatHistory, data]);
+    }
+    setChatOverview(
+      chatOverview.map((overview) => {
+        if (overview.partnerName === data.sender) {
+          return {
+            lastMessage: data.content,
+            partnerName: overview.partnerName,
+          };
+        } else {
+          return overview;
+        }
+      })
+    );
+  });
 
   useEffect(() => {
     setChatHistory([]);
@@ -80,8 +92,9 @@ export const ActiveChat: FC = () => {
             height: "100%",
           }}
         >
-          {chatHistory.map((chat) => (
+          {chatHistory.map((chat, i) => (
             <Message
+              key={i}
               content={chat.content}
               partnerName={currentActiveChat}
               sender={chat.sender}

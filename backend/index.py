@@ -3,12 +3,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from sql import get_user, find_trainingspartner
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
-from authentication.authentication import get_current_active_user, authenticate_user, create_access_token, create_new_user, get_current_user
+from authentication.authentication import (
+    get_current_active_user,
+    authenticate_user,
+    create_access_token,
+    create_new_user,
+)
 from custom_types import Token
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
-from no_sql import get_all_chats_from_user, get_content_of_chat, insert_new_partner, save_new_message, upload_video, get_video_by_id
+from no_sql import (
+    get_chat_overview_of_user,
+    get_all_chats_from_user,
+    get_content_of_chat,
+    insert_new_partner,
+    save_new_message,
+    upload_video,
+    get_video_by_id,
+)
+
 # temp
 from datetime import datetime
 
@@ -29,19 +43,22 @@ app.add_middleware(
 
 
 @app.websocket("/chat")
-async def chat(*,
-               websocket: WebSocket,
-               current_user=Depends(get_cookie_or_token)):
+async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket,  current_user)
+    await handle_session(websocket, current_user)
 
 
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     user_name = current_user.get("user_name")
     users_chats = await get_all_chats_from_user(user_name)
-    trainingspartner_name = await find_trainingspartner(plz,  users_chats)
+    trainingspartner_name = await find_trainingspartner(plz, users_chats)
     return await insert_new_partner(user_name, trainingspartner_name)
+
+
+@app.get("/chats")
+async def get_chat_overview(current_user=Depends(get_current_active_user)):
+    await get_chat_overview_of_user(current_user.get("user_name"))
 
 
 @app.get("/chat/content")
@@ -73,15 +90,22 @@ async def sign_up(form_data: OAuth2PasswordRequestForm = Depends()):
 async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="incorrect username or password", headers={"WWW-Authenticate": "Bearer"})
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     access_token_expires = timedelta(hours=8)
     access_token = create_access_token(
-        data={"sub": user['user_name']}, expires_delta=access_token_expires)
-    response = JSONResponse(content={"access_token": access_token,
-                            "expires_in": access_token_expires.seconds, "token_type": "Bearer"})
-    expiry = datetime.now() + timedelta(seconds=access_token_expires.seconds)
-    expiry_utc = expiry.replace(tzinfo=timezone.utc)
+        data={"sub": user["user_name"]}, expires_delta=access_token_expires
+    )
+    response = JSONResponse(
+        content={
+            "access_token": access_token,
+            "expires_in": access_token_expires.seconds,
+            "token_type": "Bearer",
+        }
+    )
     return response
 
 
