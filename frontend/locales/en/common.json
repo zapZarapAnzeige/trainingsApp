@@ -1,11 +1,9 @@
 {
-  "sidebar": [
-    "My Calendar",
-    "My Training Schedule",
-    "My Chats",
-    "Exercises",
-    "Help",
-    "About Us"
-  ],
-  "lol": "troll"
+  "calendar": "My Calendar",
+  "trainingSchedule": "My Training Schedule",
+  "chats": "My Chats",
+  "exercises": "Exercises",
+  "help": "Help",
+  "about": "About Us",
+  "calendarWeek": "CW"
 }

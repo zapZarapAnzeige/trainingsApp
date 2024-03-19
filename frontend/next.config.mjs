@@ -1,16 +1,5 @@
-import i18n from "next-translate";
-
+import nextTranslate from "next-translate-plugin";
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  i18n: {
-    locales: ["en", "de"],
-    defaultLocale: "en",
-    pages: {
-      "*": ["common"],
-      "/": ["home", "example"],
-      "/about": ["about"],
-    },
-  },
-};
+const nextConfig = nextTranslate();
 
 export default nextConfig;

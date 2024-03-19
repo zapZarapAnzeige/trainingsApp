@@ -1,4 +1,5 @@
 import { getCurrentCW } from "@/utils/utils";
+import useTranslation from "next-translate/useTranslation";
 import React from "react";
 
 type WeekSelectorProps = {
@@ -6,13 +7,23 @@ type WeekSelectorProps = {
 };
 
 const WeekSelector: React.FC<WeekSelectorProps> = ({ cw }) => {
+  const { t } = useTranslation("common");
   const currentCw = getCurrentCW();
+  console.log(cw);
+  console.log(currentCw);
+  console.log(
+    "Kalenderwoche " +
+      cw.toString() +
+      " ist kleiner als " +
+      currentCw.toString() +
+      " ist: " +
+      (cw < currentCw).toString()
+  );
   return (
-    <div className="inline-flex justify-start gap-1">
-      <label className="my-auto mr-2 text-gray-700">KW:</label>
+    <div className="inline-flex justify-between gap-1 rounded-lg bg-gray-200 px-4 py-2 mb-5">
       <a
-        href={"/calendar/" + (parseInt(cw) - 1).toString}
-        className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+        href={"/calendar/" + (parseInt(cw) - 1).toString()}
+        className="inline-flex size-8 items-center justify-center rounded border border-border bg-white text-gray-900 rtl:rotate-180"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -31,18 +42,17 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({ cw }) => {
       <div>
         <input
           disabled
-          type="number"
-          className="h-8 w-12 rounded border border-gray-100 bg-white p-0 text-center text-xs font-medium text-gray-900 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+          className="h-8 w-12 rounded border border-border bg-white p-0 text-center text-xs font-medium text-gray-900 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
           min="1"
-          value={cw}
+          value={t("calendarWeek") + " " + cw}
           id="PaginationPage"
         />
       </div>
 
-      {cw !== currentCw && (
+      {cw < currentCw ? (
         <a
-          href={"/calendar/" + (parseInt(cw) + 1).toString}
-          className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+          href={"/calendar/" + (parseInt(cw) + 1).toString()}
+          className="inline-flex size-8 items-center justify-center rounded border border-border bg-white text-gray-900 rtl:rotate-180"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,6 +67,8 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({ cw }) => {
             />
           </svg>
         </a>
+      ) : (
+        <div></div>
       )}
     </div>
   );
