@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Dict
 from db_connection import database
 from db_connection import client
-from fastapi import UploadFile, HTTPException
+from fastapi import Response, UploadFile, HTTPException, status
 from db_connection import grid_fs_bucket
 from fastapi.responses import StreamingResponse
 from io import BytesIO
@@ -14,13 +14,13 @@ messages = database.get_collection("messages")
 videos = database.get_collection("videos")
 
 
-async def get_last_message_of_chat(chat_id):
-    pass
-
-
 async def get_chat_partners(user_name: str):
     return [
-        chat
+        {"partner_name": chat, "last_message": participants.get(
+            'last_message_content'), "unread_messages": 0, "last_message_timestamp": participants.get('last_message_timestamp')}
+        if participants.get('last_sender_name') == user_name
+        else {"partner_name": chat, "last_message": participants.get(
+            'last_message_content'), "unread_messages": participants.get('unread_messages'), "last_message_timestamp": participants.get('last_message_timestamp')}
         for participants in await chats.find({"participants": user_name}).to_list(length=None)
         for chat in participants.get("participants")
         if chat != user_name
@@ -65,22 +65,20 @@ async def get_all_chats_from_user(user_name: str):
 async def insert_new_partner(user_name: str, partner_name: str):
     if partner_name:
         insert = await chats.insert_one({"participants": [user_name, partner_name],
-                                         "last_message_content": "",
+                                         "last_message_content": "new match",
                                          "last_message_timestamp": datetime.now(),
-                                         "unread_messages": 0})
+                                         "unread_messages": 1, "last_sender_name": user_name})
         return insert.acknowledged
     else:
-        # TODO: correct response
-        return "No people to match found"
-
-
-async def find_chat_by_participants(user1: str, user2: str, update_clause: Dict):
-    return await chats.find_one_and_update({"participants": {"$in": [user1, user2]}}, update_clause)
+        return False
 
 
 async def save_new_message(message: str, sender: str, recipiant: str, timestamp):
-    chat = await find_chat_by_participants(sender, recipiant, {"$inc": {"unread_messages": 1}, "$set": {"last_message_timestamp": timestamp, "last_message_content": message}})
-    print(chat)
+    chat = await chats.find_one_and_update({"participants": {"$all": [sender, recipiant]}, "last_sender_name": sender}, {"$inc": {"unread_messages": 1}, "$set": {"last_message_timestamp": timestamp, "last_message_content": message}})
+    if not chat:
+        chat = await chats.find_one_and_update({"participants": {"$all": [sender, recipiant]}}, {"$set": {"last_message_timestamp": timestamp, "last_message_content": message, "unread_messages": 1, "last_sender_name": sender}})
+    if not chat:
+        return False
     insert = await messages.insert_one(
         {
             "sender": sender,
@@ -93,9 +91,11 @@ async def save_new_message(message: str, sender: str, recipiant: str, timestamp)
 
 
 async def get_content_of_chat(partner: str, user: str):
-    chat = await find_chat_by_participants(partner, user, {"$set": {"unread_messages": 0}})
-    print(chat)
-    m = await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
+    chat = await chats.find_one_and_update({"participants": {"$all": [partner, user]}, "last_sender_name": partner}, {"$set": {"unread_messages": 0}})
+    if not chat:
+        chat = await chats.find_one({"participants": {"$all": [partner, user]}})
+    if not chat:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
     return {
         "chat": [
             {
@@ -103,12 +103,6 @@ async def get_content_of_chat(partner: str, user: str):
                 "sender": message.get("sender"),
                 "timestamp": message.get("timestamp"),
             }
-            for message in m
+            for message in await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
         ]
     }
-
-
-async def test():
-    print(await chats.count_documents({"initialized": True}))
-    await client.admin.command("ping")
-    print("success")

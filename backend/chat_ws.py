@@ -34,18 +34,21 @@ async def get_cookie_or_token(
         return session
 
 
-async def handle_session(websocket,  current_user):
-    user_name = current_user["user_name"]
+async def handle_session(websocket: WebSocket,  user_name: str):
     connected_users[user_name] = websocket
     while True:
         try:
             data: Dict[Message_json] = await websocket.receive_json()
             timestamp = datetime.now()
-            await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)
-            for k, v in connected_users.items():
-                if (k == data.get('recipient')):
-                    await v.send_json({"sender": user_name, "content": data.get('content'), "timestamp": str(timestamp)})
+            is_inserted = await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)
+            if (is_inserted):
+                for k, v in connected_users.items():
+                    if (k == data.get('recipient')):
+                        await v.send_json({"sender": user_name, "content": data.get('content'), "timestamp": str(timestamp)})
+                else:
+                    # TODO: watch out for this error in frontend
+                    websocket.send_json(
+                        {"error": "message was not send successfully", "message": data})
         except Exception as e:
             print(e)
             connected_users.pop(user_name)
-            # await websocket.close()
