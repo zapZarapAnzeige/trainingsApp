@@ -54,6 +54,7 @@ db.runCommand({
         "unread_messages",
         "last_message_content",
         "last_message_timestamp",
+        "last_sender_name",
       ],
       properties: {
         participants: {
@@ -65,6 +66,9 @@ db.runCommand({
           default: 0,
         },
         last_message_content: {
+          bsonType: "string",
+        },
+        last_sender_name: {
           bsonType: "string",
         },
         last_message_timestamp: {

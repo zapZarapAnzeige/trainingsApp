@@ -65,13 +65,18 @@ async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     user_name = current_user.get("user_name")
     users_chats = await get_all_chats_from_user(user_name)
     trainingspartner_name = await find_trainingspartner(plz, users_chats)
-    return await insert_new_partner(user_name, trainingspartner_name)
+    is_inserted = await insert_new_partner(user_name, trainingspartner_name)
+    if is_inserted:
+        return {"partner_name": trainingspartner_name}
+    else:
+        return "No people to match found"
 
 
 @app.get("/chats")
 async def get_chat_overview(current_user=Depends(get_current_active_user)):
     partners = await get_chat_partners(current_user.get("user_name"))
-    return await get_overview(partners)
+
+    return {"profile_pictures": await get_overview(partners), "chats": partners}
 
 
 @app.get("/chat/content")
