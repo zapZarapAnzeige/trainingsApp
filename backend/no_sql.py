@@ -15,15 +15,14 @@ videos = database.get_collection("videos")
 
 
 async def get_chat_partners(user_name: str):
-    a = await chats.find({"participants": user_name}).to_list(length=None)
-    print(a)
+
     return [
         {"partner_name": chat, "last_message": participants.get(
             'last_message_content'), "unread_messages": 0, "last_message_timestamp": participants.get('last_message_timestamp')}
         if participants.get('last_sender_name') == user_name
         else {"partner_name": chat, "last_message": participants.get(
             'last_message_content'), "unread_messages": participants.get('unread_messages'), "last_message_timestamp": participants.get('last_message_timestamp')}
-        for participants in a
+        for participants in await chats.find({"participants": user_name}).to_list(length=None)
         for chat in participants.get("participants")
         if chat != user_name
     ]
