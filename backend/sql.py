@@ -8,7 +8,6 @@ from typing import Dict, List, Optional
 
 
 async def get_overview(partners: List):
-    print(partners)
     user_data = session.execute(select(Users.c.profile_picture, Users.c.user_name).where(
         Users.c.user_name.in_([partner.get('partner_name') for partner in partners]))).mappings().fetchall()
     return [{'user_name': data.get('user_name'), 'profile_picture': base64.b64encode(data.get('profile_picture')).decode("utf-8")}

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Dict
 from db_connection import database
 from db_connection import client
-from fastapi import UploadFile, HTTPException
+from fastapi import Response, UploadFile, HTTPException, status
 from db_connection import grid_fs_bucket
 from fastapi.responses import StreamingResponse
 from io import BytesIO
@@ -15,7 +15,6 @@ videos = database.get_collection("videos")
 
 
 async def get_chat_partners(user_name: str):
-
     return [
         {"partner_name": chat, "last_message": participants.get(
             'last_message_content'), "unread_messages": 0, "last_message_timestamp": participants.get('last_message_timestamp')}
@@ -71,16 +70,15 @@ async def insert_new_partner(user_name: str, partner_name: str):
                                          "unread_messages": 1, "last_sender_name": user_name})
         return insert.acknowledged
     else:
-        # TODO: correct response
         return False
 
 
 async def save_new_message(message: str, sender: str, recipiant: str, timestamp):
-    print(sender + recipiant)
     chat = await chats.find_one_and_update({"participants": {"$all": [sender, recipiant]}, "last_sender_name": sender}, {"$inc": {"unread_messages": 1}, "$set": {"last_message_timestamp": timestamp, "last_message_content": message}})
     if not chat:
         chat = await chats.find_one_and_update({"participants": {"$all": [sender, recipiant]}}, {"$set": {"last_message_timestamp": timestamp, "last_message_content": message, "unread_messages": 1, "last_sender_name": sender}})
-    print(chat)
+    if not chat:
+        return False
     insert = await messages.insert_one(
         {
             "sender": sender,
@@ -96,7 +94,8 @@ async def get_content_of_chat(partner: str, user: str):
     chat = await chats.find_one_and_update({"participants": {"$all": [partner, user]}, "last_sender_name": partner}, {"$set": {"unread_messages": 0}})
     if not chat:
         chat = await chats.find_one({"participants": {"$all": [partner, user]}})
-    m = await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
+    if not chat:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
     return {
         "chat": [
             {
@@ -104,12 +103,6 @@ async def get_content_of_chat(partner: str, user: str):
                 "sender": message.get("sender"),
                 "timestamp": message.get("timestamp"),
             }
-            for message in m
+            for message in await messages.find({"chat_id": chat.get("_id")}).to_list(length=None)
         ]
     }
-
-
-async def test():
-    print(await chats.count_documents({"initialized": True}))
-    await client.admin.command("ping")
-    print("success")

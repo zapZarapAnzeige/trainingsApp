@@ -1,7 +1,7 @@
 from typing import Optional
-from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status
+from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status, Response
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_overview, get_profile_pic, get_user, find_trainingspartner, update_user_data
+from sql import get_overview, get_profile_pic, find_trainingspartner, update_user_data
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 from authentication.authentication import (
@@ -11,7 +11,7 @@ from authentication.authentication import (
     create_new_user,
 )
 from custom_types import Token
-from datetime import datetime, timedelta
+from datetime import timedelta
 from fastapi.responses import JSONResponse, HTMLResponse
 from chat_ws import get_cookie_or_token, handle_session
 from no_sql import (
@@ -19,13 +19,9 @@ from no_sql import (
     get_all_chats_from_user,
     get_content_of_chat,
     insert_new_partner,
-    save_new_message,
     upload_video,
     get_video_by_id,
 )
-
-# temp
-from datetime import datetime
 
 app = FastAPI()
 
@@ -41,13 +37,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+INVALID_PLZ_LENGTH_ERROR = Response(
+    status_code=status.HTTP_412_PRECONDITION_FAILED, content="invalid plz length")
 
 
 @app.put("/user")
 async def upload_user_data(profile_picture: Optional[UploadFile] = File(None), plz: str = None, searching_for_partner: bool = None, current_user=Depends(get_current_active_user)):
     user_data = {}
+    if not len(plz) == 5:
+        return INVALID_PLZ_LENGTH_ERROR
 
-    if plz and len(plz) == 5:
+    if plz:
         user_data['plz'] = plz
     if searching_for_partner:
         user_data['searching_for_partner'] = searching_for_partner
@@ -57,11 +57,13 @@ async def upload_user_data(profile_picture: Optional[UploadFile] = File(None), p
 @app.websocket("/chat")
 async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket, current_user)
+    await handle_session(websocket, current_user.get("user_name"))
 
 
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
+    if not len(plz) == 5:
+        return INVALID_PLZ_LENGTH_ERROR
     user_name = current_user.get("user_name")
     users_chats = await get_all_chats_from_user(user_name)
     trainingspartner_name = await find_trainingspartner(plz, users_chats)
@@ -81,6 +83,8 @@ async def get_chat_overview(current_user=Depends(get_current_active_user)):
 
 @app.get("/chat/content")
 async def get_chat_content(partner: str, current_user=Depends(get_current_active_user)):
+    if partner == current_user.get("user_name"):
+        return Response(status_code=status.HTTP_412_PRECONDITION_FAILED, content="sender and recipiant must not be the same")
     return await get_content_of_chat(partner, current_user.get("user_name"))
 
 
@@ -125,54 +129,3 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
         }
     )
     return response
-
-
-html = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat</h1>
-        <form action="" onsubmit="sendMessage(event)">
-            <label>Item ID: <input type="text" id="itemId" autocomplete="off" value="foo"/></label>
-            <label>Token: <input type="text" id="token" autocomplete="off" value="some-key-token"/></label>
-            <button onclick="connect(event)">Connect</button>
-            <hr>
-            <label>Message: <input type="text" id="messageText" autocomplete="off"/></label>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
-        <script>
-        var ws = null;
-            function connect(event) {
-                var itemId = document.getElementById("itemId")
-                var token = document.getElementById("token")
-                ws = new WebSocket("ws://localhost:8000/chat?token=" + token.value);
-                ws.onmessage = function(event) {
-                    var messages = document.getElementById('messages')
-                    var message = document.createElement('li')
-                    var content = document.createTextNode(event.data)
-                    message.appendChild(content)
-                    messages.appendChild(message)
-                };
-                event.preventDefault()
-            }
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = ''
-                event.preventDefault()
-            }
-        </script>
-    </body>
-</html>
-"""
-
-
-@app.get("/")
-async def get():
-    await save_new_message("lol", "abc", "a", datetime.now())
-    return HTMLResponse(html)
