@@ -13,6 +13,7 @@ const config: Config = {
         secondary: "#438D3F",
         highlight: "#C5E1A5",
         border: "#245D23",
+        borderLight: "#CCffCC",
       },
     },
   },

@@ -17,11 +17,11 @@ const WeekColumn: React.FC<WeekColumnProps> = ({
 }) => {
   return (
     <div
-      className={`flex-1 flex flex-col items-center justify-center ${
+      className={`flex-1 flex flex-col items-center justify-center px-2 ${
         lastColumn && "border-r divide-r"
       } `}
     >
-      <div className="flex-shrink-0 h-32 rounded-lg bg-gray-200 p-2 text-gray-900">
+      <div className="h-32 rounded-lg bg-gray-200 p-2 text-gray-900 w-full flex flex-col justify-center items-center">
         <p>{day}</p>
         <p>{date}</p>
         {hasTraining && (

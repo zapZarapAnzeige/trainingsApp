@@ -3,8 +3,8 @@ import useTranslation from "next-translate/useTranslation";
 
 const Sidebar: React.FC = () => {
   const { t } = useTranslation("common");
-  let user = "Daniel Jaufmann";
-  let email = "daniel@training.com";
+  let user = "user";
+  let email = "user@training.com";
 
   return (
     <div className="flex flex-col h-screen justify-between border-e border-border bg-primary w-1/5">
@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
               href={"/calendar"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("calendar")}
+              {t("sidebar.calendar")}
             </a>
           </li>
           <li>
@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
               href={"/trainingSchedule"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("trainingSchedule")}
+              {t("sidebar.trainingSchedule")}
             </a>
           </li>
           <li>
@@ -35,7 +35,7 @@ const Sidebar: React.FC = () => {
               href={"/chats"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("chats")}
+              {t("sidebar.chats")}
             </a>
           </li>
           <li>
@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
               href={"/exercises"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("exercises")}
+              {t("sidebar.exercises")}
             </a>
           </li>
           <li>
@@ -51,7 +51,7 @@ const Sidebar: React.FC = () => {
               href={"/help"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("help")}
+              {t("sidebar.help")}
             </a>
           </li>
           <li>
@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
               href={"/about"}
               className="block rounded-lg bg-highlight px-4 py-2 text-sm font-medium text-black mb-3"
             >
-              {t("about")}
+              {t("sidebar.about")}
             </a>
           </li>
         </ul>

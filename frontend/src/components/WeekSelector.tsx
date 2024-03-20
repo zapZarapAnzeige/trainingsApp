@@ -9,16 +9,6 @@ type WeekSelectorProps = {
 const WeekSelector: React.FC<WeekSelectorProps> = ({ cw }) => {
   const { t } = useTranslation("common");
   const currentCw = getCurrentCW();
-  console.log(cw);
-  console.log(currentCw);
-  console.log(
-    "Kalenderwoche " +
-      cw.toString() +
-      " ist kleiner als " +
-      currentCw.toString() +
-      " ist: " +
-      (cw < currentCw).toString()
-  );
   return (
     <div className="inline-flex justify-between gap-1 rounded-lg bg-gray-200 px-4 py-2 mb-5">
       <a
@@ -49,7 +39,7 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({ cw }) => {
         />
       </div>
 
-      {cw < currentCw ? (
+      {parseInt(cw) < parseInt(currentCw) ? (
         <a
           href={"/calendar/" + (parseInt(cw) + 1).toString()}
           className="inline-flex size-8 items-center justify-center rounded border border-border bg-white text-gray-900 rtl:rotate-180"

@@ -1,9 +1,20 @@
 {
-  "calendar": "My Calendar",
-  "trainingSchedule": "My Training Schedule",
-  "chats": "My Chats",
-  "exercises": "Exercises",
-  "help": "Help",
-  "about": "About Us",
+  "sidebar": {
+    "calendar": "My Calendar",
+    "trainingSchedule": "My Training Schedule",
+    "chats": "My Chats",
+    "exercises": "Exercises",
+    "help": "Help",
+    "about": "About Us"
+  },
+  "weekdays": [
+    { "monday": "Monday" },
+    { "tuesday": "Tuesday" },
+    { "wednesday": "Wednesday" },
+    { "thursday": "Thursday" },
+    { "friday": "Friday" },
+    { "saturday": "Saturday" },
+    { "sunday": "Sunday" }
+  ],
   "calendarWeek": "CW"
 }

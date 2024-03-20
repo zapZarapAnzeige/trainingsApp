@@ -7,6 +7,8 @@ export default function CW({ params }: { params: { cw: string } }) {
   const { t } = useTranslation("common");
   return (
     <>
+      {" "}
+      m
       <Heading title={t("calendar")} />
       <WeekSelector cw={params.cw} />
       <WeekColumns cw={params.cw} />
