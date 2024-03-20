@@ -38,54 +38,65 @@ app.add_middleware(
     allow_headers=["*"],
 )
 INVALID_PLZ_LENGTH_ERROR = Response(
-    status_code=status.HTTP_412_PRECONDITION_FAILED, content="invalid plz length")
+    status_code=status.HTTP_412_PRECONDITION_FAILED, content="invalid plz length"
+)
 
 
 @app.put("/user")
-async def upload_user_data(profile_picture: Optional[UploadFile] = File(None), plz: str = None, searching_for_partner: bool = None, current_user=Depends(get_current_active_user)):
+async def upload_user_data(
+    profile_picture: Optional[UploadFile] = File(None),
+    plz: str = None,
+    searching_for_partner: bool = None,
+    current_user=Depends(get_current_active_user),
+):
     user_data = {}
     if not len(plz) == 5:
         return INVALID_PLZ_LENGTH_ERROR
 
     if plz:
-        user_data['plz'] = plz
+        user_data["plz"] = plz
     if searching_for_partner:
-        user_data['searching_for_partner'] = searching_for_partner
-    await update_user_data(profile_picture, current_user.get("user_name"), user_data)
+        user_data["searching_for_partner"] = searching_for_partner
+    await update_user_data(profile_picture, current_user.get("user_id"), user_data)
 
 
 @app.websocket("/chat")
 async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token)):
     await websocket.accept()
-    await handle_session(websocket, current_user.get("user_name"))
+    await handle_session(websocket, current_user.get("user_id"))
 
 
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     if not len(plz) == 5:
         return INVALID_PLZ_LENGTH_ERROR
-    user_name = current_user.get("user_name")
-    users_chats = await get_all_chats_from_user(user_name)
-    trainingspartner_name = await find_trainingspartner(plz, users_chats)
-    is_inserted = await insert_new_partner(user_name, trainingspartner_name)
+    user_id = current_user.get("user_id")
+    matched_persons = await get_all_chats_from_user(user_id)
+    new_match = await find_trainingspartner(plz, matched_persons)
+    is_inserted = await insert_new_partner(user_id, new_match)
     if is_inserted:
-        return {"partner_name": trainingspartner_name}
+        return new_match
     else:
         return "No people to match found"
 
 
 @app.get("/chats")
 async def get_chat_overview(current_user=Depends(get_current_active_user)):
-    partners = await get_chat_partners(current_user.get("user_name"))
+    partners = await get_chat_partners(current_user.get("user_id"))
 
     return {"profile_pictures": await get_overview(partners), "chats": partners}
 
 
 @app.get("/chat/content")
-async def get_chat_content(partner: str, current_user=Depends(get_current_active_user)):
-    if partner == current_user.get("user_name"):
-        return Response(status_code=status.HTTP_412_PRECONDITION_FAILED, content="sender and recipiant must not be the same")
-    return await get_content_of_chat(partner, current_user.get("user_name"))
+async def get_chat_content(
+    partner_id: int, current_user=Depends(get_current_active_user)
+):
+    if partner_id == current_user.get("user_id"):
+        return Response(
+            status_code=status.HTTP_412_PRECONDITION_FAILED,
+            content="sender and recipiant must not be the same",
+        )
+    return await get_content_of_chat(partner_id, current_user.get("user_id"))
 
 
 @app.post("/video")
@@ -100,7 +111,7 @@ async def get_video(file_id: str):
 
 @app.get("/picture")
 async def get_users(current_user=Depends(get_current_active_user)):
-    return get_profile_pic(current_user.get("user_name"))
+    return get_profile_pic(current_user.get("user_id"))
 
 
 @app.post("/api/v1/signUp")

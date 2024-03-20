@@ -1,6 +1,5 @@
-
 from typing import Annotated
-from fastapi import WebSocket, Cookie, Query,  status, WebSocketDisconnect
+from fastapi import WebSocket, Cookie, Query, status, WebSocketDisconnect
 from fastapi.exceptions import HTTPException
 from authentication.authentication import get_current_active_user, get_current_user
 from typing import Dict
@@ -17,10 +16,8 @@ async def get_cookie_or_token(
     session: Annotated[str | None, Cookie()] = None,
     token: Annotated[str | None, Query()] = None,
 ):
-
     if token:
         try:
-
             user = await get_current_user(token)
             active_user = await get_current_active_user(user)
         except HTTPException as e:
@@ -34,21 +31,34 @@ async def get_cookie_or_token(
         return session
 
 
-async def handle_session(websocket: WebSocket,  user_name: str):
-    connected_users[user_name] = websocket
+async def handle_session(websocket: WebSocket, user_id: int):
+    connected_users[user_id] = websocket
     while True:
         try:
             data: Dict[Message_json] = await websocket.receive_json()
+
             timestamp = datetime.now()
-            is_inserted = await save_new_message(data.get('content'), user_name, data.get('recipient'), timestamp)
-            if (is_inserted):
+
+            is_inserted = await save_new_message(
+                data.get("content"), user_id, data.get("recipient_id"), timestamp
+            )
+            if is_inserted:
                 for k, v in connected_users.items():
-                    if (k == data.get('recipient')):
-                        await v.send_json({"sender": user_name, "content": data.get('content'), "timestamp": str(timestamp)})
-                else:
-                    # TODO: watch out for this error in frontend
-                    websocket.send_json(
-                        {"error": "message was not send successfully", "message": data})
+                    if k == data.get("recipient_id"):
+                        await v.send_json(
+                            {
+                                # maybe by user_name
+                                "sender": user_id,
+                                "content": data.get("content"),
+                                "timestamp": str(timestamp),
+                            }
+                        )
+
+            else:
+                # TODO: watch out for this error in frontend
+                await websocket.send_json(
+                    {"error": "message was not send successfully", "message": data}
+                )
         except Exception as e:
             print(e)
-            connected_users.pop(user_name)
+            connected_users.pop(user_id)

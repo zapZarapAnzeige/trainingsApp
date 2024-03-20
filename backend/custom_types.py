@@ -12,6 +12,11 @@ class Token(BaseModel):
     expires_in: int
 
 
+class User_name_id(BaseModel):
+    user_id: int
+    user_name: str
+
+
 class Token_data(BaseModel):
     user_name: str or None = None
 
