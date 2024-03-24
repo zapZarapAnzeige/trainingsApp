@@ -115,6 +115,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: str, time
         )
 
     if not chat:
+        # TODO: maybe change to custom error in future
         return False
     insert = await messages.insert_one(
         {

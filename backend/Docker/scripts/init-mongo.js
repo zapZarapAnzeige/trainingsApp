@@ -24,7 +24,7 @@ db.runCommand({
           description: "must be a string and is required",
         },
         sender: {
-          bsonType: "string",
+          bsonType: "int",
           description: "must be a string and is required",
         },
         timestamp: {
