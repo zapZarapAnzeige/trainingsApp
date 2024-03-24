@@ -6,7 +6,6 @@ from db_connection import grid_fs_bucket
 from fastapi.responses import StreamingResponse
 from io import BytesIO
 from bson import ObjectId
-from custom_types import User_name_id
 
 
 chats = database.get_collection("chats")

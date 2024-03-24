@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS Excercises (
 );
 
 CREATE TABLE IF NOT EXISTS tags (
-    tag_id INT AUTO_INCREMENT, excercise_id INT, tag_name VARCHAR(255) NOT NULL, is_primary_tag BOOLEAN DEFAULT FALSE, PRIMARY KEY (primary_tag_id), FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
+    tag_id INT AUTO_INCREMENT, excercise_id INT, tag_name VARCHAR(255) NOT NULL, is_primary_tag BOOLEAN DEFAULT FALSE, PRIMARY KEY (tag_id), FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
 );

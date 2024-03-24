@@ -12,7 +12,7 @@ from authentication.authentication import (
 )
 from custom_types import Token
 from datetime import timedelta
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse
 from chat_ws import get_cookie_or_token, handle_session
 from no_sql import (
     get_chat_partners,

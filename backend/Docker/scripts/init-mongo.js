@@ -1,18 +1,16 @@
-db.createUser({
-  user: "trainer",
-  pwd: "3333",
-  roles: [
-    {
-      role: "readWrite",
-      db: "trainingsApp_Mongo_DB",
-    },
-  ],
-});
+(function() {
+db.runCommand({createUser: "trainer", pwd:"3333", roles: [
+  {
+    role: "readWrite",
+    db: "trainingsApp_Mongo_DB",
+  },
+],})
 
-db = new Mongo().getDB("trainingsApp_Mongo_DB");
+db=  new Mongo().getDB("trainingsApp_Mongo_DB");
 
-db.createCollection("chats");
-db.createCollection("messages");
+db.createCollection ("chats");
+
+db.createCollection ("messages");
 
 db.runCommand({
   collMod: "messages",
@@ -54,7 +52,7 @@ db.runCommand({
         "unread_messages",
         "last_message_content",
         "last_message_timestamp",
-        "last_sender_name",
+        "last_sender_id",
       ],
       properties: {
         participants: {
@@ -62,14 +60,13 @@ db.runCommand({
           description: "must be a string and is required",
         },
         unread_messages: {
-          bsonType: "integer",
-          default: 0,
+          bsonType: "int",
         },
         last_message_content: {
           bsonType: "string",
         },
-        last_sender_name: {
-          bsonType: "string",
+        last_sender_id: {
+          bsonType: "int",
         },
         last_message_timestamp: {
           bsonType: "date",
@@ -80,3 +77,4 @@ db.runCommand({
   validationLevel: "strict",
   validationAction: "error",
 });
+})();

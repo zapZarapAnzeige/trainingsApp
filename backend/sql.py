@@ -70,7 +70,10 @@ def get_user(name):
 def insert_new_user(username: str, password: str):
     try:
         stmt = insert(Users).values(
-            user_name=username, password=password, expired=False
+            user_name=username,
+            password=password,
+            expired=False,
+            searching_for_partner=False,
         )
         operation = session.execute(stmt)
         session.commit()
