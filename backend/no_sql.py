@@ -14,7 +14,8 @@ videos = database.get_collection("videos")
 
 
 async def get_chat_partners(user_id: int):
-    return [
+    return {
+        chat:
         {
             "partner_id": chat,
             "last_message": participants.get("last_message_content"),
@@ -33,7 +34,7 @@ async def get_chat_partners(user_id: int):
         )
         for chat in participants.get("participants")
         if chat != user_id
-    ]
+    }
 
 
 async def upload_video(file: UploadFile):
@@ -130,7 +131,8 @@ async def save_new_message(message: str, sender_id: int, recipient_id: str, time
 
 async def get_content_of_chat(partner_id: int, user_id: int):
     chat = await chats.find_one_and_update(
-        {"participants": {"$all": [partner_id, user_id]}, "last_sender_id": partner_id},
+        {"participants": {"$all": [partner_id, user_id]},
+            "last_sender_id": partner_id},
         {"$set": {"unread_messages": 0}},
     )
     if not chat:

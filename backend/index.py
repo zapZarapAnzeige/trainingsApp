@@ -84,7 +84,7 @@ async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
 async def get_chat_overview(current_user=Depends(get_current_active_user)):
     partners = await get_chat_partners(current_user.get("user_id"))
 
-    return {"profile_pictures": await get_overview(partners), "chats": partners}
+    return {"chat_data": await get_overview(partners)}
 
 
 @app.get("/chat/content")
