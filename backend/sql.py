@@ -31,10 +31,10 @@ async def update_user_data(
     profile_picture: Optional[UploadFile], user_id: int, user_data: Dict
 ):
     if profile_picture:
-        max_size_bytes = 10 * 1024 * 1024  # 10 MB
+        max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
             raise HTTPException(
-                status_code=413, detail="Image size exceeds 10 MB")
+                status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
