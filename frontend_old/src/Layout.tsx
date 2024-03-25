@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect } from "react";
 
-import { useDispatch } from "react-redux";
-import { useIsAuthenticated } from "react-auth-kit";
+import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
-import { Header } from "./Header/Header";
 import { ActiveChat } from "./Chat/ActiveChat";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
+import { getUserData } from "./api";
+import { useDispatch } from "react-redux";
+import { setUserData } from "./Redux/actions";
 
 export const Layout: React.FC = () => {
   type RequireAuthProps = {
@@ -22,6 +23,13 @@ export const Layout: React.FC = () => {
 
     return <>{children}</>;
   };
+  const dispatch = useDispatch();
+  const auth = useAuthHeader();
+  useEffect(() => {
+    getUserData(auth()).then((res) => {
+      dispatch(setUserData({ id: res.data.user_id, name: res.data.user_name }));
+    });
+  }, []);
 
   return (
     <RequireAuth>

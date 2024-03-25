@@ -1,10 +1,9 @@
-import React, {
+import {
   createContext,
   useState,
   useEffect,
   useContext,
   ReactNode,
-  useMemo,
   useRef,
 } from "react";
 import { useAuthHeader } from "react-auth-kit";

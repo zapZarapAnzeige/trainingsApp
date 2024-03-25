@@ -3,39 +3,44 @@ import { useState, FC, useEffect } from "react";
 import { useWebsocket } from "../Provider/WebSocketProvider";
 import SendIcon from "@mui/icons-material/Send";
 import { ChatSidebar } from "./ChatSidebar";
-import { ChatOverview, SingleChatHistory } from "../types";
+import { ChatOverview, UserData, SingleChatHistory } from "../types";
 import { useAuthHeader } from "react-auth-kit";
-import { getChatHistory } from "../api";
+import { getChatHistory, getChatOverview } from "../api";
 import { Message } from "./Message";
 import { useSelector } from "react-redux";
-import { selectUser } from "../Redux/selector";
-import dayjs, { Dayjs } from "dayjs";
+import { selectUserData } from "../Redux/selector";
 
 export const ActiveChat: FC = () => {
-  //user needs to be initialized correctly
-  const user = useSelector(selectUser);
+  const userData = useSelector(selectUserData);
   const [message, setMessage] = useState<string>("");
-  const [chatOverview, setChatOverview] = useState<ChatOverview[]>([
-    { partnerName: "abc", lastMessage: "lol" },
-    { partnerName: "a", lastMessage: "lol" },
-    { partnerName: "c", lastMessage: "losadasdasdasdsadasdadasl" },
-  ]);
+  const [chatOverview, setChatOverview] = useState<ChatOverview[]>([]);
 
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
-  const [currentActiveChat, setCurrentActiveChat] = useState<string>("");
+  const [currentActiveChat, setCurrentActiveChat] = useState<UserData>({
+    id: -1,
+    name: "",
+  });
   const auth = useAuthHeader();
 
+  useEffect(() => {
+    getChatOverview(auth()).then((data) => {
+      setChatOverview(data.data.chat_data);
+    });
+  }, []);
+
   const websocket = useWebsocket((e) => {
+    console.log("here");
     const data: SingleChatHistory = JSON.parse(e.data);
-    if (currentActiveChat == data.sender) {
+    if (currentActiveChat.id === data.sender) {
       setChatHistory([...chatHistory, data]);
     }
     setChatOverview(
       chatOverview.map((overview) => {
-        if (overview.partnerName === data.sender) {
+        if (overview.partner_id === data.sender) {
           return {
-            lastMessage: data.content,
-            partnerName: overview.partnerName,
+            ...overview,
+            last_message_timestamp: data.timestamp,
+            last_message: data.content,
           };
         } else {
           return overview;
@@ -46,8 +51,8 @@ export const ActiveChat: FC = () => {
 
   useEffect(() => {
     setChatHistory([]);
-    if (currentActiveChat !== "") {
-      getChatHistory(auth(), currentActiveChat).then((res) => {
+    if (currentActiveChat.name !== "" && currentActiveChat.id > 0) {
+      getChatHistory(auth(), currentActiveChat.id).then((res) => {
         setChatHistory(res.data.chat);
       });
     }
@@ -57,11 +62,14 @@ export const ActiveChat: FC = () => {
     if (websocket) {
       chatHistory.push({
         content: message,
-        sender: user,
+        sender: userData.id,
         timestamp: Date.now().toString(),
       });
       websocket.send(
-        JSON.stringify({ recipient: currentActiveChat, content: message })
+        JSON.stringify({
+          recipient_id: currentActiveChat.id,
+          content: message,
+        })
       );
       setMessage("");
     }
@@ -76,12 +84,10 @@ export const ActiveChat: FC = () => {
           overflow: "hidden",
         }}
       >
-        {chatOverview.map(({ partnerName, lastMessage }) => {
+        {chatOverview.map((overview) => {
           return (
             <ChatSidebar
-              key={partnerName}
-              partnerName={partnerName}
-              lastMessage={lastMessage}
+              overview={overview}
               setCurrentActiveChat={setCurrentActiveChat}
             />
           );
@@ -98,7 +104,7 @@ export const ActiveChat: FC = () => {
             <Message
               key={i}
               content={chat.content}
-              partnerName={currentActiveChat}
+              partnerId={currentActiveChat.id}
               sender={chat.sender}
             />
           ))}

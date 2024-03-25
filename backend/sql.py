@@ -19,7 +19,7 @@ async def get_overview(partners: Dict):
     )
 
     return [{
-        "user_name": data.get("user_name"),
+        "partner_name": data.get("user_name"),
         **partners[data.get("user_id")],
         "profile_picture": base64.b64encode(data.get("profile_picture")).decode(
             "utf-8"

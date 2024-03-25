@@ -21,7 +21,8 @@ class CustomOAuth2PasswordBearer(OAuth2PasswordBearer):
 
 
 pwd_context = CryptContext(schemes=[bcrypt], deprecated="auto")
-oauth_scheme = CustomOAuth2PasswordBearer(tokenUrl="api/v1/login", auto_error=False)
+oauth_scheme = CustomOAuth2PasswordBearer(
+    tokenUrl="api/v1/login", auto_error=False)
 
 
 ALGORITHM = "HS256"
@@ -62,7 +63,8 @@ def create_access_token(data: dict, expires_delta: timedelta or None = None):
     else:
         expires = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expires})
-    encoded_jwt = jwt.encode(to_encode, getenv("SECRET_KEY"), algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, getenv(
+        "SECRET_KEY"), algorithm=ALGORITHM)
     return encoded_jwt
 
 
@@ -76,7 +78,8 @@ async def get_current_user(token: str = Depends(oauth_scheme)):
     try:
         if not token:
             raise JWTError()
-        payload = jwt.decode(token, getenv("SECRET_KEY"), algorithms=[ALGORITHM])
+        payload = jwt.decode(token, getenv("SECRET_KEY"),
+                             algorithms=[ALGORITHM])
         username: str = payload.get("sub")
 
         if username is None:

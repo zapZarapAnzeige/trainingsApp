@@ -5,11 +5,11 @@ import Typography from "@mui/material/Typography";
 
 type MessageProps = {
   content: string;
-  sender: string;
-  partnerName: string;
+  sender: number;
+  partnerId: number;
 };
 
-export const Message: FC<MessageProps> = ({ content, sender, partnerName }) => {
+export const Message: FC<MessageProps> = ({ content, sender, partnerId }) => {
   return (
     <Paper
       sx={{
@@ -23,10 +23,10 @@ export const Message: FC<MessageProps> = ({ content, sender, partnerName }) => {
           backgroundColor: "#E0E0E0",
         },
       }}
-      className={sender === partnerName ? "received" : ""}
+      className={sender === partnerId ? "received" : ""}
       elevation={3}
     >
-      {sender === partnerName && (
+      {sender === partnerId && (
         <AccountCircleIcon
           color="secondary"
           fontSize="large"

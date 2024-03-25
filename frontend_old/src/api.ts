@@ -15,23 +15,24 @@ const addAuth = (token: string) => {
   return { headers: { Authorization: token } };
 };
 
-export  const getChatHistory = async(token:string, partner: string)=>{
-  return await axiosInstance.get("/chat/content",{
-    ...addAuth(token), params: {partner: partner}}
-  )
-}
+export const getChatHistory = async (token: string, partnerId: number) => {
+  return await axiosInstance.get("/chat/content", {
+    ...addAuth(token),
+    params: { partner_id: partnerId },
+  });
+};
+
+export const getChatOverview = (token: string) => {
+  return axiosInstance.get("/chats", addAuth(token));
+};
 
 export const getUsers = (
   token: string,
   onSuccess: (res: AxiosResponse) => void
 ) => {
-  return axiosInstance
-    .get("/users", {
-      ...addAuth(token),
-    })
-    .then((res) => {
-      res && onSuccess(res);
-    });
+  return axiosInstance.get("/users", addAuth(token)).then((res) => {
+    res && onSuccess(res);
+  });
 };
 
 export const signUp = async (username: string, password: string) => {
@@ -46,4 +47,7 @@ export const login = async (username: string, password: string) => {
     "/api/v1/login",
     new URLSearchParams({ username: username, password: password })
   );
+};
+export const getUserData = (token: string) => {
+  return axiosInstance.get("/users/me", addAuth(token));
 };

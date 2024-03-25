@@ -4,21 +4,22 @@ import {
   PayloadAction,
   CombinedState,
 } from "@reduxjs/toolkit";
-import { setUser } from "./actions";
+import { UserData } from "../types";
+import { setUserData } from "./actions";
 
 interface AppState {
-  user: string;
+  userData: UserData;
 }
 
 const initialState: RootState = {
   app: {
-    user: "",
+    userData: { name: "", id: -1 },
   },
 };
 
 const appReducer = createReducer(initialState, (builder) => {
-  builder.addCase(setUser, (state, action: PayloadAction<string>) => {
-    state.app.user = action.payload;
+  builder.addCase(setUserData, (state, action: PayloadAction<UserData>) => {
+    state.app.userData = action.payload;
   });
 });
 

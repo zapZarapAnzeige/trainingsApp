@@ -40,7 +40,8 @@ async def handle_session(websocket: WebSocket, user_id: int):
             timestamp = datetime.now()
 
             is_inserted = await save_new_message(
-                data.get("content"), user_id, data.get("recipient_id"), timestamp
+                data.get("content"), user_id, data.get(
+                    "recipient_id"), timestamp
             )
             if is_inserted:
                 for k, v in connected_users.items():

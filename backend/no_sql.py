@@ -24,7 +24,7 @@ async def get_chat_partners(user_id: int):
         }
         if participants.get("last_sender_id") == user_id
         else {
-            "partner_name": chat,
+            "partner_id": chat,
             "last_message": participants.get("last_message_content"),
             "unread_messages": participants.get("unread_messages"),
             "last_message_timestamp": participants.get("last_message_timestamp"),

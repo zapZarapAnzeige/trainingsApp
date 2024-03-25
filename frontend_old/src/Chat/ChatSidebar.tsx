@@ -1,17 +1,15 @@
-import { Box, Button, Icon, Typography } from "@mui/material";
-import { FC, ReactNode } from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Box, Button, Typography } from "@mui/material";
+import { FC } from "react";
+import { ChatOverview, UserData } from "../types";
+import { ProfilePicture } from "./ProfilePicture";
 
 type ChatSidebarProps = {
-  partnerName: string;
-  lastMessage: string;
-  setCurrentActiveChat: (currentActiveChat: string) => void;
-  profilePicture?: ReactNode;
+  overview: ChatOverview;
+  setCurrentActiveChat: (currentActiveChat: UserData) => void;
 };
 
 export const ChatSidebar: FC<ChatSidebarProps> = ({
-  partnerName,
-  lastMessage,
+  overview,
   setCurrentActiveChat,
 }) => {
   return (
@@ -24,13 +22,15 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
           width: "100%",
         }}
         onClick={() => {
-          setCurrentActiveChat(partnerName);
+          setCurrentActiveChat({
+            id: overview.partner_id,
+            name: overview.partner_name,
+          });
         }}
       >
-        <AccountCircleIcon
-          color="secondary"
-          fontSize="large"
-          sx={{ mt: "auto", mb: "auto", mr: "auto" }}
+        <ProfilePicture
+          base64ProfilePicture={overview.profile_picture}
+          partnerName={overview.partner_name}
         />
 
         <Box
@@ -42,7 +42,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
           sx={{ mr: "auto" }}
         >
           <Typography variant="h6" color={"black"} sx={{ mr: "auto" }}>
-            {partnerName}
+            {overview.partner_name}
           </Typography>
           <Typography
             variant="caption"
@@ -52,7 +52,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
             textOverflow={"ellipsis"}
             sx={{ mr: "auto" }}
           >
-            {lastMessage}
+            {overview.last_message}
           </Typography>
         </Box>
       </Button>
