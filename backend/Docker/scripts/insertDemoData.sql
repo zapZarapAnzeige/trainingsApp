@@ -18,4 +18,10 @@ VALUES (
         False, True, 12345
     );
 
+INSERT INTO
+    `Excercises` (
+        excercise_id, excercise_name, constant_unit_of_measure, trackable_unit_of_measure
+    )
+VALUES (1, "test", "Min", "lol");
+
 COMMIT;
