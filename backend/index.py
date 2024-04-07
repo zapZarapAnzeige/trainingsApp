@@ -21,6 +21,8 @@ from no_sql import (
     insert_new_partner,
     upload_video,
     get_video_by_id,
+    block_user,
+    unblock_user,
 )
 
 app = FastAPI()
@@ -87,6 +89,18 @@ async def get_chat_overview(current_user=Depends(get_current_active_user)):
     return {"chat_data": await get_overview(partners)}
 
 
+@app.patch("/chat")
+async def update_chat_disabled(
+    currently_blocked: bool,
+    partner_id: int,
+    current_user=Depends(get_current_active_user),
+):
+    if currently_blocked:
+        return {"result": await unblock_user(current_user.get("user_id"), partner_id)}
+    else:
+        return {"result": await block_user(current_user.get("user_id"), partner_id)}
+
+
 @app.get("/chat/content")
 async def get_chat_content(
     partner_id: int, current_user=Depends(get_current_active_user)
@@ -144,4 +158,7 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.get("/users/me")
 async def get_user_data(current_user=Depends(get_current_active_user)):
-    return {"user_name": current_user.get("user_name"), "user_id": current_user.get("user_id")}
+    return {
+        "user_name": current_user.get("user_name"),
+        "user_id": current_user.get("user_id"),
+    }

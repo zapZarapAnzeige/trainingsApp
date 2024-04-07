@@ -6,6 +6,7 @@ from db_connection import grid_fs_bucket
 from fastapi.responses import StreamingResponse
 from io import BytesIO
 from bson import ObjectId
+from pymongo.results import UpdateResult
 
 
 chats = database.get_collection("chats")
@@ -15,12 +16,12 @@ videos = database.get_collection("videos")
 
 async def get_chat_partners(user_id: int):
     return {
-        chat:
-        {
+        chat: {
             "partner_id": chat,
             "last_message": participants.get("last_message_content"),
             "unread_messages": 0,
             "last_message_timestamp": participants.get("last_message_timestamp"),
+            "disabled": participants.get("disabled"),
         }
         if participants.get("last_sender_id") == user_id
         else {
@@ -28,6 +29,7 @@ async def get_chat_partners(user_id: int):
             "last_message": participants.get("last_message_content"),
             "unread_messages": participants.get("unread_messages"),
             "last_message_timestamp": participants.get("last_message_timestamp"),
+            "disabled": participants.get("disabled"),
         }
         for participants in await chats.find({"participants": user_id}).to_list(
             length=None
@@ -35,6 +37,40 @@ async def get_chat_partners(user_id: int):
         for chat in participants.get("participants")
         if chat != user_id
     }
+
+
+async def block_user(user_id: int, partner_id: int):
+    update: UpdateResult = await chats.update_one(
+        filter={"participants": {"$all": [user_id, partner_id]}, "disabled": False},
+        update={
+            "$set": {
+                "disabled": True,
+                "last_sender_id": user_id,
+                "unread_messages": 0,
+                "last_message_content": "Blocked",
+            }
+        },
+    )
+
+    return update.matched_count
+
+
+async def unblock_user(user_id: int, partner_id: int):
+    update: UpdateResult = await chats.update_one(
+        {
+            "participants": {"$all": [user_id, partner_id]},
+            "disabled": True,
+            "last_sender_id": user_id,
+        },
+        {
+            "$set": {
+                "disabled": False,
+                "unread_messages": 1,
+                "last_message_content": "Unblocked",
+            }
+        },
+    )
+    return update.matched_count
 
 
 async def upload_video(file: UploadFile):
@@ -81,6 +117,7 @@ async def insert_new_partner(user_id: int, partner_name: Dict):
                 "last_message_timestamp": datetime.now(),
                 "unread_messages": 1,
                 "last_sender_id": user_id,
+                "disabled": False,
             }
         )
         return insert.acknowledged
@@ -88,11 +125,12 @@ async def insert_new_partner(user_id: int, partner_name: Dict):
         return False
 
 
-async def save_new_message(message: str, sender_id: int, recipient_id: str, timestamp):
+async def save_new_message(message: str, sender_id: int, recipient_id: int, timestamp):
     chat = await chats.find_one_and_update(
         {
             "participants": {"$all": [sender_id, recipient_id]},
             "last_sender_id": sender_id,
+            "disabled": False,
         },
         {
             "$inc": {"unread_messages": 1},
@@ -104,7 +142,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: str, time
     )
     if not chat:
         chat = await chats.find_one_and_update(
-            {"participants": {"$all": [sender_id, recipient_id]}},
+            {"participants": {"$all": [sender_id, recipient_id]}, "disabled": False},
             {
                 "$set": {
                     "last_message_timestamp": timestamp,
@@ -131,8 +169,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: str, time
 
 async def get_content_of_chat(partner_id: int, user_id: int):
     chat = await chats.find_one_and_update(
-        {"participants": {"$all": [partner_id, user_id]},
-            "last_sender_id": partner_id},
+        {"participants": {"$all": [partner_id, user_id]}, "last_sender_id": partner_id},
         {"$set": {"unread_messages": 0}},
     )
     if not chat:

@@ -15,6 +15,10 @@ start container: sudo docker-compose up
 start-frontend: npm start
 start-backend: uvicorn index:app --reload
 
+### clean Docker storage:
+
+docker system prune -a --volumes
+
 ## Python libraries:
 
 fastapi

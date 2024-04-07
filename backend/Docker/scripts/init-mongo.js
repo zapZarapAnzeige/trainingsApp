@@ -53,14 +53,20 @@ db.runCommand({
         "last_message_content",
         "last_message_timestamp",
         "last_sender_id",
+        "disabled"
       ],
       properties: {
         participants: {
           bsonType: "array",
           description: "must be a string and is required",
         },
+        disabled: {
+          bsonType: "bool",
+          description: "must be a boolean and is required",
+        },
         unread_messages: {
           bsonType: "int",
+          description: "must be an integer and is required",
         },
         last_message_content: {
           bsonType: "string",
