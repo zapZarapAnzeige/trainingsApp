@@ -155,7 +155,10 @@ async def save_new_message(message: str, sender_id: int, recipient_id: int, time
 
     if not chat:
         # TODO: maybe change to custom error in future
-        return False
+        return {
+            "error": True,
+            "error_message": "Chat does not exist or one party blocked the other",
+        }
     insert = await messages.insert_one(
         {
             "sender": sender_id,
@@ -164,7 +167,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: int, time
             "timestamp": timestamp,
         }
     )
-    return insert.acknowledged
+    return {"error": not insert.acknowledged}
 
 
 async def get_content_of_chat(partner_id: int, user_id: int):
