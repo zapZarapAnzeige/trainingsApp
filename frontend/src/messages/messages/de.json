@@ -1,4 +1,11 @@
 {
+  "unit.seconds": "{count, plural, one {Sekunde} other {Sekunden}}",
+  "unit.minutes": "{count, plural, one {Minute} other {Minuten}}",
+  "unit.hours": "{count, plural, one {Stunde} other {Stunden}}",
+  "unit.days": "{count, plural, one {Tag} other {Tage}}",
+  "unit.months": "{count, plural, one {Monat} other {Monate}}",
+  "unit.years": "{count, plural, one {Jahr} other {Jahre}}",
+  "chat.timestamp": "vor {count} {unit}",
   "loginScreen.password": "Passwort",
   "loginScreen.username": "Benutzername",
   "loginScreen.repeatPassword": "Passwort Wiederholen",
@@ -13,5 +20,6 @@
   "confirmAbortDialog.abort": "Abbrechen",
   "errorDialog.close": "Schließen",
   "error.tokenExpired": "Der Sessiontoken ist abgelaufen, bitte melden sie sich erneut an.",
-  "error.unknown": "Ein unbekannter Fehler ist aufgetreten"
+  "error.unknown": "Ein unbekannter Fehler ist aufgetreten",
+  "chat.unreadMessages": "neue Nachrichten"
 }

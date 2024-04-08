@@ -6,9 +6,10 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
 import { ChatsOverview, UserData } from "../types";
-import { toggleMessagesPane } from "../utils";
+import { formatTimestamp, toggleMessagesPane } from "../utils";
 import { FC, Fragment } from "react";
 import { ProfilePicture } from "./ProfilePicture";
+import { useIntl } from "react-intl";
 
 type ChatListItemProps = ListItemButtonProps & {
   activePartner: UserData;
@@ -16,7 +17,6 @@ type ChatListItemProps = ListItemButtonProps & {
 
   setActivePartner: (chat: UserData) => void;
 };
-//<Typography level="body-sm">{sender.username}</Typography>
 
 export const ChatListItem: FC<ChatListItemProps> = ({
   chatOverview,
@@ -24,6 +24,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
   setActivePartner,
 }) => {
   const selected = chatOverview.partner_id === activePartner.id;
+  const intl = useIntl();
   return (
     <Fragment>
       <ListItem>
@@ -53,6 +54,11 @@ export const ChatListItem: FC<ChatListItemProps> = ({
               <Typography level="title-sm">
                 {chatOverview.partner_name}
               </Typography>
+              <Typography level="body-sm">
+                {chatOverview.unread_messages +
+                  " " +
+                  intl.formatMessage({ id: "chat.unreadMessages" })}
+              </Typography>
             </Box>
             <Box
               sx={{
@@ -68,7 +74,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
                 display={{ xs: "none", md: "block" }}
                 noWrap
               >
-                {chatOverview.last_message_timestamp}
+                {formatTimestamp(chatOverview.last_message_timestamp, intl)}
               </Typography>
             </Box>
           </Stack>

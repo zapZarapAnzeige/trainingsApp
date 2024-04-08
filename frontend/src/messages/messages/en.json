@@ -1,4 +1,11 @@
 {
+  "unit.seconds": "{count, plural, one {second} other {seconds}}",
+  "unit.minutes": "{count, plural, one {minute} other {minutes}}",
+  "unit.hours": "{count, plural, one {hour} other {hours}}",
+  "unit.days": "{count, plural, one {day} other {days}}",
+  "unit.months": "{count, plural, one {month} other {months}}",
+  "unit.years": "{count, plural, one {year} other {years}}",
+  "chat.timestamp": "{count} {unit} ago",
   "loginScreen.password": "Password",
   "loginScreen.username": "Username",
   "loginScreen.repeatPassword": "Repeat password",
@@ -13,5 +20,6 @@
   "confirmAbortDialog.abort": "Abort",
   "errorDialog.close": "Close",
   "error.tokenExpired": "Your sessiontoken is expired please sign in again",
-  "error.unknown": "An unknow error occured"
+  "error.unknown": "An unknow error occured",
+  "chat.unreadMessages": "unread messages"
 }

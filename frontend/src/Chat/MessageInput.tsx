@@ -55,24 +55,10 @@ export const MessageInput: FC<MessageInputProps> = (
                 borderColor: "divider",
               }}
             >
-              <div>
-                <IconButton size="sm" variant="plain" color="neutral">
-                  <FormatBoldRoundedIcon />
-                </IconButton>
-                <IconButton size="sm" variant="plain" color="neutral">
-                  <FormatItalicRoundedIcon />
-                </IconButton>
-                <IconButton size="sm" variant="plain" color="neutral">
-                  <StrikethroughSRoundedIcon />
-                </IconButton>
-                <IconButton size="sm" variant="plain" color="neutral">
-                  <FormatListBulletedRoundedIcon />
-                </IconButton>
-              </div>
               <Button
                 size="sm"
                 color="primary"
-                sx={{ alignSelf: "center", borderRadius: "sm" }}
+                sx={{ alignSelf: "center", borderRadius: "sm", ml: "auto" }}
                 endDecorator={<SendRoundedIcon />}
                 onClick={handleClick}
               >

@@ -22,6 +22,12 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
   setActivePartner,
   activePartner,
 }) => {
+  const getTotalUnreadMessages = () => {
+    let result = 0;
+    chatsOverview.forEach((chat) => (result += chat.unread_messages));
+    return result;
+  };
+
   return (
     <Sheet
       sx={{
@@ -50,7 +56,7 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
               size="md"
               slotProps={{ root: { component: "span" } }}
             >
-              4
+              {getTotalUnreadMessages()}
             </Chip>
           }
           sx={{ mr: "auto" }}

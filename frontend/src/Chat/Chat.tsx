@@ -47,10 +47,12 @@ export const Chat: FC = () => {
   const auth = useAuthHeader();
 
   useEffect(() => {
-    getChatsOverview(auth()).then((data) => {
-      setChatsOverview(data.data.chat_data);
+    getChatsOverview(auth()).then((res) => {
+      console.log(res.data);
+      setChatsOverview(res.data.chat_data);
     });
   }, []);
+
   return (
     <Sheet
       sx={{
