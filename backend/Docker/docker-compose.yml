@@ -29,4 +29,3 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
     depends_on:
       - mysql
-
