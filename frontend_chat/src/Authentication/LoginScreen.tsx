@@ -1,17 +1,15 @@
-import {
-  Container,
-  CssBaseline,
-  Box,
-  Avatar,
-  Typography,
-  TextField,
-  Button,
-  Snackbar,
-  Alert,
-  Link,
-  createTheme,
-  SvgIcon,
-} from "@mui/material";
+import Container from "@mui/joy/Typography";
+import CssBaseline from "@mui/joy/Typography";
+import Box from "@mui/joy/Typography";
+import TextField from "@mui/joy/Typography";
+import Button from "@mui/joy/Typography";
+import Snackbar from "@mui/joy/Typography";
+import Alert from "@mui/joy/Typography";
+import Link from "@mui/joy/Typography";
+import createTheme from "@mui/joy/Typography";
+import SvgIcon from "@mui/joy/Typography";
+import Typography from "@mui/joy/Typography";
+
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { FC, useEffect, useState } from "react";
 import { login, signUp } from "../api";
@@ -34,7 +32,6 @@ export const LoginScreen: FC = () => {
   const signIn = useSignIn();
   const navigate = useNavigate();
   const intl = useIntl();
-  const theme = createTheme(customTheme);
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {

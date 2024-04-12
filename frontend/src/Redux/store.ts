@@ -1,34 +1,13 @@
-import {
-  configureStore,
-  createReducer,
-  PayloadAction,
-  CombinedState,
-} from "@reduxjs/toolkit";
-import { UserData_old } from "../types";
-import { setUserData } from "./actions";
+import { configureStore } from "@reduxjs/toolkit";
+import currentPageSlice from "./reducers/currentPageSlice";
 
-interface AppState {
-  userData: UserData_old;
-}
-
-const initialState: RootState = {
-  app: {
-    userData: { name: "", id: -1 },
+export const store = configureStore({
+  reducer: {
+    currentPage: currentPageSlice,
   },
-};
-
-const appReducer = createReducer(initialState, (builder) => {
-  builder.addCase(setUserData, (state, action: PayloadAction<UserData_old>) => {
-    state.app.userData = action.payload;
-  });
 });
 
-export type RootState = CombinedState<{
-  app: AppState;
-}>;
-
-const store = configureStore({
-  reducer: appReducer,
-});
-
-export default store;
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

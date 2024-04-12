@@ -1,42 +1,65 @@
-import { ThemeProvider } from "@emotion/react";
-import { AuthProvider } from "react-auth-kit";
-import { Provider } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Layout } from "./Layout";
-import { LoginScreen } from "./Authentication/LoginScreen";
-import LocalizationProvider from "./messages/LocalizationProvider";
-import { getBrowserLocales } from "./messages/tools";
-import store from "./Redux/store";
-import { customTheme } from "./Theme/theme";
-import { ErrorDialogProvider } from "./Provider/ErrorDialogProvider";
-import { CssVarsProvider } from "@mui/joy";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Box from "@mui/joy/Box";
 
-export const App: React.FC = () => {
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import HeadingArea from "./components/HeadingArea";
+import { useAppSelector } from "./hooks";
+import Calendar from "./screens/Calendar";
+
+export default function App() {
+  const currentPage = useAppSelector((state) => state.currentPage.value);
+
+  const getPage = (page: string) => {
+    switch (page) {
+      case "calendar":
+        return <Calendar />;
+      case "trainingSchedule":
+        return <Calendar />;
+      case "chats":
+        return <Calendar />;
+      case "exercises":
+        return <Calendar />;
+      case "help":
+        return <Calendar />;
+      case "about":
+        return <Calendar />;
+      default:
+        return <Calendar />;
+    }
+  };
+
   return (
-    <AuthProvider
-      authType={"cookie"}
-      authName={"_auth"}
-      cookieDomain={window.location.hostname}
-      cookieSecure={true}
-    >
-      <CssVarsProvider disableTransitionOnChange>
-        <ThemeProvider theme={customTheme}>
-          <Provider store={store}>
-            <LocalizationProvider
-              locale={getBrowserLocales({ languageCodeOnly: true })}
-            >
-              <ErrorDialogProvider>
-                <Router>
-                  <Routes>
-                    <Route path="/login" element={<LoginScreen />} />
-                    <Route path="/" element={<Layout />} />
-                  </Routes>
-                </Router>
-              </ErrorDialogProvider>
-            </LocalizationProvider>
-          </Provider>
-        </ThemeProvider>
-      </CssVarsProvider>
-    </AuthProvider>
+    <>
+      <CssBaseline />
+      <Box sx={{ display: "flex", minHeight: "100dvh" }}>
+        <Header />
+        <Sidebar />
+        <Box
+          component="main"
+          className="MainContent"
+          sx={{
+            px: { xs: 2, md: 6 },
+            pt: {
+              xs: "calc(12px + var(--Header-height))",
+              sm: "calc(12px + var(--Header-height))",
+              md: 3,
+            },
+            pb: { xs: 2, sm: 2, md: 3 },
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0,
+            height: "100dvh",
+            gap: 1,
+          }}
+        >
+          <HeadingArea />
+          {getPage(currentPage)}
+        </Box>
+      </Box>
+    </>
   );
-};
+}
