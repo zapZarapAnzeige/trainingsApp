@@ -248,15 +248,6 @@ export default function Login() {
                 </Typography>
               </Stack>
             </Stack>
-            <Divider
-              sx={(theme) => ({
-                [theme.getColorSchemeSelector("light")]: {
-                  color: { xs: "#FFF", md: "text.tertiary" },
-                },
-              })}
-            >
-              or
-            </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
                 onSubmit={(event: FormEvent<SignInFormElement>) => {
@@ -303,19 +294,7 @@ export default function Login() {
                   </FormControl>
                 )}
                 <Stack gap={4} sx={{ mt: 2 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Checkbox size="sm" label="Remember me" name="persistent" />
-                    <Link level="title-sm" href="#replace-with-a-link">
-                      Forgot your password?
-                    </Link>
-                  </Box>
-                  <Button type="submit" fullWidth onClick={() => {}}>
+                  <Button type="submit" fullWidth>
                     Sign in
                   </Button>
                 </Stack>

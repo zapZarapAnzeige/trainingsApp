@@ -15,10 +15,10 @@ type ErrorDialogProps = {
   errorMessage: string;
 };
 
-export const ErrorDialog: FC<ErrorDialogProps> = ({
+const ErrorDialog: FC<ErrorDialogProps> = ({
+  open,
   closeErrorDialog,
   errorMessage,
-  open,
 }) => {
   const intl = useIntl();
   return (
@@ -39,3 +39,5 @@ export const ErrorDialog: FC<ErrorDialogProps> = ({
     </Modal>
   );
 };
+
+export default ErrorDialog;

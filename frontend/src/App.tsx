@@ -67,8 +67,6 @@ export default function App() {
             gap: 1,
           }}
         >
-          <HeadingArea />
-
           {getPage(currentPage)}
         </Box>
       </Box>
