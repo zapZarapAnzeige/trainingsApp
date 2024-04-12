@@ -4,12 +4,13 @@ import { FC, useEffect, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { PrimitiveType, useIntl } from "react-intl";
 import { axiosInstance } from "../../../frontend/src/api";
+import { ErrorDialog } from "../Common/ErrorDialog";
 
 export const ApiErrorInterceptor: FC = () => {
   const intl = useIntl();
   const logOut = useSignOut();
 
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     axiosInstance.interceptors.response.use(
