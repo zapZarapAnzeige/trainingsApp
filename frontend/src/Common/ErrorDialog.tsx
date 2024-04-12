@@ -7,6 +7,7 @@ import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { FC } from "react";
+import { useIntl } from "react-intl";
 
 type ErrorDialogProps = {
   open: boolean;

@@ -5,9 +5,9 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { UserData } from "../types";
+import { UserData } from "../../types";
 import { FC } from "react";
-import { toggleMessagesPane } from "../utils";
+import { toggleMessagesPane } from "../../utils";
 
 type MessagesPaneHeaderProps = {
   sender: UserData;

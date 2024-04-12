@@ -1,13 +1,12 @@
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
-import { SingleChatHistory, UserData } from "../../types";
+import { SingleChatHistory, UserData, UserData_old } from "../../types";
 import { FC, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
 import { MessageInput } from "./MessageInput";
 import { useSelector } from "react-redux";
-import { selectUserData } from "../Redux/selector";
 import { ProfilePicture } from "./ProfilePicture";
 
 type MessagesPaneProps = {
@@ -24,7 +23,9 @@ export const MessagesPane: FC<MessagesPaneProps> = ({
   websocket,
 }) => {
   const [textAreaValue, setTextAreaValue] = useState<string>("");
-  const userData = useSelector(selectUserData);
+  //const userData = useSelector(selectUserData);
+
+  const userData: UserData_old = { id: 1, name: "temp" };
 
   const sendMessage = () => {
     if (websocket) {

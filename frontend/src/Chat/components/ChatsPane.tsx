@@ -6,8 +6,8 @@ import List from "@mui/joy/List";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { ChatsOverview, UserData } from "../types";
-import { toggleMessagesPane } from "../utils";
+import { ChatsOverview, UserData } from "../../types";
+import { toggleMessagesPane } from "../../utils";
 import { FC } from "react";
 import { ChatListItem } from "./ChatListItem";
 
