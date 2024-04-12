@@ -1,7 +1,7 @@
 import { Box, Grid, Sheet } from "@mui/joy";
-import Pagination from "../components/Pagination";
+import Pagination from "../Common/Pagination";
 import { weekdays } from "../constants";
-import CalendarDay from "../components/CalendarDay";
+import CalendarDay from "./components/CalendarDay";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
 import testCalendar from "../example/week.json";

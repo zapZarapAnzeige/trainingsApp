@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import HeadingArea from "./components/HeadingArea";
+import Sidebar from "./Common/Sidebar";
+import Header from "./Common/Header";
+import HeadingArea from "./Common/HeadingArea";
 import { useAppSelector } from "./hooks";
-import Calendar from "./screens/Calendar";
+import Calendar from "./Calendar/Calendar";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
