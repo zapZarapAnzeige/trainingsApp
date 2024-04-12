@@ -8,11 +8,14 @@ import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
 import { useAppSelector } from "./hooks";
 import Calendar from "./Calendar/Calendar";
-import Login from "./Login/Login";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
+import { useDispatch } from "react-redux";
+import { Chat } from "./Chat/Chat";
+import { WebSocketProvider } from "./Provider/WebSocketProvider";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+  const dispatch = useDispatch();
 
   const getPage = (page: string): JSX.Element => {
     switch (page) {
@@ -21,7 +24,11 @@ export default function App() {
       case "trainingSchedule":
         return <Calendar />;
       case "chats":
-        return <Calendar />;
+        return (
+          <WebSocketProvider>
+            <Chat />
+          </WebSocketProvider>
+        );
       case "exercises":
         return <Calendar />;
       case "help":
@@ -34,7 +41,7 @@ export default function App() {
   };
 
   return currentPage === "login" ? (
-    <Login />
+    <></>
   ) : (
     <>
       <CssBaseline />

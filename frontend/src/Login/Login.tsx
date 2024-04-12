@@ -1,4 +1,3 @@
-import * as React from "react";
 import { CssVarsProvider, useColorScheme } from "@mui/joy/styles";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
@@ -16,6 +15,12 @@ import Stack from "@mui/joy/Stack";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
+import { AxiosError } from "axios";
+//import { useIntl } from "react-intl";
+import { login, signUp } from "../api";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, FormEvent } from "react";
+import { useSignIn, useIsAuthenticated } from "react-auth-kit";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -29,9 +34,9 @@ interface SignInFormElement extends HTMLFormElement {
 function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, ...other } = props;
   const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  React.useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), []);
 
   return (
     <IconButton
@@ -51,6 +56,110 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function Login() {
+  const [signInError, setSignInError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [usernameError, setUsernameError] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [repeatPassword, setRepeatPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isSignIn, setIsSignIn] = useState<boolean>(true);
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+  //const intl = useIntl();
+  const isAuthenticated = useIsAuthenticated();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  }, []);
+
+  const getMessage = (id: string): string => {
+    //return intl.formatMessage({ id: id });
+    return "";
+  };
+
+  const checkIfUsernameAndPaswordArePresent = (
+    username: FormDataEntryValue | null,
+    password: FormDataEntryValue | null
+  ): boolean => {
+    if (
+      username !== null &&
+      username !== "" &&
+      password !== null &&
+      password !== ""
+    ) {
+      return true;
+    } else {
+      if (username === "" || username === null) {
+        setUsernameError(getMessage("loginScreen.error.noUsername"));
+      }
+      if (password === null || password === "") {
+        setPasswordError(getMessage("loginScreen.error.noPassword"));
+      }
+      return false;
+    }
+  };
+
+  const clearFields = () => {
+    setPasswordError("");
+    setSignInError("");
+    setUsernameError("");
+    setPassword("");
+    setRepeatPassword("");
+    setUsername("");
+  };
+
+  const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (checkIfUsernameAndPaswordArePresent(username, password)) {
+      login(username!.toString(), password!.toString())
+        .then((res) => {
+          if (
+            signIn({
+              expiresIn: res.data.expires_in,
+              token: res.data.access_token,
+              tokenType: res.data.token_type,
+              authState: {},
+            })
+          ) {
+            navigate("/");
+          }
+        })
+        .catch((err: AxiosError) => {
+          if (err.response?.status === 401) {
+            setPasswordError(getMessage("loginScreen.error.wrongCredentials"));
+            setUsernameError(getMessage("loginScreen.error.wrongCredentials"));
+            setSignInError(getMessage("loginScreen.error.wrongCredentials"));
+          }
+        });
+    }
+  };
+
+  const handleSignUp = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPassword("");
+    setRepeatPassword("");
+    if (password === repeatPassword) {
+      if (checkIfUsernameAndPaswordArePresent(username, password)) {
+        signUp(username!.toString(), password!.toString())
+          .then(() => {
+            setIsSignIn(true);
+            clearFields();
+          })
+          .catch((err: AxiosError) => {
+            if ((err.status = 409)) {
+              setUsernameError(getMessage("loginScreen.usernameAlreadyExists"));
+            }
+          });
+      }
+    } else {
+      setPasswordError(getMessage("loginScreen.error.notMatchingPassword"));
+    }
+  };
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -150,7 +259,7 @@ export default function Login() {
             </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
+                onSubmit={(event: FormEvent<SignInFormElement>) => {
                   event.preventDefault();
                   const formElements = event.currentTarget.elements;
                   const data = {
@@ -163,12 +272,36 @@ export default function Login() {
               >
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input
+                    type="username"
+                    name="username"
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
+                  <Input
+                    type="password"
+                    name="password"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
                 </FormControl>
+                {!isSignIn && (
+                  <FormControl required>
+                    <FormLabel>Repeat Password</FormLabel>
+                    <Input
+                      type="repeatPassword"
+                      name="repeatPassword"
+                      onChange={(e) => {
+                        setRepeatPassword(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                )}
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box
                     sx={{
@@ -182,7 +315,7 @@ export default function Login() {
                       Forgot your password?
                     </Link>
                   </Box>
-                  <Button type="submit" fullWidth>
+                  <Button type="submit" fullWidth onClick={() => {}}>
                     Sign in
                   </Button>
                 </Stack>

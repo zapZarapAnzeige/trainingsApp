@@ -6,7 +6,7 @@ import {
   ReactNode,
   useRef,
 } from "react";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { useAuthHeader } from "react-auth-kit";
 
 const WebSocketContext = createContext<WebSocket | null>(null);
 
@@ -22,7 +22,7 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
 
   useEffect(() => {
     let ws: WebSocket | null = new WebSocket(
-      `ws://localhost:8000/chat?token=${auth?.split(" ")[1]}`
+      `ws://localhost:8000/chat?token=${auth().split(" ")[1]}`
     );
 
     const handleOpen = () => {
