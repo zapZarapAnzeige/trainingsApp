@@ -8,6 +8,7 @@ import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
 import { useAppSelector } from "./hooks";
 import Calendar from "./Calendar/Calendar";
+import Login from "./Login/Login";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
@@ -31,7 +32,9 @@ export default function App() {
     }
   };
 
-  return (
+  return currentPage === "login" ? (
+    <Login />
+  ) : (
     <>
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>

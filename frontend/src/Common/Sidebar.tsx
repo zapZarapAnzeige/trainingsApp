@@ -179,7 +179,7 @@ export default function Sidebar() {
 
           <ListItem>
             <ListItemButton
-              onClick={() => dispatch(changePage("about"))}
+              onClick={() => dispatch(changePage("login"))}
               selected={isSelected("about")}
             >
               <InfoIcon />
