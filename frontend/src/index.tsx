@@ -24,15 +24,15 @@ root.render(
         cookieSecure: true,
       })}
     >
-      <Provider store={store}>
-        <CssVarsProvider disableTransitionOnChange>
-          <LocalizationProvider
-            locale={getBrowserLocales({ languageCodeOnly: true })}
-          >
+      <CssVarsProvider disableTransitionOnChange>
+        <LocalizationProvider
+          locale={getBrowserLocales({ languageCodeOnly: true })}
+        >
+          <Provider store={store}>
             <App />
-          </LocalizationProvider>
-        </CssVarsProvider>
-      </Provider>
+          </Provider>
+        </LocalizationProvider>
+      </CssVarsProvider>
     </AuthProvider>
   </React.StrictMode>
 );
