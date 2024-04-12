@@ -5,10 +5,12 @@ import CalendarDay from "./components/CalendarDay";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
 import testCalendar from "../example/week.json";
+import HeadingArea from "../Common/HeadingArea";
 
 export default function Calendar() {
   return (
     <>
+      <HeadingArea />
       <Pagination />
       <Sheet
         variant="outlined"
