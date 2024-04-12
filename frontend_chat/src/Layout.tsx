@@ -5,7 +5,7 @@ import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
-import { getUserData } from "./api";
+import { getUserData } from "../../frontend/src/api";
 import { useDispatch } from "react-redux";
 import { setUserData } from "./Redux/actions";
 import { Chat } from "./Chat/Chat";

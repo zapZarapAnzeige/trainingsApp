@@ -8,11 +8,12 @@ import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
 import { useAppSelector } from "./hooks";
 import Calendar from "./Calendar/Calendar";
+import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
 
-  const getPage = (page: string) => {
+  const getPage = (page: string): JSX.Element => {
     switch (page) {
       case "calendar":
         return <Calendar />;
@@ -57,6 +58,7 @@ export default function App() {
           }}
         >
           <HeadingArea />
+          <ApiErrorInterceptor />
           {getPage(currentPage)}
         </Box>
       </Box>

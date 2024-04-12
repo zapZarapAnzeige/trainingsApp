@@ -1,15 +1,15 @@
 import { getReasonPhrase } from "http-status-codes";
 import { AxiosError } from "axios";
-import { FC, useEffect } from "react";
-import { useSignOut } from "react-auth-kit";
+import { FC, useEffect, useState } from "react";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { PrimitiveType, useIntl } from "react-intl";
 import { axiosInstance } from "../../../frontend/src/api";
-import { useErrorDialog } from "./ErrorDialogProvider";
 
 export const ApiErrorInterceptor: FC = () => {
   const intl = useIntl();
   const logOut = useSignOut();
-  const { openErrorDialog } = useErrorDialog();
+
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
     axiosInstance.interceptors.response.use(
@@ -21,7 +21,7 @@ export const ApiErrorInterceptor: FC = () => {
             : err.message,
           err.response?.status
         );
-        openErrorDialog(errorMessage);
+        setErrorMessage(errorMessage);
         return Promise.resolve();
       }
     );
@@ -60,5 +60,13 @@ export const ApiErrorInterceptor: FC = () => {
     }
   };
 
-  return <></>;
+  return (
+    <ErrorDialog
+      open={errorMessage !== ""}
+      closeErrorDialog={() => {
+        setErrorMessage("");
+      }}
+      errorMessage={errorMessage}
+    />
+  );
 };

@@ -5,7 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { ChatSidebar } from "./ChatSidebar";
 import { ChatsOverview, UserData, SingleChatHistory } from "../types";
 import { useAuthHeader } from "react-auth-kit";
-import { getChatHistory, getChatsOverview } from "../api";
+import { getChatHistory, getChatsOverview } from "../../../frontend/src/api";
 import { Message } from "./Message";
 import { useSelector } from "react-redux";
 import { selectUserData } from "../Redux/selector";

@@ -12,7 +12,7 @@ import Typography from "@mui/joy/Typography";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { FC, useEffect, useState } from "react";
-import { login, signUp } from "../api";
+import { login, signUp } from "../../../frontend/src/api";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
 import { useIntl } from "react-intl";
