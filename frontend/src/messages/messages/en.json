@@ -18,7 +18,7 @@
   "loginScreen.usernameAlreadyExists": "Username already exists",
   "confirmAbortDialog.confirm": "Confirm",
   "confirmAbortDialog.abort": "Abort",
-  "errorDialog.close": "Close",
+  "DismissDialog.close": "Close",
   "error.tokenExpired": "Your sessiontoken is expired please sign in again",
   "error.unknown": "An unknow error occured",
   "chat.unreadMessages": "unread messages"

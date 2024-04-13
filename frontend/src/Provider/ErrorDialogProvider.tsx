@@ -1,56 +1,60 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import ErrorDialog from "../Common/ErrorDialog";
+import DismissDialog from "../Common/DismissDialog";
+import { DismissDialogType } from "../types";
 
-type ErrorDialogContextType = {
-  openErrorDialog: (message: string, onClose?: VoidFunction) => void;
+type DismissDialogContextType = {
+  openDismissDialog: (message: string, onClose?: VoidFunction) => void;
 };
 
-const ErrorDialogContext = createContext<ErrorDialogContextType | undefined>(
-  undefined
-);
+const DismissDialogContext = createContext<
+  DismissDialogContextType | undefined
+>(undefined);
 
-export const useErrorDialog = () => {
-  const context = useContext(ErrorDialogContext);
+export const useDismissDialog = () => {
+  const context = useContext(DismissDialogContext);
   if (!context) {
     throw new Error("No Provider present");
   }
   return context;
 };
 
-type ErrorDialogProviderProps = {
+type DismissDialogProviderProps = {
   children: ReactNode;
 };
 
-export const ErrorDialogProvider = ({ children }: ErrorDialogProviderProps) => {
-  const [errorDialogOpen, setErrorDialogOpen] = useState<boolean>(false);
+export const ErrorDialogProvider = ({
+  children,
+}: DismissDialogProviderProps) => {
+  const [DismissDialogOpen, setDismissDialogOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [onCloseAction, setOnCloseAction] = useState<VoidFunction>(() => {});
 
-  const openErrorDialog = (message: string, onClose?: VoidFunction) => {
+  const openDismissDialog = (message: string, onClose?: VoidFunction) => {
     setErrorMessage(message);
-    setErrorDialogOpen(true);
+    setDismissDialogOpen(true);
     onClose && setOnCloseAction(onClose);
   };
 
-  const closeErrorDialog = () => {
+  const closeDismissDialog = () => {
     onCloseAction && onCloseAction();
-    setErrorDialogOpen(false);
+    setDismissDialogOpen(false);
     setErrorMessage("");
     setOnCloseAction(() => () => {});
   };
 
-  const value: ErrorDialogContextType = {
-    openErrorDialog,
+  const value: DismissDialogContextType = {
+    openDismissDialog,
   };
 
   return (
-    <ErrorDialogContext.Provider value={value}>
+    <DismissDialogContext.Provider value={value}>
       {children}
-      <ErrorDialog
-        closeErrorDialog={closeErrorDialog}
+      <DismissDialog
+        closeDismissDialog={closeDismissDialog}
+        dismissDialogType={DismissDialogType.ERROR}
         errorMessage={errorMessage}
-        open={errorDialogOpen}
+        open={DismissDialogOpen}
       />
-    </ErrorDialogContext.Provider>
+    </DismissDialogContext.Provider>
   );
 };

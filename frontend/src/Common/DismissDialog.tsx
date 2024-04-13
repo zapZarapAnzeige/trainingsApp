@@ -12,17 +12,17 @@ import { FC } from "react";
 import { useIntl } from "react-intl";
 import { DismissDialogType } from "../types";
 
-type InfoDialogProps = {
+type DismissDialogProps = {
   open: boolean;
   dismissDialogType: DismissDialogType;
-  closeErrorDialog: VoidFunction;
+  closeDismissDialog: VoidFunction;
   errorMessage: string;
 };
 
-const InfoDialog: FC<InfoDialogProps> = ({
+const DismissDialog: FC<DismissDialogProps> = ({
   open,
   dismissDialogType,
-  closeErrorDialog,
+  closeDismissDialog,
   errorMessage,
 }) => {
   const intl = useIntl();
@@ -54,7 +54,7 @@ const InfoDialog: FC<InfoDialogProps> = ({
   }
 
   return (
-    <Modal open={open} onClose={closeErrorDialog}>
+    <Modal open={open} onClose={closeDismissDialog}>
       <ModalDialog variant="outlined" role="alertdialog">
         <DialogTitle>
           {getDialogTitleIcon(dismissDialogType)}
@@ -64,8 +64,8 @@ const InfoDialog: FC<InfoDialogProps> = ({
         <Divider />
         <DialogContent>{errorMessage}</DialogContent>
         <DialogActions>
-          <Button onClick={closeErrorDialog} variant="solid" color="danger">
-            {intl.formatMessage({ id: "errorDialog.close" })}
+          <Button onClick={closeDismissDialog} variant="solid" color="danger">
+            {intl.formatMessage({ id: "DismissDialog.close" })}
           </Button>
         </DialogActions>
       </ModalDialog>
@@ -73,4 +73,4 @@ const InfoDialog: FC<InfoDialogProps> = ({
   );
 };
 
-export default InfoDialog;
+export default DismissDialog;

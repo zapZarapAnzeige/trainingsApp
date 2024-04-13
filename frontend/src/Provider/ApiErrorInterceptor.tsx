@@ -3,8 +3,9 @@ import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
 import { PrimitiveType, useIntl } from "react-intl";
 import { axiosInstance } from "../../../frontend/src/api";
-import ErrorDialog from "../Common/ErrorDialog";
+import DismissDialog from "../Common/DismissDialog";
 import { useSignOut } from "react-auth-kit";
+import { DismissDialogType } from "../types";
 
 export const ApiErrorInterceptor: FC = () => {
   const intl = useIntl();
@@ -62,9 +63,10 @@ export const ApiErrorInterceptor: FC = () => {
   };
 
   return (
-    <ErrorDialog
+    <DismissDialog
+      dismissDialogType={DismissDialogType.ERROR}
       open={errorMessage !== ""}
-      closeErrorDialog={() => {
+      closeDismissDialog={() => {
         setErrorMessage("");
       }}
       errorMessage={errorMessage}
