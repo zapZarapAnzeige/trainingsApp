@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
@@ -6,23 +6,27 @@ import Box from "@mui/joy/Box";
 import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
-import { useAppSelector } from "./hooks";
+import { useAppDispatch, useAppSelector } from "./hooks";
 import Calendar from "./Calendar/Calendar";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { useDispatch } from "react-redux";
 import { Chat } from "./Chat/Chat";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
-import { useIsAuthenticated } from "react-auth-kit";
+import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
+import { getUserData } from "./api";
+import { changeUser } from "./redux/reducers/userSlice";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+  const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthHeader();
+  const dispatch = useAppDispatch();
 
   type RequireAuthProps = {
     children: ReactNode;
   };
   const RequireAuth = (props: RequireAuthProps) => {
-    const isAuthenticated = useIsAuthenticated();
     const { children } = props;
     if (!isAuthenticated()) {
       return <Navigate to="/login" />;
@@ -30,6 +34,16 @@ export default function App() {
 
     return <>{children}</>;
   };
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      getUserData(auth()).then((res) => {
+        dispatch(
+          changeUser({ id: res.data.user_id, name: res.data.user_name })
+        );
+      });
+    }
+  });
 
   const getPage = (page: string): JSX.Element => {
     switch (page) {

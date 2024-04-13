@@ -29,7 +29,6 @@ export const Layout: FC = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<App />} />
               </Routes>
-              <App />
             </Router>
           </LocalizationProvider>
         </Provider>

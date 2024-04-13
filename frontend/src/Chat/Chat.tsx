@@ -26,6 +26,7 @@ export const Chat: FC = () => {
 
   const websocket = useWebsocket((e) => {
     const data: SingleChatHistory = JSON.parse(e.data);
+    console.log(data);
     if (activePartner.id === data.sender) {
       setChatHistory([...chatHistory, data]);
     }
