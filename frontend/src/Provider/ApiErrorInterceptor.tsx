@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { FC, useEffect, useState } from "react";
 import { PrimitiveType, useIntl } from "react-intl";
 import { axiosInstance } from "../../../frontend/src/api";
-import { ErrorDialog } from "../Common/ErrorDialog";
+import ErrorDialog from "../Common/ErrorDialog";
 import { useSignOut } from "react-auth-kit";
 
 export const ApiErrorInterceptor: FC = () => {

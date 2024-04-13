@@ -8,7 +8,6 @@ import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
-import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/joy/Stack";
@@ -16,11 +15,12 @@ import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import { AxiosError } from "axios";
-//import { useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { login, signUp } from "../api";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, FormEvent } from "react";
 import { useSignIn, useIsAuthenticated } from "react-auth-kit";
+import { Link } from "@mui/joy";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -66,7 +66,7 @@ export default function Login() {
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const signIn = useSignIn();
   const navigate = useNavigate();
-  //const intl = useIntl();
+  const intl = useIntl();
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
@@ -76,8 +76,7 @@ export default function Login() {
   }, []);
 
   const getMessage = (id: string): string => {
-    //return intl.formatMessage({ id: id });
-    return "";
+    return intl.formatMessage({ id: id });
   };
 
   const checkIfUsernameAndPaswordArePresent = (
@@ -238,44 +237,36 @@ export default function Login() {
             <Stack gap={4} sx={{ mb: 2 }}>
               <Stack gap={1}>
                 <Typography component="h1" level="h3">
-                  Sign in
+                  {isSignIn ? "Sign in" : "Sign Up"}
                 </Typography>
                 <Typography level="body-sm">
-                  New to company?{" "}
-                  <Link href="#replace-with-a-link" level="title-sm">
-                    Sign up!
+                  {isSignIn
+                    ? "New to this Site? "
+                    : "Already have an Account? "}
+                  <Link onClick={() => setIsSignIn(!isSignIn)}>
+                    {isSignIn ? "Sign Up" : "Sign in"}
                   </Link>
                 </Typography>
               </Stack>
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form
-                onSubmit={(event: FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
-              >
+              <form onSubmit={isSignIn ? handleSignIn : handleSignUp}>
                 <FormControl required>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{getMessage("loginScreen.username")}</FormLabel>
                   <Input
-                    type="username"
-                    name="username"
+                    type={getMessage("loginScreen.username")}
+                    name={getMessage("loginScreen.username")}
                     onChange={(e) => {
                       setUsername(e.target.value);
                     }}
+                    value={username}
                   />
                 </FormControl>
                 <FormControl required>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{getMessage("loginScreen.password")}</FormLabel>
                   <Input
-                    type="password"
-                    name="password"
+                    type={getMessage("loginScreen.password")}
+                    name={getMessage("loginScreen.password")}
                     onChange={(e) => {
                       setPassword(e.target.value);
                     }}
@@ -283,10 +274,12 @@ export default function Login() {
                 </FormControl>
                 {!isSignIn && (
                   <FormControl required>
-                    <FormLabel>Repeat Password</FormLabel>
+                    <FormLabel>
+                      {getMessage("loginScreen.repeatPassword")}
+                    </FormLabel>
                     <Input
-                      type="repeatPassword"
-                      name="repeatPassword"
+                      type={getMessage("loginScreen.repeatPassword")}
+                      name={getMessage("loginScreen.repeatPassword")}
                       onChange={(e) => {
                         setRepeatPassword(e.target.value);
                       }}
@@ -295,7 +288,9 @@ export default function Login() {
                 )}
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
-                    Sign in
+                    {getMessage(
+                      isSignIn ? "loginScreen.signIn" : "loginScreen.signUp"
+                    )}
                   </Button>
                 </Stack>
               </form>
