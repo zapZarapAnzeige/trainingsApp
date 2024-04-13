@@ -37,3 +37,9 @@ export type SingleChatHistory = {
   content: string;
   timestamp: string;
 };
+
+export enum DismissDialogType {
+  INFO = "info",
+  WARNING = "warning",
+  ERROR = "error",
+}
