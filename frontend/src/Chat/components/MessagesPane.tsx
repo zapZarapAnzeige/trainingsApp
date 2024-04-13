@@ -6,8 +6,8 @@ import { FC, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
 import { MessageInput } from "./MessageInput";
-import { useSelector } from "react-redux";
 import { ProfilePicture } from "./ProfilePicture";
+import { useAppSelector } from "../../hooks";
 
 type MessagesPaneProps = {
   activePartner: UserData;
@@ -22,10 +22,8 @@ export const MessagesPane: FC<MessagesPaneProps> = ({
   setChatHistory,
   websocket,
 }) => {
+  const userData = useAppSelector((state) => state.user.value);
   const [textAreaValue, setTextAreaValue] = useState<string>("");
-  //const userData = useSelector(selectUserData);
-
-  const userData: UserData_old = { id: 1, name: "temp" };
 
   const sendMessage = () => {
     if (websocket) {

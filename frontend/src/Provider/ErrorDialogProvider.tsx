@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { ErrorDialog } from "./Components/ErrorDialog";
+import ErrorDialog from "../Common/ErrorDialog";
 
 type ErrorDialogContextType = {
   openErrorDialog: (message: string, onClose?: VoidFunction) => void;

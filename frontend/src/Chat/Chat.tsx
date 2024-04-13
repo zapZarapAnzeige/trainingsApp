@@ -1,11 +1,11 @@
 import Sheet from "@mui/joy/Sheet";
 import { ChatsOverview, SingleChatHistory, UserData } from "../types";
 import { FC, useEffect, useState } from "react";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { getChatHistory, getChatsOverview } from "../api";
 import { ChatsPane } from "./components/ChatsPane";
 import { MessagesPane } from "./components/MessagesPane";
 import { useWebsocket } from "../Provider/WebSocketProvider";
+import { useAuthHeader } from "react-auth-kit";
 
 export const Chat: FC = () => {
   const [chatsOverview, setChatsOverview] = useState<ChatsOverview[]>([]);
@@ -18,7 +18,7 @@ export const Chat: FC = () => {
   useEffect(() => {
     setChatHistory([]);
     if (activePartner.name !== "" && activePartner.id > 0) {
-      getChatHistory(auth ?? "", activePartner.id).then((res) => {
+      getChatHistory(auth(), activePartner.id).then((res) => {
         setChatHistory(res.data.chat);
       });
     }
@@ -26,6 +26,7 @@ export const Chat: FC = () => {
 
   const websocket = useWebsocket((e) => {
     const data: SingleChatHistory = JSON.parse(e.data);
+    console.log(data);
     if (activePartner.id === data.sender) {
       setChatHistory([...chatHistory, data]);
     }
@@ -47,7 +48,7 @@ export const Chat: FC = () => {
   const auth = useAuthHeader();
 
   useEffect(() => {
-    getChatsOverview(auth ?? "").then((res) => {
+    getChatsOverview(auth()).then((res) => {
       console.log(res.data);
       setChatsOverview(res.data.chat_data);
     });

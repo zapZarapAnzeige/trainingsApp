@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
@@ -6,13 +6,44 @@ import Box from "@mui/joy/Box";
 import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
-import { useAppSelector } from "./hooks";
+import { useAppDispatch, useAppSelector } from "./hooks";
 import Calendar from "./Calendar/Calendar";
-import Login from "./Login/Login";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
+import { useDispatch } from "react-redux";
+import { Chat } from "./Chat/Chat";
+import { WebSocketProvider } from "./Provider/WebSocketProvider";
+import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
+import { Navigate } from "react-router-dom";
+import { getUserData } from "./api";
+import { changeUser } from "./redux/reducers/userSlice";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+  const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthHeader();
+  const dispatch = useAppDispatch();
+
+  type RequireAuthProps = {
+    children: ReactNode;
+  };
+  const RequireAuth = (props: RequireAuthProps) => {
+    const { children } = props;
+    if (!isAuthenticated()) {
+      return <Navigate to="/login" />;
+    }
+
+    return <>{children}</>;
+  };
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      getUserData(auth()).then((res) => {
+        dispatch(
+          changeUser({ id: res.data.user_id, name: res.data.user_name })
+        );
+      });
+    }
+  });
 
   const getPage = (page: string): JSX.Element => {
     switch (page) {
@@ -21,7 +52,11 @@ export default function App() {
       case "trainingSchedule":
         return <Calendar />;
       case "chats":
-        return <Calendar />;
+        return (
+          <WebSocketProvider>
+            <Chat />
+          </WebSocketProvider>
+        );
       case "exercises":
         return <Calendar />;
       case "help":
@@ -33,10 +68,8 @@ export default function App() {
     }
   };
 
-  return currentPage === "login" ? (
-    <Login />
-  ) : (
-    <>
+  return (
+    <RequireAuth>
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
         <Header />
@@ -63,6 +96,6 @@ export default function App() {
           {getPage(currentPage)}
         </Box>
       </Box>
-    </>
+    </RequireAuth>
   );
 }
