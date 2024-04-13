@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
@@ -12,10 +12,24 @@ import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { useDispatch } from "react-redux";
 import { Chat } from "./Chat/Chat";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
+import { useIsAuthenticated } from "react-auth-kit";
+import { Navigate } from "react-router-dom";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
-  const dispatch = useDispatch();
+
+  type RequireAuthProps = {
+    children: ReactNode;
+  };
+  const RequireAuth = (props: RequireAuthProps) => {
+    const isAuthenticated = useIsAuthenticated();
+    const { children } = props;
+    if (!isAuthenticated()) {
+      return <Navigate to="/login" />;
+    }
+
+    return <>{children}</>;
+  };
 
   const getPage = (page: string): JSX.Element => {
     switch (page) {
@@ -40,10 +54,8 @@ export default function App() {
     }
   };
 
-  return currentPage === "login" ? (
-    <></>
-  ) : (
-    <>
+  return (
+    <RequireAuth>
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
         <Header />
@@ -70,6 +82,6 @@ export default function App() {
           {getPage(currentPage)}
         </Box>
       </Box>
-    </>
+    </RequireAuth>
   );
 }

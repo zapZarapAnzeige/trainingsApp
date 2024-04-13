@@ -11,18 +11,6 @@ import { setUserData } from "./Redux/actions";
 import { Chat } from "./Chat/Chat";
 
 export const Layout: React.FC = () => {
-  type RequireAuthProps = {
-    children: ReactNode;
-  };
-  const RequireAuth = (props: RequireAuthProps) => {
-    const isAuthenticated = useIsAuthenticated();
-    const { children } = props;
-    if (!isAuthenticated()) {
-      return <Navigate to="/login" />;
-    }
-
-    return <>{children}</>;
-  };
   const dispatch = useDispatch();
   const auth = useAuthHeader();
   useEffect(() => {
