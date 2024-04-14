@@ -31,17 +31,19 @@ export const Chat: FC = () => {
       setChatHistory([...chatHistory, data]);
     }
     setChatsOverview(
-      chatsOverview.map((overview) => {
-        if (overview.partner_id === data.sender) {
-          return {
-            ...overview,
-            last_message_timestamp: data.timestamp,
-            last_message: data.content,
-          };
-        } else {
-          return overview;
-        }
-      })
+      chatsOverview.map((overview) =>
+        overview.partner_id === data.sender
+          ? {
+              ...overview,
+              last_message_timestamp: data.timestamp,
+              last_message: data.content,
+              unread_messages:
+                overview.partner_id === activePartner.id
+                  ? 0
+                  : overview.unread_messages + 1,
+            }
+          : overview
+      )
     );
   });
 
@@ -82,6 +84,7 @@ export const Chat: FC = () => {
         }}
       >
         <ChatsPane
+          setChatsOverview={setChatsOverview}
           activePartner={activePartner}
           chatsOverview={chatsOverview}
           setActivePartner={setActivePartner}

@@ -70,6 +70,7 @@ export default function App() {
 
   return (
     <RequireAuth>
+      <ApiErrorInterceptor />
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
         <Header />

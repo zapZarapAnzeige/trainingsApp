@@ -15,12 +15,14 @@ type ChatsPaneProps = {
   chatsOverview: ChatsOverview[];
   setActivePartner: (activePartner: UserData) => void;
   activePartner: UserData;
+  setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
 
 export const ChatsPane: FC<ChatsPaneProps> = ({
   chatsOverview,
   setActivePartner,
   activePartner,
+  setChatsOverview,
 }) => {
   const getTotalUnreadMessages = () => {
     let result = 0;
@@ -106,6 +108,15 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
             activePartner={activePartner}
             chatOverview={chatOverview}
             setActivePartner={setActivePartner}
+            readMessages={() =>
+              setChatsOverview(
+                chatsOverview.map((chat) =>
+                  chat.partner_id === chatOverview.partner_id
+                    ? { ...chat, unread_messages: 0 }
+                    : chat
+                )
+              )
+            }
           />
         ))}
       </List>

@@ -14,7 +14,7 @@ import { useIntl } from "react-intl";
 type ChatListItemProps = ListItemButtonProps & {
   activePartner: UserData;
   chatOverview: ChatsOverview;
-
+  readMessages: () => void;
   setActivePartner: (chat: UserData) => void;
 };
 
@@ -22,6 +22,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
   chatOverview,
   activePartner,
   setActivePartner,
+  readMessages,
 }) => {
   const selected = chatOverview.partner_id === activePartner.id;
   const intl = useIntl();
@@ -31,6 +32,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
         <ListItemButton
           onClick={() => {
             toggleMessagesPane();
+            readMessages();
             setActivePartner({
               id: chatOverview.partner_id,
               name: chatOverview.partner_name,
