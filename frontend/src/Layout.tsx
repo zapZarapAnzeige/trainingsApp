@@ -9,7 +9,6 @@ import { getBrowserLocales } from "./messages/tools";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Login from "./Login/Login";
 import { AuthProvider } from "react-auth-kit";
-import { ErrorDialogProvider } from "./Provider/ErrorDialogProvider";
 
 export const Layout: FC = () => {
   return (
