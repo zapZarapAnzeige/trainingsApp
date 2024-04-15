@@ -6,7 +6,7 @@ import { Dispatch, FC, SetStateAction, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
 import { MessageInput } from "./MessageInput";
-import { ProfilePicture } from "./ProfilePicture";
+import { ProfilePicture } from "../../Common/ProfilePicture";
 import { useAppSelector } from "../../hooks";
 
 type MessagesPaneProps = {

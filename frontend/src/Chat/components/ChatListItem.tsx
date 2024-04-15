@@ -8,7 +8,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { ChatsOverview, PartnerData } from "../../types";
 import { formatTimestamp, toggleMessagesPane } from "../../utils";
 import { FC, Fragment } from "react";
-import { ProfilePicture } from "./ProfilePicture";
+import { ProfilePicture } from "../../Common/ProfilePicture";
 import { useIntl } from "react-intl";
 
 type ChatListItemProps = ListItemButtonProps & {
