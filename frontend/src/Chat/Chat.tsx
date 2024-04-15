@@ -3,7 +3,7 @@ import {
   ChatsOverview,
   DismissDialogType,
   SingleChatHistory,
-  UserData,
+  PartnerData,
   WSError,
 } from "../types";
 import { FC, useEffect, useState } from "react";
@@ -18,7 +18,7 @@ import { useIntl } from "react-intl";
 export const Chat: FC = () => {
   const [chatsOverview, setChatsOverview] = useState<ChatsOverview[]>([]);
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
-  const [activePartner, setActivePartner] = useState<UserData>({
+  const [activePartner, setActivePartner] = useState<PartnerData>({
     id: -1,
     name: "",
     disabled: true,

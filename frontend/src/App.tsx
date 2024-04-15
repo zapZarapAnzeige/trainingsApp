@@ -39,7 +39,13 @@ export default function App() {
     if (isAuthenticated()) {
       getUserData(auth()).then((res) => {
         dispatch(
-          changeUser({ id: res.data.user_id, name: res.data.user_name })
+          changeUser({
+            id: res.data.user_id,
+            name: res.data.user_name,
+            searchingForPartner: res.data.searching_for_partner,
+            plz: res.data.plz,
+            profilePicture: res.data.profile_picture,
+          })
         );
       });
     }

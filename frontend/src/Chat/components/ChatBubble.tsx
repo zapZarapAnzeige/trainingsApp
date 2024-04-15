@@ -2,15 +2,15 @@ import Box from "@mui/joy/Box";
 import Stack from "@mui/joy/Stack";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
-import { SingleChatHistory, UserData, UserData_old } from "../../types";
+import { SingleChatHistory, PartnerData, UserData } from "../../types";
 import { FC } from "react";
 import { formatTimestamp } from "../../utils";
 import { useIntl } from "react-intl";
 
 type ChatBubbleProps = SingleChatHistory & {
   messageSentByUser: boolean;
-  userData: UserData_old;
-  activePartner: UserData;
+  userData: UserData;
+  activePartner: PartnerData;
 };
 
 export const ChatBubble: FC<ChatBubbleProps> = ({

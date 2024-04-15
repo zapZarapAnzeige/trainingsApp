@@ -5,17 +5,17 @@ import ListItemButton, { ListItemButtonProps } from "@mui/joy/ListItemButton";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
-import { ChatsOverview, UserData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../types";
 import { formatTimestamp, toggleMessagesPane } from "../../utils";
 import { FC, Fragment } from "react";
 import { ProfilePicture } from "./ProfilePicture";
 import { useIntl } from "react-intl";
 
 type ChatListItemProps = ListItemButtonProps & {
-  activePartner: UserData;
+  activePartner: PartnerData;
   chatOverview: ChatsOverview;
   readMessages: () => void;
-  setActivePartner: (chat: UserData) => void;
+  setActivePartner: (chat: PartnerData) => void;
 };
 
 export const ChatListItem: FC<ChatListItemProps> = ({

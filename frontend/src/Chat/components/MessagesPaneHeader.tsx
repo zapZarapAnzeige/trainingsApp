@@ -10,7 +10,7 @@ import {
 } from "@mui/joy";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { ChatsOverview, UserData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../types";
 import { Dispatch, FC, SetStateAction } from "react";
 import { toggleMessagesPane } from "../../utils";
 import { useAuthHeader } from "react-auth-kit";
@@ -19,8 +19,8 @@ import { useAppSelector } from "../../hooks";
 import { useIntl } from "react-intl";
 
 type MessagesPaneHeaderProps = {
-  setSender: (sender: UserData) => void;
-  sender: UserData;
+  setSender: (sender: PartnerData) => void;
+  sender: PartnerData;
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
 };
 

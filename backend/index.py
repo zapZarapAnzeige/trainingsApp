@@ -158,7 +158,6 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.get("/users/me")
 async def get_user_data(current_user=Depends(get_current_active_user)):
-    return {
-        "user_name": current_user.get("user_name"),
-        "user_id": current_user.get("user_id"),
-    }
+    del current_user["password"]
+    del current_user["expired"]
+    return current_user

@@ -5,7 +5,7 @@ import { Box, Chip, IconButton, Input } from "@mui/joy";
 import List from "@mui/joy/List";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { ChatsOverview, UserData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../types";
 import { toggleMessagesPane } from "../../utils";
 import { FC, useState } from "react";
 import { ChatListItem } from "./ChatListItem";
@@ -13,8 +13,8 @@ import { useIntl } from "react-intl";
 
 type ChatsPaneProps = {
   chatsOverview: ChatsOverview[];
-  setActivePartner: (activePartner: UserData) => void;
-  activePartner: UserData;
+  setActivePartner: (activePartner: PartnerData) => void;
+  activePartner: PartnerData;
   setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
 

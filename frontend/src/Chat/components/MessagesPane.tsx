@@ -1,7 +1,7 @@
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
-import { ChatsOverview, SingleChatHistory, UserData } from "../../types";
+import { ChatsOverview, SingleChatHistory, PartnerData } from "../../types";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
@@ -11,10 +11,10 @@ import { useAppSelector } from "../../hooks";
 
 type MessagesPaneProps = {
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
-  activePartner: UserData;
+  activePartner: PartnerData;
   chatHistory: SingleChatHistory[];
   websocket: WebSocket;
-  setActivePartner: (sender: UserData) => void;
+  setActivePartner: (sender: PartnerData) => void;
 };
 
 export const MessagesPane: FC<MessagesPaneProps> = ({

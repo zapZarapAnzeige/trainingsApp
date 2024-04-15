@@ -1,19 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { UserData_old } from "../../types";
+import { UserData } from "../../types";
 
 export type userState = {
-  value: UserData_old;
+  value: UserData;
 };
 
 const initialState: userState = {
-  value: { id: -1, name: "" },
+  value: { id: -1, name: "", searchingForPartner: false },
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    changeUser: (state, action: PayloadAction<UserData_old>) => {
+    changeUser: (state, action: PayloadAction<UserData>) => {
       state.value = action.payload;
     },
   },

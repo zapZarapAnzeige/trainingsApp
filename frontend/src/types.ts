@@ -23,12 +23,15 @@ export type ChatsOverview = {
   last_sender_id: number;
 };
 
-export type UserData_old = {
+export type UserData = {
   name: string;
   id: number;
+  searchingForPartner: boolean;
+  plz?: string;
+  profilePicture?: string;
 };
 
-export type UserData = {
+export type PartnerData = {
   name: string;
   id: number;
   profile_picture?: string;
