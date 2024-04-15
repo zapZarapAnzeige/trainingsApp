@@ -43,7 +43,10 @@ export const ApiErrorInterceptor: FC = () => {
       return getMessage("error.unknown");
     } else {
       if ((code = 401)) {
-        if (message === "Token has expired or is not present") {
+        if (
+          message === "Token has expired or is not present" ||
+          message === "Signature has expired."
+        ) {
           logOut();
           return getMessage("error.tokenExpired");
         } else if (
