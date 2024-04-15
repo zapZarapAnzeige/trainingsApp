@@ -1,0 +1,20 @@
+[
+  {
+    "exerciseName": "Irgendwas",
+    "exerciseType": "weighted",
+    "exercise": {
+      "repititionAmount": 15,
+      "setAmount": 5,
+      "weight": 3
+    },
+    "rating": 4
+  },
+  {
+    "exerciseName": "Irgendwas",
+    "exerciseType": "cardio",
+    "exercise": {
+      "minutes": 15
+    },
+    "rating": 5
+  }
+]

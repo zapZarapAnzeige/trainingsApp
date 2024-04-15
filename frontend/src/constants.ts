@@ -1,4 +1,4 @@
-export const weekdays = [
+export const weekdays: string[] = [
   "Montag",
   "Dienstag",
   "Mittwoch",
@@ -6,4 +6,14 @@ export const weekdays = [
   "Freitag",
   "Samstag",
   "Sonntag",
+];
+
+export const weekdaysAbbreviation: string[] = [
+  "Mo.",
+  "Di.",
+  "Mi.",
+  "Do.",
+  "Fr.",
+  "Sa.",
+  "So.",
 ];

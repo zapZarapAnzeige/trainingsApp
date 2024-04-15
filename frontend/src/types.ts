@@ -1,15 +1,38 @@
-export type CalendarDayData = {
+// Trainingstypen
+export type Training = {
   name: string;
-  date: string;
-  trainingData: CalendarDayTrainingData[] | null;
+  onDays: string[];
+  exercises: Exercise[];
 };
 
-export type CalendarDayTrainingData = {
-  exercise: string;
+export type Exercise = {
+  exerciseName: string;
+  exercise: ExerciseCardio | ExerciseWeighted;
+};
+
+export type ExerciseCardio = {
+  minutes: number;
+};
+
+export type ExerciseWeighted = {
   repititionAmount: number;
   setAmount: number;
   weight: number;
+};
+
+export type ExerciseCalendar = Exercise & {
   done: boolean;
+};
+
+export type CalendarDayData = {
+  name: string;
+  day: string;
+  exercises: ExerciseCalendar[];
+};
+
+// Exercises
+export type ExercisesEntryData = Exercise & {
+  rating: number;
 };
 
 export type ChatsOverview = {

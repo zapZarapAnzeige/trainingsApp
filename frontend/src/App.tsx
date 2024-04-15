@@ -16,6 +16,8 @@ import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { getUserData } from "./api";
 import { changeUser } from "./redux/reducers/userSlice";
+import TrainingSchedule from "./TrainingSchedule/TrainingSchedule";
+import Exercises from "./Exercises/Exercises";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
@@ -50,7 +52,7 @@ export default function App() {
       case "calendar":
         return <Calendar />;
       case "trainingSchedule":
-        return <Calendar />;
+        return <TrainingSchedule />;
       case "chats":
         return (
           <WebSocketProvider>
@@ -58,7 +60,7 @@ export default function App() {
           </WebSocketProvider>
         );
       case "exercises":
-        return <Calendar />;
+        return <Exercises />;
       case "help":
         return <Calendar />;
       case "about":
@@ -72,8 +74,8 @@ export default function App() {
     <RequireAuth>
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100dvh" }}>
-        <Header />
         <Sidebar />
+        <Header />
         <Box
           component="main"
           className="MainContent"
@@ -91,6 +93,7 @@ export default function App() {
             minWidth: 0,
             height: "100dvh",
             gap: 1,
+            overflow: "auto",
           }}
         >
           {getPage(currentPage)}

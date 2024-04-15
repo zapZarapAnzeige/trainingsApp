@@ -1,4 +1,5 @@
 import { IntlShape } from "react-intl";
+import { weekdaysAbbreviation } from "./constants";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {
@@ -122,3 +123,7 @@ export const formatTimestamp = (date: string, intl: IntlShape) => {
     getUnitForTimestamp(seconds, intl)
   );
 };
+
+export function mapNumberToWeekdayString(index: number) {
+  return weekdaysAbbreviation[index];
+}
