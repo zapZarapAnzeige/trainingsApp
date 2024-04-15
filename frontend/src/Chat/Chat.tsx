@@ -1,19 +1,31 @@
 import Sheet from "@mui/joy/Sheet";
-import { ChatsOverview, SingleChatHistory, UserData } from "../types";
+import {
+  ChatsOverview,
+  DismissDialogType,
+  SingleChatHistory,
+  PartnerData,
+  WSError,
+} from "../types";
 import { FC, useEffect, useState } from "react";
 import { getChatHistory, getChatsOverview } from "../api";
 import { ChatsPane } from "./components/ChatsPane";
 import { MessagesPane } from "./components/MessagesPane";
 import { useWebsocket } from "../Provider/WebSocketProvider";
 import { useAuthHeader } from "react-auth-kit";
+import DismissDialog from "../Common/DismissDialog";
+import { useIntl } from "react-intl";
 
 export const Chat: FC = () => {
   const [chatsOverview, setChatsOverview] = useState<ChatsOverview[]>([]);
   const [chatHistory, setChatHistory] = useState<SingleChatHistory[]>([]);
-  const [activePartner, setActivePartner] = useState<UserData>({
+  const [activePartner, setActivePartner] = useState<PartnerData>({
     id: -1,
     name: "",
+    disabled: true,
+    lastMessageSenderId: -1,
   });
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const intl = useIntl();
 
   useEffect(() => {
     setChatHistory([]);
@@ -24,32 +36,51 @@ export const Chat: FC = () => {
     }
   }, [activePartner]);
 
+  const isSingleChatHistory = (
+    value: SingleChatHistory | WSError
+  ): value is SingleChatHistory => {
+    return "content" in value && "sender" in value && "timestamp" in value;
+  };
+
+  const isWSError = (value: SingleChatHistory | WSError): value is WSError => {
+    return "error" in value && "message" in value;
+  };
+
   const websocket = useWebsocket((e) => {
-    const data: SingleChatHistory = JSON.parse(e.data);
-    console.log(data);
-    if (activePartner.id === data.sender) {
-      setChatHistory([...chatHistory, data]);
+    const data: SingleChatHistory | WSError = JSON.parse(e.data);
+    if (isSingleChatHistory(data)) {
+      if (activePartner.id === data.sender) {
+        setChatHistory([...chatHistory, data]);
+      }
+      setChatsOverview(
+        chatsOverview.map((overview) =>
+          overview.partner_id === data.sender
+            ? {
+                ...overview,
+                last_message_timestamp: data.timestamp,
+                last_message: data.content,
+                unread_messages:
+                  overview.partner_id === activePartner.id
+                    ? 0
+                    : overview.unread_messages + 1,
+              }
+            : overview
+        )
+      );
+    } else if (isWSError(data)) {
+      setErrorMessage(
+        data.error_message ?? intl.formatMessage({ id: "error.unknown" })
+      );
+      setChatHistory(
+        chatHistory.filter((chat) => chat.tempId !== data.message.id)
+      );
     }
-    setChatsOverview(
-      chatsOverview.map((overview) => {
-        if (overview.partner_id === data.sender) {
-          return {
-            ...overview,
-            last_message_timestamp: data.timestamp,
-            last_message: data.content,
-          };
-        } else {
-          return overview;
-        }
-      })
-    );
   });
 
   const auth = useAuthHeader();
 
   useEffect(() => {
     getChatsOverview(auth()).then((res) => {
-      console.log(res.data);
       setChatsOverview(res.data.chat_data);
     });
   }, []);
@@ -82,16 +113,26 @@ export const Chat: FC = () => {
         }}
       >
         <ChatsPane
+          setChatsOverview={setChatsOverview}
           activePartner={activePartner}
           chatsOverview={chatsOverview}
           setActivePartner={setActivePartner}
         />
       </Sheet>
       <MessagesPane
+        setActivePartner={setActivePartner}
+        setChatsOverview={setChatsOverview}
         activePartner={activePartner}
         chatHistory={chatHistory}
-        setChatHistory={setChatHistory}
         websocket={websocket}
+      />
+      <DismissDialog
+        dismissDialogType={DismissDialogType.ERROR}
+        open={errorMessage !== ""}
+        closeDismissDialog={() => {
+          setErrorMessage("");
+        }}
+        errorMessage={errorMessage}
       />
     </Sheet>
   );

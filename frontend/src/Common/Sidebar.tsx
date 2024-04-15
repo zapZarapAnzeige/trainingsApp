@@ -26,10 +26,14 @@ import { changePage } from "../redux/reducers/currentPageSlice";
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import { closeSidebar, getPageName } from "../utils";
 import { useAppSelector, useAppDispatch } from "../hooks";
+import { ProfilePicture } from "./ProfilePicture";
+import { useSignOut } from "react-auth-kit";
 
 export default function Sidebar() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
   const dispatch = useAppDispatch();
+  const userData = useAppSelector((state) => state.user.value);
+  const logout = useSignOut();
 
   const isSelected = (page: string) => page === currentPage;
   return (
@@ -192,16 +196,15 @@ export default function Sidebar() {
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
+        <ProfilePicture
+          base64ProfilePicture={userData.profilePicture}
+          partnerName={userData.name}
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm">{userData.name}</Typography>
+          <Typography level="body-xs">{userData.name}</Typography>
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
+        <IconButton size="sm" variant="plain" color="neutral" onClick={logout}>
           <LogoutRoundedIcon />
         </IconButton>
       </Box>

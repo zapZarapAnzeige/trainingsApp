@@ -1,22 +1,37 @@
-import Avatar from "@mui/joy/Avatar";
-import Button from "@mui/joy/Button";
-import IconButton from "@mui/joy/IconButton";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
+import {
+  Avatar,
+  IconButton,
+  Stack,
+  Typography,
+  Menu,
+  MenuItem,
+  MenuButton,
+  Dropdown,
+} from "@mui/joy";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { UserData } from "../../types";
-import { FC } from "react";
+import { ChatsOverview, PartnerData } from "../../types";
+import { Dispatch, FC, SetStateAction } from "react";
 import { toggleMessagesPane } from "../../utils";
+import { useAuthHeader } from "react-auth-kit";
+import { changeBlockStatus } from "../../api";
+import { useAppSelector } from "../../hooks";
+import { useIntl } from "react-intl";
 
 type MessagesPaneHeaderProps = {
-  sender: UserData;
+  setSender: (sender: PartnerData) => void;
+  sender: PartnerData;
+  setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
 };
 
-export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = (
-  props: MessagesPaneHeaderProps
-) => {
-  const { sender } = props;
+export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = ({
+  sender,
+  setChatsOverview,
+  setSender,
+}) => {
+  const auth = useAuthHeader();
+  const intl = useIntl();
+  const userData = useAppSelector((state) => state.user.value);
   return (
     <Stack
       direction="row"
@@ -50,19 +65,61 @@ export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = (
         </div>
       </Stack>
       <Stack spacing={1} direction="row" alignItems="center">
-        <Button
-          color="neutral"
-          variant="outlined"
-          size="sm"
-          sx={{
-            display: { xs: "none", md: "inline-flex" },
-          }}
-        >
-          View profile
-        </Button>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <MoreVertRoundedIcon />
-        </IconButton>
+        <Dropdown>
+          <MenuButton
+            size="sm"
+            variant="plain"
+            sx={{ borderWidth: 0, maxWidth: "32px", maxHeight: "32px" }}
+          >
+            <IconButton size="sm" variant="plain" color="neutral">
+              <MoreVertRoundedIcon />
+            </IconButton>
+          </MenuButton>
+          <Menu
+            placement="bottom-end"
+            size="sm"
+            sx={{
+              zIndex: "99999",
+              p: 1,
+              gap: 1,
+              "--ListItem-radius": "var(--joy-radius-sm)",
+            }}
+          >
+            <MenuItem onClick={() => {}}>
+              {intl.formatMessage({ id: "chat.label.viewProfile" })}
+            </MenuItem>
+            <MenuItem
+              disabled={
+                sender.disabled && sender.lastMessageSenderId !== userData.id
+              }
+              onClick={() => {
+                setChatsOverview((chatOverview) =>
+                  chatOverview.map((chat) =>
+                    chat.partner_id === sender.id
+                      ? {
+                          ...chat,
+                          unread_messages: 0,
+                          disabled: !chat.disabled,
+                          profile_picture: undefined,
+                        }
+                      : chat
+                  )
+                );
+                setSender({
+                  ...sender,
+                  disabled: !sender.disabled,
+                  profile_picture: undefined,
+                });
+
+                changeBlockStatus(auth(), sender.disabled, sender.id);
+              }}
+            >
+              {intl.formatMessage({
+                id: sender.disabled ? "unblock User" : "Block User",
+              })}
+            </MenuItem>
+          </Menu>
+        </Dropdown>
       </Stack>
     </Stack>
   );

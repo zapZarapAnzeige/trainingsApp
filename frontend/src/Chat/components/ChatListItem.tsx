@@ -5,23 +5,24 @@ import ListItemButton, { ListItemButtonProps } from "@mui/joy/ListItemButton";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
-import { ChatsOverview, UserData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../types";
 import { formatTimestamp, toggleMessagesPane } from "../../utils";
 import { FC, Fragment } from "react";
-import { ProfilePicture } from "./ProfilePicture";
+import { ProfilePicture } from "../../Common/ProfilePicture";
 import { useIntl } from "react-intl";
 
 type ChatListItemProps = ListItemButtonProps & {
-  activePartner: UserData;
+  activePartner: PartnerData;
   chatOverview: ChatsOverview;
-
-  setActivePartner: (chat: UserData) => void;
+  readMessages: () => void;
+  setActivePartner: (chat: PartnerData) => void;
 };
 
 export const ChatListItem: FC<ChatListItemProps> = ({
   chatOverview,
   activePartner,
   setActivePartner,
+  readMessages,
 }) => {
   const selected = chatOverview.partner_id === activePartner.id;
   const intl = useIntl();
@@ -31,15 +32,20 @@ export const ChatListItem: FC<ChatListItemProps> = ({
         <ListItemButton
           onClick={() => {
             toggleMessagesPane();
+            readMessages();
             setActivePartner({
+              disabled: chatOverview.disabled,
               id: chatOverview.partner_id,
               name: chatOverview.partner_name,
               profile_picture: chatOverview.profile_picture,
+              lastMessageSenderId: chatOverview.last_sender_id,
             });
           }}
           selected={selected}
           color="neutral"
           sx={{
+            overflow: "hidden",
+            textOverflow: "hidden",
             flexDirection: "column",
             alignItems: "initial",
             gap: 1,
@@ -55,9 +61,10 @@ export const ChatListItem: FC<ChatListItemProps> = ({
                 {chatOverview.partner_name}
               </Typography>
               <Typography level="body-sm">
-                {chatOverview.unread_messages +
-                  " " +
-                  intl.formatMessage({ id: "chat.unreadMessages" })}
+                {intl.formatMessage(
+                  { id: "chat.unreadMessages" },
+                  { unreadMessages: chatOverview.unread_messages }
+                )}
               </Typography>
             </Box>
             <Box
@@ -79,6 +86,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
             </Box>
           </Stack>
           <Typography
+            noWrap
             level="body-sm"
             sx={{
               display: "-webkit-box",

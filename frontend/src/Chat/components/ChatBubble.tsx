@@ -2,15 +2,15 @@ import Box from "@mui/joy/Box";
 import Stack from "@mui/joy/Stack";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
-import { SingleChatHistory, UserData, UserData_old } from "../../types";
+import { SingleChatHistory, PartnerData, UserData } from "../../types";
 import { FC } from "react";
 import { formatTimestamp } from "../../utils";
 import { useIntl } from "react-intl";
 
 type ChatBubbleProps = SingleChatHistory & {
   messageSentByUser: boolean;
-  userData: UserData_old;
-  activePartner: UserData;
+  userData: UserData;
+  activePartner: PartnerData;
 };
 
 export const ChatBubble: FC<ChatBubbleProps> = ({
@@ -43,6 +43,7 @@ export const ChatBubble: FC<ChatBubbleProps> = ({
           color={messageSentByUser ? "primary" : "neutral"}
           variant={messageSentByUser ? "solid" : "soft"}
           sx={{
+            wordBreak: "break-word",
             p: 1.25,
             borderRadius: "lg",
             borderTopRightRadius: messageSentByUser ? 0 : "lg",
@@ -55,6 +56,7 @@ export const ChatBubble: FC<ChatBubbleProps> = ({
           <Typography
             level="body-sm"
             sx={{
+              textAlign: messageSentByUser ? "end" : "start",
               color: messageSentByUser
                 ? "var(--joy-palette-common-white)"
                 : "var(--joy-palette-text-primary)",

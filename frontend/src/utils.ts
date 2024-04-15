@@ -116,8 +116,11 @@ const getUnitForTimestamp = (seconds: number, intl: IntlShape) => {
   }
 };
 
-export const formatTimestamp = (date: string, intl: IntlShape) => {
-  const seconds = Math.floor(Math.abs(Date.now() - Date.parse(date)) / 1000);
+export const formatTimestamp = (date: string | number, intl: IntlShape) => {
+  const convertedDate = typeof date === "string" ? Date.parse(date) : date;
+  const seconds = Math.floor(
+    Math.abs(new Date().getTime() - convertedDate) / 1000
+  );
   return intl.formatMessage(
     { id: "chat.timestamp" },
     getUnitForTimestamp(seconds, intl)

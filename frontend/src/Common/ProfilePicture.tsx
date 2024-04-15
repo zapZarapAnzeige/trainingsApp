@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Badge, Avatar } from "@mui/joy";
+import { Avatar } from "@mui/joy";
 
 type ProfilePictureProps = {
   base64ProfilePicture?: string;
@@ -58,18 +58,10 @@ const getImageFromBase64 = (
     return altIcon;
   }
   return (
-    <Badge
-      color={"neutral"}
-      variant={"soft"}
+    <Avatar
       size="sm"
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      badgeInset="4px 4px"
-    >
-      <Avatar
-        size="sm"
-        src={"data:image/" + extension + ";base64," + base64ProfilePicture}
-      />
-    </Badge>
+      src={"data:image/" + extension + ";base64," + base64ProfilePicture}
+    />
   );
 };
 

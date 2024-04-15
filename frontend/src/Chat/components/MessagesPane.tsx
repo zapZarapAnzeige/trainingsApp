@@ -1,43 +1,50 @@
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
-import { SingleChatHistory, UserData, UserData_old } from "../../types";
-import { FC, useState } from "react";
+import { ChatsOverview, SingleChatHistory, PartnerData } from "../../types";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
 import { MessageInput } from "./MessageInput";
-import { ProfilePicture } from "./ProfilePicture";
+import { ProfilePicture } from "../../Common/ProfilePicture";
 import { useAppSelector } from "../../hooks";
 
 type MessagesPaneProps = {
-  activePartner: UserData;
+  setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
+  activePartner: PartnerData;
   chatHistory: SingleChatHistory[];
-  setChatHistory: (chatHistory: SingleChatHistory[]) => void;
   websocket: WebSocket;
+  setActivePartner: (sender: PartnerData) => void;
 };
 
 export const MessagesPane: FC<MessagesPaneProps> = ({
   activePartner,
   chatHistory,
-  setChatHistory,
   websocket,
+  setChatsOverview,
+  setActivePartner,
 }) => {
   const userData = useAppSelector((state) => state.user.value);
   const [textAreaValue, setTextAreaValue] = useState<string>("");
+  const [tempMessageId, setTempMessageId] = useState<number>(0);
 
   const sendMessage = () => {
     if (websocket) {
       chatHistory.push({
         content: textAreaValue,
         sender: userData.id,
-        timestamp: Date.now().toString(),
+        timestamp: Date.now(),
+        tempId: tempMessageId,
       });
+
       websocket.send(
         JSON.stringify({
           recipient_id: activePartner.id,
           content: textAreaValue,
+          id: tempMessageId,
         })
       );
+      setTempMessageId(tempMessageId + 1);
       setTextAreaValue("");
     }
   };
@@ -51,7 +58,11 @@ export const MessagesPane: FC<MessagesPaneProps> = ({
         backgroundColor: "background.level1",
       }}
     >
-      <MessagesPaneHeader sender={activePartner} />
+      <MessagesPaneHeader
+        setSender={setActivePartner}
+        sender={activePartner}
+        setChatsOverview={setChatsOverview}
+      />
       <Box
         sx={{
           display: "flex",

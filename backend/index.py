@@ -1,3 +1,4 @@
+import base64
 from typing import Optional
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -52,8 +53,9 @@ async def upload_user_data(
     current_user=Depends(get_current_active_user),
 ):
     user_data = {}
-    if not len(plz) == 5:
-        return INVALID_PLZ_LENGTH_ERROR
+    if plz:
+        if not len(plz) == 5:
+            return INVALID_PLZ_LENGTH_ERROR
 
     if plz:
         user_data["plz"] = plz
@@ -158,7 +160,9 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.get("/users/me")
 async def get_user_data(current_user=Depends(get_current_active_user)):
-    return {
-        "user_name": current_user.get("user_name"),
-        "user_id": current_user.get("user_id"),
-    }
+    del current_user["password"]
+    del current_user["expired"]
+    profile_picture = {"profile_picture": base64.b64encode(current_user.pop("profile_picture")).decode(
+        "utf-8"
+    ) if current_user.get("profile_picture") else None}
+    return {**current_user, **profile_picture}

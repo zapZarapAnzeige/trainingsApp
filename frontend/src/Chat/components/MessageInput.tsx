@@ -1,16 +1,11 @@
-import * as React from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import Textarea from "@mui/joy/Textarea";
-import { IconButton, Stack } from "@mui/joy";
-
-import FormatBoldRoundedIcon from "@mui/icons-material/FormatBoldRounded";
-import FormatItalicRoundedIcon from "@mui/icons-material/FormatItalicRounded";
-import StrikethroughSRoundedIcon from "@mui/icons-material/StrikethroughSRounded";
-import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
+import { Stack } from "@mui/joy";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { FC, useRef } from "react";
+import { useIntl } from "react-intl";
 
 export type MessageInputProps = {
   textAreaValue: string;
@@ -21,6 +16,7 @@ export type MessageInputProps = {
 export const MessageInput: FC<MessageInputProps> = (
   props: MessageInputProps
 ) => {
+  const intl = useIntl();
   const { textAreaValue, setTextAreaValue, onSubmit } = props;
   const textAreaRef = useRef<HTMLDivElement>(null);
   const handleClick = () => {
@@ -33,8 +29,8 @@ export const MessageInput: FC<MessageInputProps> = (
     <Box sx={{ px: 2, pb: 3 }}>
       <FormControl>
         <Textarea
-          placeholder="Type something here…"
-          aria-label="Message"
+          placeholder={intl.formatMessage({ id: "chat.placeholder.message" })}
+          aria-label={intl.formatMessage({ id: "chat.label.message" })}
           ref={textAreaRef}
           onChange={(e) => {
             setTextAreaValue(e.target.value);
@@ -62,7 +58,7 @@ export const MessageInput: FC<MessageInputProps> = (
                 endDecorator={<SendRoundedIcon />}
                 onClick={handleClick}
               >
-                Send
+                {intl.formatMessage({ id: "chat.label.send" })}
               </Button>
             </Stack>
           }

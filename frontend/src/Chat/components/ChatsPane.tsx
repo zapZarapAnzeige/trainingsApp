@@ -3,30 +3,35 @@ import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
 import { Box, Chip, IconButton, Input } from "@mui/joy";
 import List from "@mui/joy/List";
-import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { ChatsOverview, UserData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../types";
 import { toggleMessagesPane } from "../../utils";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { ChatListItem } from "./ChatListItem";
+import { useIntl } from "react-intl";
 
 type ChatsPaneProps = {
   chatsOverview: ChatsOverview[];
-  setActivePartner: (activePartner: UserData) => void;
-  activePartner: UserData;
+  setActivePartner: (activePartner: PartnerData) => void;
+  activePartner: PartnerData;
+  setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
 
 export const ChatsPane: FC<ChatsPaneProps> = ({
   chatsOverview,
   setActivePartner,
   activePartner,
+  setChatsOverview,
 }) => {
+  const intl = useIntl();
   const getTotalUnreadMessages = () => {
     let result = 0;
     chatsOverview.forEach((chat) => (result += chat.unread_messages));
     return result;
   };
+
+  const [searchbarText, setSearchbarText] = useState<string>("");
 
   return (
     <Sheet
@@ -61,17 +66,8 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
           }
           sx={{ mr: "auto" }}
         >
-          Messages
+          {intl.formatMessage({ id: "chat.label.messages" })}
         </Typography>
-        <IconButton
-          variant="plain"
-          aria-label="edit"
-          color="neutral"
-          size="sm"
-          sx={{ display: { xs: "none", sm: "unset" } }}
-        >
-          <EditNoteRoundedIcon />
-        </IconButton>
         <IconButton
           variant="plain"
           aria-label="edit"
@@ -88,9 +84,12 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
       <Box sx={{ px: 2, pb: 1.5 }}>
         <Input
           size="sm"
+          onChange={(e) => {
+            setSearchbarText(e.target.value);
+          }}
           startDecorator={<SearchRoundedIcon />}
-          placeholder="Search"
-          aria-label="Search"
+          placeholder={intl.formatMessage({ id: "chat.label.search" })}
+          aria-label={intl.formatMessage({ id: "chat.label.search" })}
         />
       </Box>
       <List
@@ -100,14 +99,27 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
           "--ListItem-paddingX": "1rem",
         }}
       >
-        {chatsOverview.map((chatOverview) => (
-          <ChatListItem
-            key={chatOverview.partner_id}
-            activePartner={activePartner}
-            chatOverview={chatOverview}
-            setActivePartner={setActivePartner}
-          />
-        ))}
+        {chatsOverview.map((chatOverview) =>
+          chatOverview.partner_name.includes(searchbarText) ? (
+            <ChatListItem
+              key={chatOverview.partner_id}
+              activePartner={activePartner}
+              chatOverview={chatOverview}
+              setActivePartner={setActivePartner}
+              readMessages={() =>
+                setChatsOverview(
+                  chatsOverview.map((chat) =>
+                    chat.partner_id === chatOverview.partner_id
+                      ? { ...chat, unread_messages: 0 }
+                      : chat
+                  )
+                )
+              }
+            />
+          ) : (
+            <></>
+          )
+        )}
       </List>
     </Sheet>
   );
