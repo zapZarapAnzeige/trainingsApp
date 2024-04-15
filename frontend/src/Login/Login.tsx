@@ -3,8 +3,6 @@ import GlobalStyles from "@mui/joy/GlobalStyles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
-import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
@@ -20,7 +18,10 @@ import { login, signUp } from "../api";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, FormEvent } from "react";
 import { useSignIn, useIsAuthenticated } from "react-auth-kit";
-import { Link } from "@mui/joy";
+import { Link, Snackbar } from "@mui/joy";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { InputField } from "./InputField";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -263,40 +264,26 @@ export default function Login() {
             </Stack>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form onSubmit={isSignIn ? handleSignIn : handleSignUp}>
-                <FormControl required>
-                  <FormLabel>{getMessage("loginScreen.username")}</FormLabel>
-                  <Input
-                    type={getMessage("loginScreen.username")}
-                    name={getMessage("loginScreen.username")}
-                    onChange={(e) => {
-                      setUsername(e.target.value);
-                    }}
-                    value={username}
-                  />
-                </FormControl>
-                <FormControl required>
-                  <FormLabel>{getMessage("loginScreen.password")}</FormLabel>
-                  <Input
-                    type={getMessage("loginScreen.password")}
-                    name={getMessage("loginScreen.password")}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                  />
-                </FormControl>
+                <InputField
+                  errorMessage={usernameError}
+                  fieldName={getMessage("loginScreen.username")}
+                  setField={setUsername}
+                />
+                <InputField
+                  errorMessage={passwordError}
+                  fieldName={getMessage("loginScreen.password")}
+                  setField={setPassword}
+                  setShowPassword={setShowPassword}
+                  showPassword={showPassword}
+                />
                 {!isSignIn && (
-                  <FormControl required>
-                    <FormLabel>
-                      {getMessage("loginScreen.repeatPassword")}
-                    </FormLabel>
-                    <Input
-                      type={getMessage("loginScreen.repeatPassword")}
-                      name={getMessage("loginScreen.repeatPassword")}
-                      onChange={(e) => {
-                        setRepeatPassword(e.target.value);
-                      }}
-                    />
-                  </FormControl>
+                  <InputField
+                    errorMessage={passwordError}
+                    fieldName={getMessage("loginScreen.repeatPassword")}
+                    setField={setRepeatPassword}
+                    setShowPassword={setShowPassword}
+                    showPassword={showPassword}
+                  />
                 )}
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
@@ -332,14 +319,23 @@ export default function Login() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1527181152855-fc03fc7949c8?auto=format&w=1000&dpr=2)",
+          backgroundImage: `url(${"/lightModeBackgroundImage.avif"})`,
           [theme.getColorSchemeSelector("dark")]: {
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1572072393749-3ca9c8ea0831?auto=format&w=1000&dpr=2)",
+            backgroundImage: `url(${"/darkModeBackgroundImage.avif"})`,
           },
         })}
       />
+      <Snackbar
+        variant="solid"
+        color="danger"
+        autoHideDuration={5000}
+        open={signInError !== ""}
+        onClose={() => {
+          setSignInError("");
+        }}
+      >
+        {signInError}
+      </Snackbar>
     </CssVarsProvider>
   );
 }
