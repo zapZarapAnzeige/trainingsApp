@@ -44,6 +44,8 @@ export const ChatListItem: FC<ChatListItemProps> = ({
           selected={selected}
           color="neutral"
           sx={{
+            overflow: "hidden",
+            textOverflow: "hidden",
             flexDirection: "column",
             alignItems: "initial",
             gap: 1,
@@ -84,6 +86,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
             </Box>
           </Stack>
           <Typography
+            noWrap
             level="body-sm"
             sx={{
               display: "-webkit-box",

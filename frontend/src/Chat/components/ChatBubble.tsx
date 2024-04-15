@@ -43,6 +43,7 @@ export const ChatBubble: FC<ChatBubbleProps> = ({
           color={messageSentByUser ? "primary" : "neutral"}
           variant={messageSentByUser ? "solid" : "soft"}
           sx={{
+            wordBreak: "break-word",
             p: 1.25,
             borderRadius: "lg",
             borderTopRightRadius: messageSentByUser ? 0 : "lg",
@@ -55,6 +56,7 @@ export const ChatBubble: FC<ChatBubbleProps> = ({
           <Typography
             level="body-sm"
             sx={{
+              textAlign: messageSentByUser ? "end" : "start",
               color: messageSentByUser
                 ? "var(--joy-palette-common-white)"
                 : "var(--joy-palette-text-primary)",
