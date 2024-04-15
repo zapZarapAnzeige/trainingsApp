@@ -86,7 +86,7 @@ export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = ({
             }}
           >
             <MenuItem onClick={() => {}}>
-              {intl.formatMessage({ id: "chat.label.viewProfile" })}View Profile
+              {intl.formatMessage({ id: "chat.label.viewProfile" })}
             </MenuItem>
             <MenuItem
               disabled={
@@ -114,7 +114,9 @@ export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = ({
                 changeBlockStatus(auth(), sender.disabled, sender.id);
               }}
             >
-              {sender.disabled ? "unblock User" : "Block User"}
+              {intl.formatMessage({
+                id: sender.disabled ? "unblock User" : "Block User",
+              })}
             </MenuItem>
           </Menu>
         </Dropdown>

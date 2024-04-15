@@ -21,11 +21,13 @@
   "DismissDialog.close": "Close",
   "error.tokenExpired": "Your sessiontoken is expired please sign in again",
   "error.unknown": "An unknow error occured",
-  "chat.unreadMessages": "unread messages",
+  "chat.unreadMessages": "{unreadMessages, plural, one {{unreadMessages} unread Message} other {{unreadMessages} unread Messages}}",
   "chat.label.messages": "Messages",
   "chat.label.search": "Search",
   "chat.label.message": "Message",
   "chat.label.send": "Send",
+  "chat.label.block": "Block User",
+  "chat.label.unblock": "Unblock User",
   "chat.label.viewProfile": "View Profile",
   "chat.placeholder.message": "Type something here…"
 }

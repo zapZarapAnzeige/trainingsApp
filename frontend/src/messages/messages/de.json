@@ -21,11 +21,13 @@
   "DismissDialog.close": "Schließen",
   "error.tokenExpired": "Der Sessiontoken ist abgelaufen, bitte melden sie sich erneut an.",
   "error.unknown": "Ein unbekannter Fehler ist aufgetreten",
-  "chat.unreadMessages": "neue Nachrichten",
+  "chat.unreadMessages": "{unreadMessages, plural, one {{unreadMessages} neue Nachricht} other {{unreadMessages} neue Nachrichten}}",
   "chat.label.messages": "Nachrichten",
   "chat.label.search": "Suchen",
   "chat.label.message": "Nachricht",
   "chat.label.send": "Senden",
+  "chat.label.block": "Nutzer Blockieren",
+  "chat.label.unblock": "User entblocken",
   "chat.label.viewProfile": "Profil ansehen",
   "chat.placeholder.message": "Hier Nachricht eingeben…"
 }

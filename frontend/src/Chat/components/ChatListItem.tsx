@@ -59,9 +59,10 @@ export const ChatListItem: FC<ChatListItemProps> = ({
                 {chatOverview.partner_name}
               </Typography>
               <Typography level="body-sm">
-                {chatOverview.unread_messages +
-                  " " +
-                  intl.formatMessage({ id: "chat.unreadMessages" })}
+                {intl.formatMessage(
+                  { id: "chat.unreadMessages" },
+                  { unreadMessages: chatOverview.unread_messages }
+                )}
               </Typography>
             </Box>
             <Box
