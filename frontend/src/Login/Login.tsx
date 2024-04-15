@@ -207,7 +207,9 @@ export default function Login() {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Company logo</Typography>
+              <Typography level="title-lg">
+                {getMessage("label.companyName")}
+              </Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>
@@ -237,14 +239,24 @@ export default function Login() {
             <Stack gap={4} sx={{ mb: 2 }}>
               <Stack gap={1}>
                 <Typography component="h1" level="h3">
-                  {isSignIn ? "Sign in" : "Sign Up"}
+                  {getMessage(
+                    isSignIn
+                      ? "loginScreen.label.signIn"
+                      : "loginScreen.label.signUp"
+                  )}
                 </Typography>
                 <Typography level="body-sm">
-                  {isSignIn
-                    ? "New to this Site? "
-                    : "Already have an Account? "}
+                  {getMessage(
+                    isSignIn
+                      ? "loginScreen.subheading.signIn"
+                      : "loginScreen.subheading.signUp"
+                  )}
                   <Link onClick={() => setIsSignIn(!isSignIn)}>
-                    {isSignIn ? "Sign Up" : "Sign in"}
+                    {getMessage(
+                      isSignIn
+                        ? "loginScreen.label.signUp"
+                        : "loginScreen.label.signIn"
+                    )}
                   </Link>
                 </Typography>
               </Stack>
@@ -289,7 +301,9 @@ export default function Login() {
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Button type="submit" fullWidth>
                     {getMessage(
-                      isSignIn ? "loginScreen.signIn" : "loginScreen.signUp"
+                      isSignIn
+                        ? "loginScreen.label.submitButton.signIn"
+                        : "loginScreen.label.submitButton.signUp"
                     )}
                   </Button>
                 </Stack>
@@ -298,7 +312,7 @@ export default function Login() {
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" textAlign="center">
-              © Your company {new Date().getFullYear()}
+              © {new Date().getFullYear()}
             </Typography>
           </Box>
         </Box>

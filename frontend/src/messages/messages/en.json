@@ -5,12 +5,16 @@
   "unit.days": "{count, plural, one {day} other {days}}",
   "unit.months": "{count, plural, one {month} other {months}}",
   "unit.years": "{count, plural, one {year} other {years}}",
-  "chat.timestamp": "{count} {unit} ago",
+  "label.companyName": "Curry Calle",
+  "loginScreen.label.signIn": "Sign in",
+  "loginScreen.label.signUp": "Sign Up",
+  "loginScreen.subheading.signIn": "New to this Site? ",
+  "loginScreen.subheading.signUp": "Already have an Account? ",
   "loginScreen.password": "Password",
   "loginScreen.username": "Username",
   "loginScreen.repeatPassword": "Repeat password",
-  "loginScreen.signUp": "Create new account",
-  "loginScreen.signIn": "Login",
+  "loginScreen.label.submitButton.signUp": "Create new account",
+  "loginScreen.label.submitButton.signIn": "Login",
   "loginScreen.error.noPassword": "Enter a password",
   "loginScreen.error.noUsername": "Enter an username",
   "loginScreen.error.notMatchingPassword": "The passwords do not match",
@@ -29,5 +33,6 @@
   "chat.label.block": "Block User",
   "chat.label.unblock": "Unblock User",
   "chat.label.viewProfile": "View Profile",
-  "chat.placeholder.message": "Type something here…"
+  "chat.placeholder.message": "Type something here…",
+  "chat.timestamp": "{count} {unit} ago"
 }
