@@ -34,9 +34,11 @@ export const ChatListItem: FC<ChatListItemProps> = ({
             toggleMessagesPane();
             readMessages();
             setActivePartner({
+              disabled: chatOverview.disabled,
               id: chatOverview.partner_id,
               name: chatOverview.partner_name,
               profile_picture: chatOverview.profile_picture,
+              lastMessageSenderId: chatOverview.last_sender_id,
             });
           }}
           selected={selected}

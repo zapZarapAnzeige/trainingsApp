@@ -51,3 +51,24 @@ export const login = async (username: string, password: string) => {
 export const getUserData = (token: string) => {
   return axiosInstance.get("/users/me", addAuth(token));
 };
+
+export const changeBlockStatus = (
+  token: string,
+  currentlyBlocked: boolean,
+  partnerId: number
+) => {
+  axiosInstance.patch(
+    "/chat",
+    {
+      currently_blocked: currentlyBlocked,
+      partner_id: partnerId,
+    },
+    {
+      ...addAuth(token),
+      params: {
+        currently_blocked: currentlyBlocked,
+        partner_id: partnerId,
+      },
+    }
+  );
+};
