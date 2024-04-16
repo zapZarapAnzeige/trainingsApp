@@ -5,14 +5,14 @@ import {
   SingleChatHistory,
   PartnerData,
   WSError,
-} from "../types";
+} from "../../types";
 import { FC, useEffect, useState } from "react";
-import { getChatHistory, getChatsOverview } from "../api";
+import { getChatHistory, getChatsOverview } from "../../api";
 import { ChatsPane } from "./components/ChatsPane";
 import { MessagesPane } from "./components/MessagesPane";
-import { useWebsocket } from "../Provider/WebSocketProvider";
+import { useWebsocket } from "../../Provider/WebSocketProvider";
 import { useAuthHeader } from "react-auth-kit";
-import DismissDialog from "../Common/DismissDialog";
+import DismissDialog from "../../Common/DismissDialog";
 import { useIntl } from "react-intl";
 
 export const Chat: FC = () => {

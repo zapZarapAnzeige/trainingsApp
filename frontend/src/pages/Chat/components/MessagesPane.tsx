@@ -1,13 +1,13 @@
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
-import { ChatsOverview, SingleChatHistory, PartnerData } from "../../types";
+import { ChatsOverview, SingleChatHistory, PartnerData } from "../../../types";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { MessagesPaneHeader } from "./MessagesPaneHeader";
 import { ChatBubble } from "./ChatBubble";
 import { MessageInput } from "./MessageInput";
-import { ProfilePicture } from "../../Common/ProfilePicture";
-import { useAppSelector } from "../../hooks";
+import { ProfilePicture } from "../../../Common/ProfilePicture";
+import { useAppSelector } from "../../../hooks";
 
 type MessagesPaneProps = {
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;

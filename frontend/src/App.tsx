@@ -10,13 +10,13 @@ import { useAppDispatch, useAppSelector } from "./hooks";
 import Calendar from "./pages/Calendar/Calendar";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { useDispatch } from "react-redux";
-import { Chat } from "./Chat/Chat";
+import { Chat } from "./pages/Chat/Chat";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
 import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Navigate } from "react-router-dom";
 import { getUserData } from "./api";
 import { changeUser } from "./redux/reducers/userSlice";
-import TrainingSchedule from "./TrainingSchedule/TrainingSchedule";
+import TrainingSchedule from "./pages/TrainingSchedule/TrainingSchedule";
 import Exercises from "./pages/Exercises/Exercises";
 
 export default function App() {

@@ -5,10 +5,10 @@ import ListItemButton, { ListItemButtonProps } from "@mui/joy/ListItemButton";
 import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
-import { ChatsOverview, PartnerData } from "../../types";
-import { formatTimestamp, toggleMessagesPane } from "../../utils";
+import { ChatsOverview, PartnerData } from "../../../types";
+import { formatTimestamp, toggleMessagesPane } from "../../../utils";
 import { FC, Fragment } from "react";
-import { ProfilePicture } from "../../Common/ProfilePicture";
+import { ProfilePicture } from "../../../Common/ProfilePicture";
 import { useIntl } from "react-intl";
 
 type ChatListItemProps = ListItemButtonProps & {

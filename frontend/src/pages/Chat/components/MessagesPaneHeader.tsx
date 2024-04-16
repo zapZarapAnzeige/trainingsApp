@@ -10,12 +10,12 @@ import {
 } from "@mui/joy";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
-import { ChatsOverview, PartnerData } from "../../types";
+import { ChatsOverview, PartnerData } from "../../../types";
 import { Dispatch, FC, SetStateAction } from "react";
-import { toggleMessagesPane } from "../../utils";
+import { toggleMessagesPane } from "../../../utils";
 import { useAuthHeader } from "react-auth-kit";
-import { changeBlockStatus } from "../../api";
-import { useAppSelector } from "../../hooks";
+import { changeBlockStatus } from "../../../api";
+import { useAppSelector } from "../../../hooks";
 import { useIntl } from "react-intl";
 
 type MessagesPaneHeaderProps = {
