@@ -28,7 +28,7 @@ export const ChatListItem: FC<ChatListItemProps> = ({
   const intl = useIntl();
   return (
     <Fragment>
-      <ListItem>
+      <ListItem sx={{ overflowX: "hidden" }}>
         <ListItemButton
           onClick={() => {
             toggleMessagesPane();
@@ -44,11 +44,13 @@ export const ChatListItem: FC<ChatListItemProps> = ({
           selected={selected}
           color="neutral"
           sx={{
-            overflow: "hidden",
-            textOverflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
             flexDirection: "column",
             alignItems: "initial",
             gap: 1,
+            // this is neccessary for the box not to Grow
+            width: "1px",
           }}
         >
           <Stack direction="row" spacing={1.5}>
@@ -86,14 +88,14 @@ export const ChatListItem: FC<ChatListItemProps> = ({
             </Box>
           </Stack>
           <Typography
-            noWrap
             level="body-sm"
             sx={{
-              display: "-webkit-box",
-              WebkitLineClamp: "2",
-              WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+              width: "100%",
             }}
           >
             {chatOverview.last_message}
