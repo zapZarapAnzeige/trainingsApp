@@ -56,7 +56,9 @@ export const ChatBubble: FC<ChatBubbleProps> = ({
           <Typography
             level="body-sm"
             sx={{
-              textAlign: messageSentByUser ? "end" : "start",
+              //textAlign: messageSentByUser ? "end" : "start",
+              wordWrap: "break-word",
+              whiteSpace: "pre-wrap",
               color: messageSentByUser
                 ? "var(--joy-palette-common-white)"
                 : "var(--joy-palette-text-primary)",
