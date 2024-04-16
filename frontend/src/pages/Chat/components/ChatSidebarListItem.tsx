@@ -11,14 +11,14 @@ import { FC, Fragment } from "react";
 import { ProfilePicture } from "../../../Common/ProfilePicture";
 import { useIntl } from "react-intl";
 
-type ChatListItemProps = ListItemButtonProps & {
+type ChatSidebarListItemProps = ListItemButtonProps & {
   activePartner: PartnerData;
   chatOverview: ChatsOverview;
   readMessages: () => void;
   setActivePartner: (chat: PartnerData) => void;
 };
 
-export const ChatListItem: FC<ChatListItemProps> = ({
+export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
   chatOverview,
   activePartner,
   setActivePartner,

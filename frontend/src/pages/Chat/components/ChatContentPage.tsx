@@ -3,13 +3,13 @@ import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
 import { ChatsOverview, SingleChatHistory, PartnerData } from "../../../types";
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { MessagesPaneHeader } from "./MessagesPaneHeader";
-import { ChatBubble } from "./ChatBubble";
+import { ChatContentPageHeader } from "./ChatContentPageHeader";
+import { ChatMessage } from "./ChatMessage";
 import { MessageInput } from "./MessageInput";
 import { ProfilePicture } from "../../../Common/ProfilePicture";
 import { useAppSelector } from "../../../hooks";
 
-type MessagesPaneProps = {
+type ChatContentPageProps = {
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
   activePartner: PartnerData;
   chatHistory: SingleChatHistory[];
@@ -17,7 +17,7 @@ type MessagesPaneProps = {
   setActivePartner: (sender: PartnerData) => void;
 };
 
-export const MessagesPane: FC<MessagesPaneProps> = ({
+export const ChatContentPage: FC<ChatContentPageProps> = ({
   activePartner,
   chatHistory,
   websocket,
@@ -58,7 +58,7 @@ export const MessagesPane: FC<MessagesPaneProps> = ({
         backgroundColor: "background.level1",
       }}
     >
-      <MessagesPaneHeader
+      <ChatContentPageHeader
         setSender={setActivePartner}
         sender={activePartner}
         setChatsOverview={setChatsOverview}
@@ -91,7 +91,7 @@ export const MessagesPane: FC<MessagesPaneProps> = ({
                     base64ProfilePicture={activePartner.profile_picture}
                   />
                 )}
-                <ChatBubble
+                <ChatMessage
                   activePartner={activePartner}
                   userData={userData}
                   messageSentByUser={message.sender !== activePartner.id}
