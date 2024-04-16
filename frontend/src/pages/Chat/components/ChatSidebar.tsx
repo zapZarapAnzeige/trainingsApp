@@ -8,17 +8,17 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { ChatsOverview, PartnerData } from "../../../types";
 import { toggleMessagesPane } from "../../../utils";
 import { FC, useState } from "react";
-import { ChatListItem } from "./ChatListItem";
+import { ChatSidebarListItem } from "./ChatSidebarListItem";
 import { useIntl } from "react-intl";
 
-type ChatsPaneProps = {
+type ChatSidebarProps = {
   chatsOverview: ChatsOverview[];
   setActivePartner: (activePartner: PartnerData) => void;
   activePartner: PartnerData;
   setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
 
-export const ChatsPane: FC<ChatsPaneProps> = ({
+export const ChatSidebar: FC<ChatSidebarProps> = ({
   chatsOverview,
   setActivePartner,
   activePartner,
@@ -101,7 +101,7 @@ export const ChatsPane: FC<ChatsPaneProps> = ({
       >
         {chatsOverview.map((chatOverview) =>
           chatOverview.partner_name.includes(searchbarText) ? (
-            <ChatListItem
+            <ChatSidebarListItem
               key={chatOverview.partner_id}
               activePartner={activePartner}
               chatOverview={chatOverview}

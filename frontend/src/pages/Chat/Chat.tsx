@@ -8,8 +8,8 @@ import {
 } from "../../types";
 import { FC, useEffect, useState } from "react";
 import { getChatHistory, getChatsOverview } from "../../api";
-import { ChatsPane } from "./components/ChatsPane";
-import { MessagesPane } from "./components/MessagesPane";
+import { ChatSidebar } from "./components/ChatSidebar";
+import { ChatContentPage } from "./components/ChatContentPage";
 import { useWebsocket } from "../../Provider/WebSocketProvider";
 import { useAuthHeader } from "react-auth-kit";
 import DismissDialog from "../../Common/DismissDialog";
@@ -112,14 +112,14 @@ export const Chat: FC = () => {
           top: 52,
         }}
       >
-        <ChatsPane
+        <ChatSidebar
           setChatsOverview={setChatsOverview}
           activePartner={activePartner}
           chatsOverview={chatsOverview}
           setActivePartner={setActivePartner}
         />
       </Sheet>
-      <MessagesPane
+      <ChatContentPage
         setActivePartner={setActivePartner}
         setChatsOverview={setChatsOverview}
         activePartner={activePartner}

@@ -7,13 +7,13 @@ import { FC } from "react";
 import { formatTimestamp } from "../../../utils";
 import { useIntl } from "react-intl";
 
-type ChatBubbleProps = SingleChatHistory & {
+type ChatMessageProps = SingleChatHistory & {
   messageSentByUser: boolean;
   userData: UserData;
   activePartner: PartnerData;
 };
 
-export const ChatBubble: FC<ChatBubbleProps> = ({
+export const ChatMessage: FC<ChatMessageProps> = ({
   content,
   messageSentByUser,
   sender,

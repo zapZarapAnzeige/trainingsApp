@@ -18,13 +18,13 @@ import { changeBlockStatus } from "../../../api";
 import { useAppSelector } from "../../../hooks";
 import { useIntl } from "react-intl";
 
-type MessagesPaneHeaderProps = {
+type ChatContentPageHeaderProps = {
   setSender: (sender: PartnerData) => void;
   sender: PartnerData;
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
 };
 
-export const MessagesPaneHeader: FC<MessagesPaneHeaderProps> = ({
+export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
   sender,
   setChatsOverview,
   setSender,
