@@ -1,8 +1,7 @@
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import { AspectRatio, IconButton, Stack, Typography } from "@mui/joy";
-import { ExercisesEntryData } from "../../types";
-import { BookmarkAdd } from "@mui/icons-material";
+import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
+import { ExercisesEntryData } from "../../../types";
 import { FC } from "react";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -13,20 +12,11 @@ type ExercisesEntryProps = {
 const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   return (
     <Card sx={{ width: 320 }}>
-      <div>
+      <Box>
         <Typography level="title-lg">
           {exercisesEntryData.exerciseName}
         </Typography>
-        <IconButton
-          aria-label="bookmark Bahamas Islands"
-          variant="plain"
-          color="neutral"
-          size="sm"
-          sx={{ position: "absolute", top: "0.875rem", right: "0.5rem" }}
-        >
-          <BookmarkAdd />
-        </IconButton>
-      </div>
+      </Box>
       <AspectRatio minHeight="120px" maxHeight="200px">
         <img
           src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
@@ -36,16 +26,18 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
         />
       </AspectRatio>
       <Stack></Stack>
-      <CardContent orientation="horizontal">
-        <div>
-          <Typography level="body-xs">Rating</Typography>
-          <Typography fontSize="lg" fontWeight="lg">
-            {exercisesEntryData.rating + " Stars"}
-          </Typography>
-        </div>
-        <IconButton variant="solid" color="primary">
-          <AddIcon />
-        </IconButton>
+      <CardContent>
+        <Stack spacing={2} direction="row" justifyContent="space-between">
+          <Box>
+            <Typography level="body-xs">Rating</Typography>
+            <Typography fontSize="lg" fontWeight="lg">
+              {exercisesEntryData.rating + " Stars"}
+            </Typography>
+          </Box>
+          <IconButton variant="solid" color="primary">
+            <AddIcon />
+          </IconButton>
+        </Stack>
       </CardContent>
     </Card>
   );

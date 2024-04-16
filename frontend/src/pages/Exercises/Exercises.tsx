@@ -1,4 +1,4 @@
-import HeadingArea from "../Common/HeadingArea";
+import HeadingArea from "../../Common/HeadingArea";
 import ExercisesContent from "./components/ExercisesContent";
 import ExercisesInterface from "./components/ExercisesInterface";
 

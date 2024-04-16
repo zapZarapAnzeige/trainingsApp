@@ -7,7 +7,7 @@ import {
   accordionSummaryClasses,
 } from "@mui/joy";
 import { FC } from "react";
-import { CalendarDayData } from "../../types";
+import { CalendarDayData } from "../../../types";
 
 type CalendarDayProps = {
   dayName: string;

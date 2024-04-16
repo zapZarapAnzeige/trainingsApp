@@ -7,7 +7,7 @@ import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
 import HeadingArea from "./Common/HeadingArea";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import Calendar from "./Calendar/Calendar";
+import Calendar from "./pages/Calendar/Calendar";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
 import { useDispatch } from "react-redux";
 import { Chat } from "./Chat/Chat";
@@ -17,7 +17,7 @@ import { Navigate } from "react-router-dom";
 import { getUserData } from "./api";
 import { changeUser } from "./redux/reducers/userSlice";
 import TrainingSchedule from "./TrainingSchedule/TrainingSchedule";
-import Exercises from "./Exercises/Exercises";
+import Exercises from "./pages/Exercises/Exercises";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);

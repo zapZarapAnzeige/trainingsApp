@@ -1,11 +1,11 @@
 import { Box, Grid, Sheet } from "@mui/joy";
-import Pagination from "../Common/Pagination";
-import { weekdays } from "../constants";
+import Pagination from "../../Common/Pagination";
+import { weekdays } from "../../constants";
 import CalendarDay from "./components/CalendarDay";
-import HeadingArea from "../Common/HeadingArea";
+import HeadingArea from "../../Common/HeadingArea";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
-import testCalendar from "../example/week.json";
+import testCalendar from "../../example/week.json";
 
 export default function Calendar() {
   return (
