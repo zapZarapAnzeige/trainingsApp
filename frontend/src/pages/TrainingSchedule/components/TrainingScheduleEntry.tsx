@@ -15,10 +15,10 @@ import {
 } from "@mui/joy";
 import FormLabel from "@mui/joy/FormLabel";
 import CreateIcon from "@mui/icons-material/Create";
-import { Training } from "../../types";
+import { Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
-import { weekdaysAbbreviation } from "../../constants";
+import { weekdaysAbbreviation } from "../../../constants";
 
 type TrainingScheduleEntryProps = {
   training: Training;

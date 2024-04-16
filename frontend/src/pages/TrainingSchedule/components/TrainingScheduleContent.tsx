@@ -2,7 +2,7 @@ import { Sheet, Grid } from "@mui/joy";
 import TrainingScheduleEntry from "./TrainingScheduleEntry";
 
 // TESTDATEN // Benötigt werden Daten vom Typ Training
-import trainingTestData from "../../example/trainingSchedule.json";
+import trainingTestData from "../../../example/trainingSchedule.json";
 
 export default function ExercisesContent() {
   return (

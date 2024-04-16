@@ -1,7 +1,7 @@
 import { FormControl, IconButton, Select, Stack } from "@mui/joy";
 import Option from "@mui/joy/Option";
 import { FC } from "react";
-import { Exercise } from "../../types";
+import { Exercise } from "../../../types";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 type TrainingsScheduleDialogSelectProps = {

@@ -9,18 +9,18 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Stack from "@mui/joy/Stack";
 import AddIcon from "@mui/icons-material/Add";
-import { Exercise, Training } from "../../types";
+import { Exercise, Training } from "../../../types";
 import { Checkbox, Divider, IconButton, Select } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { weekdaysAbbreviation } from "../../constants";
-import { useAppSelector, useAppDispatch } from "../../hooks";
+import { weekdaysAbbreviation } from "../../../constants";
+import { useAppSelector, useAppDispatch } from "../../../hooks";
 import {
   addDay,
   removeDay,
   setName,
-} from "../../redux/reducers/trainingScheduleSlice";
-import { mapNumberToWeekdayString } from "../../utils";
+} from "../../../redux/reducers/trainingScheduleSlice";
+import { mapNumberToWeekdayString } from "../../../utils";
 import TrainingsScheduleDialogSelect from "./TrainingsScheduleDialogSelect";
 
 type TrainingScheduleDialogProps = {
