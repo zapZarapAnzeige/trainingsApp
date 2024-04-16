@@ -17,3 +17,5 @@ export const weekdaysAbbreviation: string[] = [
   "Sa.",
   "So.",
 ];
+
+export const tags: string[] = ["a", "b", "c"];

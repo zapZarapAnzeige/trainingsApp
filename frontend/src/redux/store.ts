@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import currentPageSlice from "./reducers/currentPageSlice";
 import userSlice from "./reducers/userSlice";
 import trainingScheduleDialogSlice from "./reducers/trainingScheduleSlice";
+import tagsSlice from "./reducers/tagsSlice";
 
 export const store = configureStore({
   reducer: {
     currentPage: currentPageSlice,
     user: userSlice,
     trainingScheduleDialog: trainingScheduleDialogSlice,
+    tags: tagsSlice,
   },
 });
 
