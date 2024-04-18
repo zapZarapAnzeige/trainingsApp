@@ -70,8 +70,7 @@ async def handle_session(websocket: WebSocket, user_id: int):
 
             # insert message into db
             is_inserted = await save_new_message(
-                data.get("content"), user_id, data.get(
-                    "recipient_id"), timestamp
+                data.get("content"), user_id, data.get("recipient_id"), timestamp
             )
             print(is_inserted)
             if is_inserted.get("error"):

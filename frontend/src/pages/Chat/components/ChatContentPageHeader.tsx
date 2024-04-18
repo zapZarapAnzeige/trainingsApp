@@ -17,6 +17,7 @@ import { useAuthHeader } from "react-auth-kit";
 import { changeBlockStatus } from "../../../api";
 import { useAppSelector } from "../../../hooks";
 import { useIntl } from "react-intl";
+import { ProfilePicture } from "../../../Common/ProfilePicture";
 
 type ChatContentPageHeaderProps = {
   setSender: (sender: PartnerData) => void;
@@ -56,7 +57,10 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
         >
           <ArrowBackIosNewRoundedIcon />
         </IconButton>
-        <Avatar size="lg" src={sender.profile_picture} />
+        <ProfilePicture
+          base64ProfilePicture={sender.profile_picture}
+          props={{ size: "lg" }}
+        />
         <div>
           <Typography fontWeight="lg" fontSize="lg" component="h2" noWrap>
             {sender.name}

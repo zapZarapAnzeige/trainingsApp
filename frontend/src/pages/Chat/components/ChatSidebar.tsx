@@ -1,15 +1,34 @@
 import Stack from "@mui/joy/Stack";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
-import { Box, Chip, IconButton, Input } from "@mui/joy";
+import {
+  Box,
+  Chip,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  Input,
+} from "@mui/joy";
 import List from "@mui/joy/List";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { ChatsOverview, PartnerData } from "../../../types";
+import {
+  ChatsOverview,
+  DismissDialogType,
+  PartnerData,
+  SmallChatOverview,
+} from "../../../types";
 import { toggleMessagesPane } from "../../../utils";
-import { FC, useState } from "react";
+import { FC, ReactNode, forwardRef, useState } from "react";
 import { ChatSidebarListItem } from "./ChatSidebarListItem";
 import { useIntl } from "react-intl";
+import SendIcon from "@mui/icons-material/Send";
+import { InfoOutlined } from "@mui/icons-material";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
+import { useAuthHeader } from "react-auth-kit";
+import { findNewPartner } from "../../../api";
+import DismissDialog from "../../../Common/DismissDialog";
+import { ProfilePicture } from "../../../Common/ProfilePicture";
 
 type ChatSidebarProps = {
   chatsOverview: ChatsOverview[];
@@ -18,6 +37,34 @@ type ChatSidebarProps = {
   setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
 
+interface NumericFormatAdapterProps {
+  onChange: (event: { target: { name: string; value: string } }) => void;
+  name: string;
+}
+
+const NumericFormatAdapter = forwardRef<
+  NumericFormatProps,
+  NumericFormatAdapterProps
+>(function NumericFormatAdapter(props, ref) {
+  const { onChange, ...other } = props;
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      valueIsNumericString
+    />
+  );
+});
+
 export const ChatSidebar: FC<ChatSidebarProps> = ({
   chatsOverview,
   setActivePartner,
@@ -25,6 +72,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
   setChatsOverview,
 }) => {
   const intl = useIntl();
+  const auth = useAuthHeader();
   const getTotalUnreadMessages = () => {
     let result = 0;
     chatsOverview.forEach((chat) => (result += chat.unread_messages));
@@ -32,6 +80,10 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
   };
 
   const [searchbarText, setSearchbarText] = useState<string>("");
+  const [searchForPartnerText, setSearchForPartnerText] = useState<string>("");
+  const [searchForPartnerErrorText, setSearchForPartnerErrorText] =
+    useState<string>("");
+  const [infoMessage, setInfoMessage] = useState<string | ReactNode>("");
 
   return (
     <Sheet
@@ -39,7 +91,9 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
         borderRight: "1px solid",
         borderColor: "divider",
         height: "calc(100dvh - var(--Header-height))",
-        overflowY: "auto",
+        overflowY: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Stack
@@ -92,35 +146,144 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
           aria-label={intl.formatMessage({ id: "chat.label.search" })}
         />
       </Box>
-      <List
+      <Box
         sx={{
-          py: 0,
-          "--ListItem-paddingY": "0.75rem",
-          "--ListItem-paddingX": "1rem",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          boxSizing: "border-box",
         }}
       >
-        {chatsOverview.map((chatOverview) =>
-          chatOverview.partner_name.includes(searchbarText) ? (
-            <ChatSidebarListItem
-              key={chatOverview.partner_id}
-              activePartner={activePartner}
-              chatOverview={chatOverview}
-              setActivePartner={setActivePartner}
-              readMessages={() =>
-                setChatsOverview(
-                  chatsOverview.map((chat) =>
-                    chat.partner_id === chatOverview.partner_id
-                      ? { ...chat, unread_messages: 0 }
-                      : chat
+        <List
+          sx={{
+            overflow: "auto",
+            py: 0,
+            "--ListItem-paddingY": "0.75rem",
+            "--ListItem-paddingX": "1rem",
+          }}
+        >
+          {chatsOverview.map((chatOverview) =>
+            chatOverview.partner_name.includes(searchbarText) ? (
+              <ChatSidebarListItem
+                key={chatOverview.partner_id}
+                activePartner={activePartner}
+                chatOverview={chatOverview}
+                setActivePartner={setActivePartner}
+                readMessages={() =>
+                  setChatsOverview(
+                    chatsOverview.map((chat) =>
+                      chat.partner_id === chatOverview.partner_id
+                        ? { ...chat, unread_messages: 0 }
+                        : chat
+                    )
                   )
-                )
+                }
+              />
+            ) : (
+              <></>
+            )
+          )}
+        </List>
+        <Box sx={{ px: 2, pb: 1.5 }}>
+          <FormControl error>
+            <Input
+              endDecorator={
+                <IconButton
+                  onClick={() => {
+                    if (searchForPartnerText.length !== 5) {
+                      setSearchForPartnerErrorText(
+                        intl.formatMessage({ id: "chat.error.plzIncorrect" })
+                      );
+                    } else {
+                      findNewPartner(auth(), searchForPartnerText).then(
+                        (res) => {
+                          if (typeof res.data !== "string") {
+                            setChatsOverview([
+                              ...chatsOverview,
+                              {
+                                disabled: false,
+                                last_message: "newMatch",
+                                last_message_timestamp: Date.now(),
+                                last_sender_id: res.data.user_id,
+                                partner_id: res.data.user_id,
+                                partner_name: res.data.user_name,
+                                unread_messages: 1,
+                                profile_picture: res.data.profile_picture,
+                              },
+                            ]);
+                            setInfoMessage(
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignContent: "center",
+                                }}
+                              >
+                                {res.data.profile_picture && (
+                                  <ProfilePicture
+                                    base64ProfilePicture={
+                                      res.data.profile_picture
+                                    }
+                                  />
+                                )}
+                                <Typography>
+                                  {intl.formatMessage(
+                                    {
+                                      id: "chat.info.newPartner",
+                                    },
+                                    { partnerName: res.data.user_name }
+                                  )}
+                                </Typography>
+                              </Box>
+                            );
+                          } else {
+                            setInfoMessage(res.data);
+                          }
+                        }
+                      );
+                    }
+                  }}
+                  disabled={searchForPartnerText.length !== 5}
+                >
+                  <SendIcon />
+                </IconButton>
               }
+              slotProps={{
+                input: {
+                  component: NumericFormatAdapter,
+                },
+              }}
+              error={searchForPartnerErrorText !== ""}
+              size="sm"
+              onChange={(e) => {
+                if (e.target.value.length > 5) {
+                  setSearchForPartnerErrorText(
+                    intl.formatMessage({ id: "chat.error.plzIncorrect" })
+                  );
+                } else {
+                  setSearchForPartnerErrorText("");
+                }
+                setSearchForPartnerText(e.target.value);
+              }}
+              startDecorator={<SearchRoundedIcon />}
+              placeholder={intl.formatMessage({ id: "chat.label.search" })}
+              aria-label={intl.formatMessage({ id: "chat.label.search" })}
             />
-          ) : (
-            <></>
-          )
-        )}
-      </List>
+            {searchForPartnerErrorText && (
+              <FormHelperText>
+                <InfoOutlined />
+                {searchForPartnerErrorText}
+              </FormHelperText>
+            )}
+          </FormControl>
+        </Box>
+      </Box>
+      <DismissDialog
+        open={infoMessage !== ""}
+        dismissDialogType={DismissDialogType.INFO}
+        closeDismissDialog={() => setInfoMessage("")}
+        dialogContent={infoMessage}
+      />
     </Sheet>
   );
 };

@@ -52,7 +52,7 @@ export const ErrorDialogProvider = ({
       <DismissDialog
         closeDismissDialog={closeDismissDialog}
         dismissDialogType={DismissDialogType.ERROR}
-        errorMessage={errorMessage}
+        dialogContent={errorMessage}
         open={DismissDialogOpen}
       />
     </DismissDialogContext.Provider>

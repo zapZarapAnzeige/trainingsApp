@@ -79,6 +79,9 @@ async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     new_match = await find_trainingspartner(plz, matched_persons)
     is_inserted = await insert_new_partner(user_id, new_match)
     if is_inserted:
+        new_match["profile_picture"] = base64.b64encode(
+            new_match["profile_picture"]
+        ).decode("utf-8")
         return new_match
     else:
         return "No people to match found"
@@ -162,7 +165,11 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 async def get_user_data(current_user=Depends(get_current_active_user)):
     del current_user["password"]
     del current_user["expired"]
-    profile_picture = {"profile_picture": base64.b64encode(current_user.pop("profile_picture")).decode(
-        "utf-8"
-    ) if current_user.get("profile_picture") else None}
+    profile_picture = {
+        "profile_picture": base64.b64encode(current_user.pop("profile_picture")).decode(
+            "utf-8"
+        )
+        if current_user.get("profile_picture")
+        else None
+    }
     return {**current_user, **profile_picture}

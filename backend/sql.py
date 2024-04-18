@@ -18,13 +18,18 @@ async def get_overview(partners: Dict):
         .fetchall()
     )
 
-    return [{
-        "partner_name": data.get("user_name"),
-        **partners[data.get("user_id")],
-        "profile_picture": base64.b64encode(data.get("profile_picture")).decode(
-            "utf-8"
-        ) if data.get("profile_picture") else None,
-    }for data in user_data]
+    return [
+        {
+            "partner_name": data.get("user_name"),
+            **partners[data.get("user_id")],
+            "profile_picture": base64.b64encode(data.get("profile_picture")).decode(
+                "utf-8"
+            )
+            if data.get("profile_picture")
+            else None,
+        }
+        for data in user_data
+    ]
 
 
 async def update_user_data(
@@ -33,8 +38,7 @@ async def update_user_data(
     if profile_picture:
         max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
-            raise HTTPException(
-                status_code=413, detail="Image size exceeds 16 MB")
+            raise HTTPException(status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
@@ -56,8 +60,7 @@ def get_profile_pic(user_id: int):
 
 
 def get_user(name):
-    result = session.execute(select(Users).where(
-        Users.c.user_name == name)).fetchone()
+    result = session.execute(select(Users).where(Users.c.user_name == name)).fetchone()
     if result is not None:
         return result._asdict()
 
@@ -87,7 +90,7 @@ def get_all_usernames():
 async def find_trainingspartner(plz: str, matched_people: List[int]):
     try:
         partner = session.execute(
-            select(Users.c.user_name, Users.c.user_id).where(
+            select(Users.c.user_name, Users.c.user_id, Users.c.profile_picture).where(
                 and_(
                     Users.c.plz == plz,
                     Users.c.searching_for_partner,

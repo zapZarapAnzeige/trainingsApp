@@ -46,6 +46,12 @@ export type ChatsOverview = {
   last_sender_id: number;
 };
 
+export type SmallChatOverview = {
+  partner_name: string;
+  partner_id: number;
+  profile_picture?: string;
+};
+
 export type UserData = {
   name: string;
   id: number;

@@ -101,6 +101,7 @@ export const Chat: FC = () => {
     >
       <Sheet
         sx={{
+          overflow: "hidden",
           position: { xs: "fixed", sm: "sticky" },
           transform: {
             xs: "translateX(calc(100% * (var(--MessagesPane-slideIn, 0) - 1)))",
@@ -132,7 +133,7 @@ export const Chat: FC = () => {
         closeDismissDialog={() => {
           setErrorMessage("");
         }}
-        errorMessage={errorMessage}
+        dialogContent={errorMessage}
       />
     </Sheet>
   );

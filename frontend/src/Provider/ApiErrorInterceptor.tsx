@@ -72,7 +72,7 @@ export const ApiErrorInterceptor: FC = () => {
       closeDismissDialog={() => {
         setErrorMessage("");
       }}
-      errorMessage={errorMessage}
+      dialogContent={errorMessage}
     />
   );
 };

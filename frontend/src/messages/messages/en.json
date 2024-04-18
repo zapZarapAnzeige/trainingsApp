@@ -34,5 +34,7 @@
   "chat.label.unblock": "Unblock User",
   "chat.label.viewProfile": "View Profile",
   "chat.placeholder.message": "Type something here…",
-  "chat.timestamp": "{count} {unit} ago"
+  "chat.timestamp": "{count} {unit} ago",
+  "chat.error.plzIncorrect": "Plz must be 5 number long",
+  "chat.info.newPartner": "\uD83C\uDF89 new trainingspartner: {partnerName} \uD83C\uDF89"
 }

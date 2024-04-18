@@ -22,6 +22,7 @@
     "react-auth-kit": "^2.12.3",
     "react-dom": "^18.2.0",
     "react-intl": "^6.6.5",
+    "react-number-format": "^5.3.4",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.12.1",
     "react-scripts": "5.0.1",

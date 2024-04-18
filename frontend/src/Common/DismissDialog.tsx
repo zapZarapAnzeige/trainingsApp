@@ -8,7 +8,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import CancelRoundedIcon from "@mui/icons-material/Cancel";
 import InfoRoundedIcon from "@mui/icons-material/Info";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { DismissDialogType } from "../types";
 
@@ -16,14 +16,14 @@ type DismissDialogProps = {
   open: boolean;
   dismissDialogType: DismissDialogType;
   closeDismissDialog: VoidFunction;
-  errorMessage: string;
+  dialogContent: string | ReactNode;
 };
 
 const DismissDialog: FC<DismissDialogProps> = ({
   open,
   dismissDialogType,
   closeDismissDialog,
-  errorMessage,
+  dialogContent,
 }) => {
   const intl = useIntl();
 
@@ -62,7 +62,7 @@ const DismissDialog: FC<DismissDialogProps> = ({
           {getDialogTitle(dismissDialogType)}
         </DialogTitle>
         <Divider />
-        <DialogContent>{errorMessage}</DialogContent>
+        <DialogContent>{dialogContent}</DialogContent>
         <DialogActions>
           <Button onClick={closeDismissDialog} variant="solid" color="danger">
             {intl.formatMessage({ id: "DismissDialog.close" })}

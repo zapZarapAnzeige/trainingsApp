@@ -52,6 +52,14 @@ export const getUserData = (token: string) => {
   return axiosInstance.get("/users/me", addAuth(token));
 };
 
+export const findNewPartner = (token: string, plz: string) => {
+  return axiosInstance.post(
+    "/chat",
+    {},
+    { ...addAuth(token), params: { plz: plz } }
+  );
+};
+
 export const changeBlockStatus = (
   token: string,
   currentlyBlocked: boolean,

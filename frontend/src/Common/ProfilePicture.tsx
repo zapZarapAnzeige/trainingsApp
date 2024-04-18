@@ -1,7 +1,8 @@
 import { FC } from "react";
-import { Avatar } from "@mui/joy";
+import { Avatar, AvatarProps } from "@mui/joy";
 
 type ProfilePictureProps = {
+  props?: AvatarProps;
   base64ProfilePicture?: string;
   partnerName?: string;
 };
@@ -45,7 +46,8 @@ const getImageExtension = (base64ProfilePicture: string) => {
 
 const getImageFromBase64 = (
   partnerName?: string,
-  base64ProfilePicture?: string
+  base64ProfilePicture?: string,
+  avatarprops?: AvatarProps
 ) => {
   const altIcon = <Avatar>{partnerName ? partnerName.charAt(0) : ""}</Avatar>;
   let extension = "";
@@ -60,6 +62,7 @@ const getImageFromBase64 = (
   return (
     <Avatar
       size="sm"
+      {...avatarprops}
       src={"data:image/" + extension + ";base64," + base64ProfilePicture}
     />
   );
@@ -68,6 +71,7 @@ const getImageFromBase64 = (
 export const ProfilePicture: FC<ProfilePictureProps> = ({
   base64ProfilePicture,
   partnerName,
+  props,
 }) => {
-  return getImageFromBase64(partnerName, base64ProfilePicture);
+  return getImageFromBase64(partnerName, base64ProfilePicture, props);
 };
