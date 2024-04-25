@@ -28,6 +28,7 @@
   "chat.unreadMessages": "{unreadMessages, plural, one {{unreadMessages} unread Message} other {{unreadMessages} unread Messages}}",
   "chat.label.messages": "Messages",
   "chat.label.search": "Search",
+  "chat.label.searchPartner": "Search for Partner by PLZ",
   "chat.label.message": "Message",
   "chat.label.send": "Send",
   "chat.label.block": "Block User",
@@ -35,6 +36,17 @@
   "chat.label.viewProfile": "View Profile",
   "chat.placeholder.message": "Type something here…",
   "chat.timestamp": "{count} {unit} ago",
+  "chat.label.you":"You",
   "chat.error.plzIncorrect": "Plz must be 5 number long",
-  "chat.info.newPartner": "\uD83C\uDF89 new trainingspartner: {partnerName} \uD83C\uDF89"
+  "chat.info.newPartner": "\uD83C\uDF89 new trainingspartner: {partnerName} \uD83C\uDF89",
+  "profile.label.name":"Name",
+  "profile.label.nickName":"nick name",
+  "profile.label.lookingForPartner":"Looking for Trainingspartner?",
+  "profile.label.plz":"PLZ",
+  "profile.label.yes":"YES",
+  "profile.label.no":"NO",
+  "profile.label.cancel": "Cancel",
+  "profile.label.save": "Save",
+  "profile.label.bio": "Bio",
+  "profile.label.personalInfo":"Personal info"
 }

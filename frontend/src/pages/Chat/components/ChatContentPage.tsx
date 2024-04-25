@@ -15,6 +15,7 @@ type ChatContentPageProps = {
   chatHistory: SingleChatHistory[];
   websocket: WebSocket;
   setActivePartner: (sender: PartnerData) => void;
+  setViewProfile: (viewProfile: boolean) => void;
 };
 
 export const ChatContentPage: FC<ChatContentPageProps> = ({
@@ -23,6 +24,7 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
   websocket,
   setChatsOverview,
   setActivePartner,
+  setViewProfile,
 }) => {
   const userData = useAppSelector((state) => state.user.value);
   const [textAreaValue, setTextAreaValue] = useState<string>("");
@@ -59,6 +61,7 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
       }}
     >
       <ChatContentPageHeader
+        setViewProfile={setViewProfile}
         setSender={setActivePartner}
         sender={activePartner}
         setChatsOverview={setChatsOverview}

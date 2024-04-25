@@ -14,6 +14,7 @@ import { useWebsocket } from "../../Provider/WebSocketProvider";
 import { useAuthHeader } from "react-auth-kit";
 import DismissDialog from "../../Common/DismissDialog";
 import { useIntl } from "react-intl";
+import { Profile } from "../Profile/Profile";
 
 export const Chat: FC = () => {
   const [chatsOverview, setChatsOverview] = useState<ChatsOverview[]>([]);
@@ -26,6 +27,7 @@ export const Chat: FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
   const intl = useIntl();
+  const [viewProfile, setViewProfile] = useState<boolean>();
 
   useEffect(() => {
     setChatHistory([]);
@@ -85,7 +87,9 @@ export const Chat: FC = () => {
     });
   }, []);
 
-  return (
+  return viewProfile ? (
+    <Profile setViewProfile={setViewProfile} userData={activePartner} />
+  ) : (
     <Sheet
       sx={{
         flex: 1,
@@ -121,6 +125,7 @@ export const Chat: FC = () => {
         />
       </Sheet>
       <ChatContentPage
+        setViewProfile={setViewProfile}
         setActivePartner={setActivePartner}
         setChatsOverview={setChatsOverview}
         activePartner={activePartner}

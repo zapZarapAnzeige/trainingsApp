@@ -24,7 +24,7 @@ export const InputField: FC<InputFieldProps> = ({
     <FormControl required>
       <FormLabel>{fieldName}</FormLabel>
       <Input
-        type={showPassword ? "Password" : ""}
+        type={showPassword ? "" : "Password"}
         name={fieldName}
         onChange={(e) => {
           setField(e.target.value);

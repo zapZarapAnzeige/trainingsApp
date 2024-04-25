@@ -12,12 +12,7 @@ import {
 import List from "@mui/joy/List";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import {
-  ChatsOverview,
-  DismissDialogType,
-  PartnerData,
-  SmallChatOverview,
-} from "../../../types";
+import { ChatsOverview, DismissDialogType, PartnerData } from "../../../types";
 import { toggleMessagesPane } from "../../../utils";
 import { FC, ReactNode, forwardRef, useState } from "react";
 import { ChatSidebarListItem } from "./ChatSidebarListItem";
@@ -266,8 +261,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
                 setSearchForPartnerText(e.target.value);
               }}
               startDecorator={<SearchRoundedIcon />}
-              placeholder={intl.formatMessage({ id: "chat.label.search" })}
-              aria-label={intl.formatMessage({ id: "chat.label.search" })}
+              placeholder={intl.formatMessage({
+                id: "chat.label.searchPartner",
+              })}
+              aria-label={intl.formatMessage({
+                id: "chat.label.searchPartner",
+              })}
             />
             {searchForPartnerErrorText && (
               <FormHelperText>
