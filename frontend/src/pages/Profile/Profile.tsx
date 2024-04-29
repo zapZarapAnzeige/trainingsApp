@@ -25,18 +25,28 @@ import {
 
 import { FC, useState } from "react";
 import { useIntl } from "react-intl";
-import { PartnerData } from "../../types";
+import { PartnerData, UserData } from "../../types";
 import { getImageFromBase64 } from "../../utils";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;
-  userData: PartnerData;
+  userData: PartnerData | UserData;
 };
 
 export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
+  const isUserData = (value: PartnerData | UserData): value is UserData => {
+    return setViewProfile === undefined;
+  };
+
   const intl = useIntl();
   const [lookingForPartner, setLookingForPartner] = useState<boolean | null>(
-    false
+    isUserData(userData) ? userData.searchingForPartner : false
+  );
+  const [bio, setBio] = useState<string>(userData.bio ?? "");
+  const [name, setName] = useState<string>(userData.name);
+  const [nickName, setNickname] = useState<string>(userData.nickname ?? "");
+  const [plz, setPlz] = useState<string>(
+    isUserData(userData) ? userData.plz ?? "" : ""
   );
 
   const getMessage = (id: string) => {
@@ -83,9 +93,9 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                 maxHeight={200}
                 sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
               >
-                {getProfileImage(userData.name, userData.profile_picture)}
+                {getProfileImage(userData.name, userData.profilePicture)}
               </AspectRatio>
-              {!setViewProfile && (
+              {isUserData(userData) && (
                 <IconButton
                   aria-label="upload new picture"
                   size="sm"
@@ -114,16 +124,27 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     gap: 2,
                   }}
                 >
-                  <Input disabled={true} size="sm" value={userData.name} />
                   <Input
-                    disabled={setViewProfile !== undefined}
+                    disabled={true}
+                    size="sm"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                  <Input
+                    disabled={!isUserData(userData)}
                     size="sm"
                     placeholder={getMessage("profile.label.nickName")}
+                    value={nickName}
+                    onChange={(e) => {
+                      setNickname(e.target.value);
+                    }}
                     sx={{ flexGrow: 1 }}
                   />
                 </FormControl>
               </Stack>
-              {!setViewProfile && (
+              {isUserData(userData) && (
                 <Stack direction="row" spacing={2}>
                   <FormLabel>
                     {getMessage("profile.label.lookingForPartner")}
@@ -146,6 +167,10 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   <FormLabel>{getMessage("profile.label.plz")}</FormLabel>
                   <FormControl sx={{ flexGrow: 1 }}>
                     <Input
+                      value={plz}
+                      onChange={(e) => {
+                        setPlz(e.target.value);
+                      }}
                       size="sm"
                       startDecorator={<EmailRoundedIcon />}
                       placeholder={getMessage("profile.label.plz")}
@@ -160,7 +185,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
             </Stack>
           </Stack>
 
-          {!setViewProfile && (
+          {isUserData(userData) && (
             <CardOverflow
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
@@ -187,10 +212,13 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
               size="sm"
               minRows={4}
               sx={{ mt: 1.5 }}
-              disabled={setLookingForPartner !== undefined}
-              defaultValue="I'm a software developer based in Bangkok, Thailand. My goal is to solve UI problems with neat CSS without using too much JavaScript."
+              disabled={!isUserData(userData)}
+              value={bio}
+              onChange={(e) => {
+                setBio(e.target.value);
+              }}
             />
-            {!setLookingForPartner && (
+            {isUserData(userData) && (
               <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
                 275 characters left
                 {
@@ -199,7 +227,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
               </FormHelperText>
             )}
           </Stack>
-          {!setViewProfile && (
+          {isUserData(userData) && (
             <CardOverflow
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >

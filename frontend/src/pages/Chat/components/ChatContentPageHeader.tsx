@@ -61,7 +61,7 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
           <ArrowBackIosNewRoundedIcon />
         </IconButton>
         <ProfilePicture
-          base64ProfilePicture={sender.profile_picture}
+          base64ProfilePicture={sender.profilePicture}
           props={{ size: "lg" }}
         />
         <IconButton onClick={() => setViewProfile(true)}>
@@ -99,12 +99,12 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
               onClick={() => {
                 setChatsOverview((chatOverview) =>
                   chatOverview.map((chat) =>
-                    chat.partner_id === sender.id
+                    chat.partnerId === sender.id
                       ? {
                           ...chat,
-                          unread_messages: 0,
+                          unreadMessages: 0,
                           disabled: !chat.disabled,
-                          profile_picture: undefined,
+                          profilePicture: undefined,
                         }
                       : chat
                   )
@@ -112,7 +112,7 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
                 setSender({
                   ...sender,
                   disabled: !sender.disabled,
-                  profile_picture: undefined,
+                  profilePicture: undefined,
                 });
 
                 changeBlockStatus(auth(), sender.disabled, sender.id);

@@ -5,6 +5,8 @@ import {
   SingleChatHistory,
   PartnerData,
   WSError,
+  isSingleChatHistory,
+  isWSError,
 } from "../../types";
 import { FC, useEffect, useState } from "react";
 import { getChatHistory, getChatsOverview } from "../../api";
@@ -38,16 +40,6 @@ export const Chat: FC = () => {
     }
   }, [activePartner]);
 
-  const isSingleChatHistory = (
-    value: SingleChatHistory | WSError
-  ): value is SingleChatHistory => {
-    return "content" in value && "sender" in value && "timestamp" in value;
-  };
-
-  const isWSError = (value: SingleChatHistory | WSError): value is WSError => {
-    return "error" in value && "message" in value;
-  };
-
   const websocket = useWebsocket((e) => {
     const data: SingleChatHistory | WSError = JSON.parse(e.data);
     if (isSingleChatHistory(data)) {
@@ -56,15 +48,15 @@ export const Chat: FC = () => {
       }
       setChatsOverview(
         chatsOverview.map((overview) =>
-          overview.partner_id === data.sender
+          overview.partnerId === data.sender
             ? {
                 ...overview,
-                last_message_timestamp: data.timestamp,
-                last_message: data.content,
-                unread_messages:
-                  overview.partner_id === activePartner.id
+                lastMessageTimestamp: data.timestamp,
+                lastMessage: data.content,
+                unreadMessages:
+                  overview.partnerId === activePartner.id
                     ? 0
-                    : overview.unread_messages + 1,
+                    : overview.unreadMessages + 1,
               }
             : overview
         )
@@ -83,7 +75,22 @@ export const Chat: FC = () => {
 
   useEffect(() => {
     getChatsOverview(auth()).then((res) => {
-      setChatsOverview(res.data.chat_data);
+      setChatsOverview(
+        res.data.chat_data.map(
+          (data: any): ChatsOverview => ({
+            bio: data.bio,
+            disabled: data.disabled,
+            lastMessage: data.last_message,
+            lastMessageTimestamp: data.last_message_timestamp,
+            lastSenderId: data.last_sender_id,
+            nickname: data.nickname,
+            partnerId: data.partner_id,
+            partnerName: data.partner_name,
+            profilePicture: data.profile_picture,
+            unreadMessages: data.unread_messages,
+          })
+        )
+      );
     });
   }, []);
 

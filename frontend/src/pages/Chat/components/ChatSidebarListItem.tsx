@@ -24,7 +24,7 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
   setActivePartner,
   readMessages,
 }) => {
-  const selected = chatOverview.partner_id === activePartner.id;
+  const selected = chatOverview.partnerId === activePartner.id;
   const intl = useIntl();
   return (
     <Fragment>
@@ -34,11 +34,13 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
             toggleMessagesPane();
             readMessages();
             setActivePartner({
+              bio: chatOverview.bio,
+              nickname: chatOverview.nickname,
               disabled: chatOverview.disabled,
-              id: chatOverview.partner_id,
-              name: chatOverview.partner_name,
-              profile_picture: chatOverview.profile_picture,
-              lastMessageSenderId: chatOverview.last_sender_id,
+              id: chatOverview.partnerId,
+              name: chatOverview.partnerName,
+              profilePicture: chatOverview.profilePicture,
+              lastMessageSenderId: chatOverview.lastSenderId,
             });
           }}
           selected={selected}
@@ -55,17 +57,17 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
         >
           <Stack direction="row" spacing={1.5}>
             <ProfilePicture
-              base64ProfilePicture={chatOverview.profile_picture}
-              partnerName={chatOverview.partner_name}
+              base64ProfilePicture={chatOverview.profilePicture}
+              partnerName={chatOverview.partnerName}
             />
             <Box sx={{ flex: 1 }}>
               <Typography level="title-sm">
-                {chatOverview.partner_name}
+                {chatOverview.partnerName}
               </Typography>
               <Typography level="body-sm">
                 {intl.formatMessage(
                   { id: "chat.unreadMessages" },
-                  { unreadMessages: chatOverview.unread_messages }
+                  { unreadMessages: chatOverview.unreadMessages }
                 )}
               </Typography>
             </Box>
@@ -75,7 +77,7 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
                 textAlign: "right",
               }}
             >
-              {chatOverview.unread_messages > 0 && (
+              {chatOverview.unreadMessages > 0 && (
                 <CircleIcon sx={{ fontSize: 12 }} color="primary" />
               )}
               <Typography
@@ -83,7 +85,7 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
                 display={{ xs: "none", md: "block" }}
                 noWrap
               >
-                {formatTimestamp(chatOverview.last_message_timestamp, intl)}
+                {formatTimestamp(chatOverview.lastMessageTimestamp, intl)}
               </Typography>
             </Box>
           </Stack>
@@ -98,7 +100,7 @@ export const ChatSidebarListItem: FC<ChatSidebarListItemProps> = ({
               width: "100%",
             }}
           >
-            {chatOverview.last_message}
+            {chatOverview.lastMessage}
           </Typography>
         </ListItemButton>
       </ListItem>

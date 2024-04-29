@@ -90,8 +90,8 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
               >
                 {message.sender === activePartner.id && (
                   <ProfilePicture
-                    partnerName={activePartner.profile_picture}
-                    base64ProfilePicture={activePartner.profile_picture}
+                    partnerName={activePartner.profilePicture}
+                    base64ProfilePicture={activePartner.profilePicture}
                   />
                 )}
                 <ChatMessage
