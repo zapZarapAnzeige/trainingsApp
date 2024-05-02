@@ -10,9 +10,13 @@ from typing import Dict, List, Optional
 async def get_overview(partners: Dict):
     user_data = (
         session.execute(
-            select(Users.c.profile_picture, Users.c.user_name, Users.c.user_id).where(
-                Users.c.user_id.in_(partners.keys())
-            )
+            select(
+                Users.c.profile_picture,
+                Users.c.user_name,
+                Users.c.user_id,
+                Users.c.bio,
+                Users.c.nickname,
+            ).where(Users.c.user_id.in_(partners.keys()))
         )
         .mappings()
         .fetchall()
@@ -20,6 +24,8 @@ async def get_overview(partners: Dict):
 
     return [
         {
+            "bio": data.get("bio"),
+            "nickname": data.get("nickname"),
             "partner_name": data.get("user_name"),
             **partners[data.get("user_id")],
             "profile_picture": base64.b64encode(data.get("profile_picture")).decode(
@@ -90,7 +96,13 @@ def get_all_usernames():
 async def find_trainingspartner(plz: str, matched_people: List[int]):
     try:
         partner = session.execute(
-            select(Users.c.user_name, Users.c.user_id, Users.c.profile_picture).where(
+            select(
+                Users.c.user_name,
+                Users.c.user_id,
+                Users.c.profile_picture,
+                Users.c.nickname,
+                Users.c.bio,
+            ).where(
                 and_(
                     Users.c.plz == plz,
                     Users.c.searching_for_partner,

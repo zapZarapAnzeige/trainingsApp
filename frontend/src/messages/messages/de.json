@@ -28,6 +28,7 @@
   "chat.unreadMessages": "{unreadMessages, plural, one {{unreadMessages} neue Nachricht} other {{unreadMessages} neue Nachrichten}}",
   "chat.label.messages": "Nachrichten",
   "chat.label.search": "Suchen",
+  "chat.label.searchPartner": "Mit PLZ nach Trainingspartner suchen",
   "chat.label.message": "Nachricht",
   "chat.label.send": "Senden",
   "chat.label.block": "Nutzer Blockieren",
@@ -35,6 +36,17 @@
   "chat.label.viewProfile": "Profil ansehen",
   "chat.placeholder.message": "Hier Nachricht eingeben…",
   "chat.timestamp": "vor {count} {unit}",
+  "chat.label.you":"Du",
   "chat.error.plzIncorrect": "Plz muss 5 Zahlen lang sein",
-  "chat.info.newPartner": "\uD83C\uDF89 neuer Trainingspartner: {partnerName} \uD83C\uDF89"
+  "chat.info.newPartner": "\uD83C\uDF89 neuer Trainingspartner: {partnerName} \uD83C\uDF89",
+"profile.label.name":"Name",
+"profile.label.nickName":"Spitzname",
+"profile.label.lookingForPartner":"Auf der Suche nach einem Trainingspartner?",
+"profile.label.plz":"PLZ",
+"profile.label.yes":"JA",
+"profile.label.no":"NEIN",
+"profile.label.cancel": "Verwerfen",
+"profile.label.save": "Speichern",
+"profile.label.bio": "Bio",
+"profile.label.personalInfo": "Persönliche Informationen"
 }

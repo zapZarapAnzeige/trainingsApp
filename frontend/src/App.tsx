@@ -50,6 +50,8 @@ export default function App() {
             searchingForPartner: res.data.searching_for_partner,
             plz: res.data.plz,
             profilePicture: res.data.profile_picture,
+            bio: res.data.bio,
+            nickname: res.data.nickname,
           })
         );
       });

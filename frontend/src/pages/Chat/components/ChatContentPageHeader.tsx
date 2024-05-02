@@ -23,16 +23,19 @@ type ChatContentPageHeaderProps = {
   setSender: (sender: PartnerData) => void;
   sender: PartnerData;
   setChatsOverview: Dispatch<SetStateAction<ChatsOverview[]>>;
+  setViewProfile: (viewProfile: boolean) => void;
 };
 
 export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
   sender,
   setChatsOverview,
   setSender,
+  setViewProfile,
 }) => {
   const auth = useAuthHeader();
   const intl = useIntl();
   const userData = useAppSelector((state) => state.user.value);
+
   return (
     <Stack
       direction="row"
@@ -58,15 +61,14 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
           <ArrowBackIosNewRoundedIcon />
         </IconButton>
         <ProfilePicture
-          base64ProfilePicture={sender.profile_picture}
+          base64ProfilePicture={sender.profilePicture}
           props={{ size: "lg" }}
         />
-        <div>
+        <IconButton onClick={() => setViewProfile(true)}>
           <Typography fontWeight="lg" fontSize="lg" component="h2" noWrap>
             {sender.name}
           </Typography>
-          <Typography level="body-sm">{sender.name}</Typography>
-        </div>
+        </IconButton>
       </Stack>
       <Stack spacing={1} direction="row" alignItems="center">
         <Dropdown>
@@ -75,9 +77,7 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
             variant="plain"
             sx={{ borderWidth: 0, maxWidth: "32px", maxHeight: "32px" }}
           >
-            <IconButton size="sm" variant="plain" color="neutral">
-              <MoreVertRoundedIcon />
-            </IconButton>
+            <MoreVertRoundedIcon />
           </MenuButton>
           <Menu
             placement="bottom-end"
@@ -89,7 +89,7 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
               "--ListItem-radius": "var(--joy-radius-sm)",
             }}
           >
-            <MenuItem onClick={() => {}}>
+            <MenuItem onClick={() => setViewProfile(true)}>
               {intl.formatMessage({ id: "chat.label.viewProfile" })}
             </MenuItem>
             <MenuItem
@@ -99,12 +99,12 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
               onClick={() => {
                 setChatsOverview((chatOverview) =>
                   chatOverview.map((chat) =>
-                    chat.partner_id === sender.id
+                    chat.partnerId === sender.id
                       ? {
                           ...chat,
-                          unread_messages: 0,
+                          unreadMessages: 0,
                           disabled: !chat.disabled,
-                          profile_picture: undefined,
+                          profilePicture: undefined,
                         }
                       : chat
                   )
@@ -112,14 +112,14 @@ export const ChatContentPageHeader: FC<ChatContentPageHeaderProps> = ({
                 setSender({
                   ...sender,
                   disabled: !sender.disabled,
-                  profile_picture: undefined,
+                  profilePicture: undefined,
                 });
 
                 changeBlockStatus(auth(), sender.disabled, sender.id);
               }}
             >
               {intl.formatMessage({
-                id: sender.disabled ? "unblock User" : "Block User",
+                id: sender.disabled ? "chat.label.unblock" : "chat.label.block",
               })}
             </MenuItem>
           </Menu>

@@ -50,6 +50,8 @@ async def upload_user_data(
     profile_picture: Optional[UploadFile] = File(None),
     plz: str = None,
     searching_for_partner: bool = None,
+    bio: str = None,
+    nickname: str = None,
     current_user=Depends(get_current_active_user),
 ):
     user_data = {}

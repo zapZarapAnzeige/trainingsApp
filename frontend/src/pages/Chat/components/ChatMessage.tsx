@@ -31,7 +31,9 @@ export const ChatMessage: FC<ChatMessageProps> = ({
         sx={{ mb: 0.25 }}
       >
         <Typography level="body-xs">
-          {sender === userData.id ? "You" : activePartner.name}
+          {sender === userData.id
+            ? intl.formatMessage({ id: "chat.label.you" })
+            : activePartner.name}
         </Typography>
         <Typography level="body-xs">
           {formatTimestamp(timestamp, intl)}

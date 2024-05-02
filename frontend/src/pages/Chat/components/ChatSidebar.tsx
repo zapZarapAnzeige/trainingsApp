@@ -12,12 +12,7 @@ import {
 import List from "@mui/joy/List";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import {
-  ChatsOverview,
-  DismissDialogType,
-  PartnerData,
-  SmallChatOverview,
-} from "../../../types";
+import { ChatsOverview, DismissDialogType, PartnerData } from "../../../types";
 import { toggleMessagesPane } from "../../../utils";
 import { FC, ReactNode, forwardRef, useState } from "react";
 import { ChatSidebarListItem } from "./ChatSidebarListItem";
@@ -75,7 +70,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
   const auth = useAuthHeader();
   const getTotalUnreadMessages = () => {
     let result = 0;
-    chatsOverview.forEach((chat) => (result += chat.unread_messages));
+    chatsOverview.forEach((chat) => (result += chat.unreadMessages));
     return result;
   };
 
@@ -163,17 +158,17 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
           }}
         >
           {chatsOverview.map((chatOverview) =>
-            chatOverview.partner_name.includes(searchbarText) ? (
+            chatOverview.partnerName.includes(searchbarText) ? (
               <ChatSidebarListItem
-                key={chatOverview.partner_id}
+                key={chatOverview.partnerId}
                 activePartner={activePartner}
                 chatOverview={chatOverview}
                 setActivePartner={setActivePartner}
                 readMessages={() =>
                   setChatsOverview(
                     chatsOverview.map((chat) =>
-                      chat.partner_id === chatOverview.partner_id
-                        ? { ...chat, unread_messages: 0 }
+                      chat.partnerId === chatOverview.partnerId
+                        ? { ...chat, unreadMessages: 0 }
                         : chat
                     )
                   )
@@ -201,14 +196,16 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
                             setChatsOverview([
                               ...chatsOverview,
                               {
+                                bio: res.data.bio,
+                                nickname: res.data.nickname,
                                 disabled: false,
-                                last_message: "newMatch",
-                                last_message_timestamp: Date.now(),
-                                last_sender_id: res.data.user_id,
-                                partner_id: res.data.user_id,
-                                partner_name: res.data.user_name,
-                                unread_messages: 1,
-                                profile_picture: res.data.profile_picture,
+                                lastMessage: "newMatch",
+                                lastMessageTimestamp: Date.now(),
+                                lastSenderId: res.data.user_id,
+                                partnerId: res.data.user_id,
+                                partnerName: res.data.user_name,
+                                unreadMessages: 1,
+                                profilePicture: res.data.profile_picture,
                               },
                             ]);
                             setInfoMessage(
@@ -266,8 +263,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
                 setSearchForPartnerText(e.target.value);
               }}
               startDecorator={<SearchRoundedIcon />}
-              placeholder={intl.formatMessage({ id: "chat.label.search" })}
-              aria-label={intl.formatMessage({ id: "chat.label.search" })}
+              placeholder={intl.formatMessage({
+                id: "chat.label.searchPartner",
+              })}
+              aria-label={intl.formatMessage({
+                id: "chat.label.searchPartner",
+              })}
             />
             {searchForPartnerErrorText && (
               <FormHelperText>

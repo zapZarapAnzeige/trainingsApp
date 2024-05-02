@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Avatar, AvatarProps } from "@mui/joy";
+import { getImageFromBase64 } from "../utils";
 
 type ProfilePictureProps = {
   props?: AvatarProps;
@@ -7,71 +8,16 @@ type ProfilePictureProps = {
   partnerName?: string;
 };
 
-const getImageExtension = (base64ProfilePicture: string) => {
-  switch (base64ProfilePicture.charAt(0)) {
-    case "/":
-      return "jpg";
-
-    case "i":
-      return "png";
-
-    case "R":
-      return "gif";
-
-    case "U":
-      return "webp";
-
-    case "B":
-      return "bmp";
-
-    case "T":
-      return "tiff";
-
-    case "S":
-      return "svg";
-
-    case "E":
-      return "eps";
-
-    case "P":
-      return "psd";
-
-    case "I":
-      return "ico";
-
-    default:
-      return "";
-  }
-};
-
-const getImageFromBase64 = (
-  partnerName?: string,
-  base64ProfilePicture?: string,
-  avatarprops?: AvatarProps
-) => {
-  const altIcon = <Avatar>{partnerName ? partnerName.charAt(0) : ""}</Avatar>;
-  let extension = "";
-  if (base64ProfilePicture) {
-    extension = getImageExtension(base64ProfilePicture);
-  } else {
-    return altIcon;
-  }
-  if (extension === "") {
-    return altIcon;
-  }
-  return (
-    <Avatar
-      size="sm"
-      {...avatarprops}
-      src={"data:image/" + extension + ";base64," + base64ProfilePicture}
-    />
-  );
-};
-
 export const ProfilePicture: FC<ProfilePictureProps> = ({
   base64ProfilePicture,
   partnerName,
   props,
 }) => {
-  return getImageFromBase64(partnerName, base64ProfilePicture, props);
+  const image = getImageFromBase64(base64ProfilePicture);
+
+  if (typeof image === "string") {
+    return <Avatar size="sm" {...props} src={image} />;
+  } else {
+    return <Avatar>{partnerName ? partnerName.charAt(0) : ""}</Avatar>;
+  }
 };

@@ -41,34 +41,32 @@ export type Help = {
 };
 
 export type ChatsOverview = {
-  partner_name: string;
-  partner_id: number;
-  last_message: string;
-  unread_messages: number;
-  last_message_timestamp: string | number;
+  partnerName: string;
+  partnerId: number;
+  lastMessage: string;
+  unreadMessages: number;
+  lastMessageTimestamp: string | number;
   disabled: boolean;
-  profile_picture?: string;
-  last_sender_id: number;
+  profilePicture?: string;
+  lastSenderId: number;
+  bio?: string;
+  nickname?: string;
 };
 
-export type SmallChatOverview = {
-  partner_name: string;
-  partner_id: number;
-  profile_picture?: string;
-};
-
-export type UserData = {
+type BaseUserData = {
   name: string;
   id: number;
+  profilePicture?: string;
+  nickname?: string;
+  bio?: string;
+};
+
+export type UserData = BaseUserData & {
   searchingForPartner: boolean;
   plz?: string;
-  profilePicture?: string;
 };
 
-export type PartnerData = {
-  name: string;
-  id: number;
-  profile_picture?: string;
+export type PartnerData = BaseUserData & {
   disabled: boolean;
   lastMessageSenderId: number;
 };
@@ -96,3 +94,15 @@ export enum DismissDialogType {
   WARNING = "warning",
   ERROR = "error",
 }
+
+export const isSingleChatHistory = (
+  value: SingleChatHistory | WSError
+): value is SingleChatHistory => {
+  return "content" in value && "sender" in value && "timestamp" in value;
+};
+
+export const isWSError = (
+  value: SingleChatHistory | WSError
+): value is WSError => {
+  return "error" in value && "message" in value;
+};
