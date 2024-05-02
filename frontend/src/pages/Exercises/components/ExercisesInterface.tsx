@@ -1,9 +1,20 @@
-import { Box, Chip, ChipDelete, Select, Stack, Typography } from "@mui/joy";
+import {
+  Box,
+  Chip,
+  ChipDelete,
+  Select,
+  Stack,
+  Typography,
+  Option,
+} from "@mui/joy";
 import { useState } from "react";
 import { tags } from "../../../constants";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { addTag, removeTag } from "../../../redux/reducers/tagsSlice";
 
 export default function ExercisesInterface() {
-  const [open, setOpen] = useState<string[]>([]);
+  const currentPage = useAppSelector((state) => state.tags.value);
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -16,7 +27,11 @@ export default function ExercisesInterface() {
         color="white"
       >
         <Box display="flex" alignItems="center">
-          <Select></Select>
+          <Select>
+            {tags.map((tag) => {
+              return <Option value={tag}>{tag}</Option>;
+            })}
+          </Select>
         </Box>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <div>

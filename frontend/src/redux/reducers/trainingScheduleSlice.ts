@@ -43,9 +43,18 @@ const trainingScheduleDialogSlice = createSlice({
         (exercise) => exercise.exerciseName !== action.payload
       );
     },
+    clearAll: (state) => {
+      state.value = { name: "", onDays: [], exercises: [] };
+    },
   },
 });
 
-export const { setName, addDay, removeDay, addExercise, removeExercise } =
-  trainingScheduleDialogSlice.actions;
+export const {
+  setName,
+  addDay,
+  removeDay,
+  addExercise,
+  removeExercise,
+  clearAll,
+} = trainingScheduleDialogSlice.actions;
 export default trainingScheduleDialogSlice.reducer;

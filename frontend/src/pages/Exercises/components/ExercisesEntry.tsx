@@ -11,7 +11,7 @@ type ExercisesEntryProps = {
 
 const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   return (
-    <Card sx={{ width: 320 }}>
+    <Card>
       <Box>
         <Typography level="title-lg">
           {exercisesEntryData.exerciseName}

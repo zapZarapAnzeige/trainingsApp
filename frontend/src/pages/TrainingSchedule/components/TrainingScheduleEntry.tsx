@@ -34,10 +34,10 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
       <TrainingScheduleDialog open={open} setOpen={setOpen} />
       <Card
         sx={{
-          width: 320,
           maxWidth: "100%",
           boxShadow: "lg",
           margin: "auto",
+          height: "50vh",
         }}
       >
         <CardOverflow sx={{ bgcolor: "background.level1" }}>
@@ -54,7 +54,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
             </Grid>
           </CardContent>
         </CardOverflow>
-        <CardContent>
+        <CardContent sx={{ overflow: "auto" }}>
           <List>
             {training.exercises.map((exercise, index) => {
               return (
@@ -68,7 +68,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     ) : (
                       <ListItemContent>
                         {exercise.exercise.setAmount} x{" "}
-                        {exercise.exercise.repititionAmount} Wdh.
+                        {exercise.exercise.repetitionAmount} Wdh.
                       </ListItemContent>
                     )}
                   </ListItem>

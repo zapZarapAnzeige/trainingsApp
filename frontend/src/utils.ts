@@ -42,6 +42,8 @@ export function getPageName(page: string) {
       return "Hilfe";
     case "about":
       return "Über uns";
+    case "profile":
+      return "Mein Profil";
     default:
       return "";
   }

@@ -15,7 +15,7 @@ export type ExerciseCardio = {
 };
 
 export type ExerciseWeighted = {
-  repititionAmount: number;
+  repetitionAmount: number;
   setAmount: number;
   weight: number;
 };
@@ -33,6 +33,11 @@ export type CalendarDayData = {
 // Exercises
 export type ExercisesEntryData = Exercise & {
   rating: number;
+};
+
+export type Help = {
+  title: string;
+  text: string;
 };
 
 export type ChatsOverview = {

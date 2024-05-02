@@ -183,7 +183,7 @@ export default function Sidebar() {
 
           <ListItem>
             <ListItemButton
-              onClick={() => dispatch(changePage("login"))}
+              onClick={() => dispatch(changePage("about"))}
               selected={isSelected("about")}
             >
               <InfoIcon />
@@ -200,9 +200,12 @@ export default function Sidebar() {
           base64ProfilePicture={userData.profilePicture}
           partnerName={userData.name}
         />
-        <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Box
+          sx={{ minWidth: 0, flex: 1 }}
+          onClick={() => dispatch(changePage("profile"))}
+        >
           <Typography level="title-sm">{userData.name}</Typography>
-          <Typography level="body-xs">{userData.name}</Typography>
+          <Typography level="body-xs">USER EMAIL?</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={logout}>
           <LogoutRoundedIcon />

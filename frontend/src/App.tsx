@@ -18,6 +18,9 @@ import { getUserData } from "./api";
 import { changeUser } from "./redux/reducers/userSlice";
 import TrainingSchedule from "./pages/TrainingSchedule/TrainingSchedule";
 import Exercises from "./pages/Exercises/Exercises";
+import Help from "./pages/Help/Help";
+import About from "./pages/About/About";
+import Profile from "./pages/Profile/Profile";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
@@ -68,9 +71,9 @@ export default function App() {
       case "exercises":
         return <Exercises />;
       case "help":
-        return <Calendar />;
+        return <Help />;
       case "about":
-        return <Calendar />;
+        return <About />;
       default:
         return <Calendar />;
     }
