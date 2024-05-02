@@ -20,7 +20,6 @@ import TrainingSchedule from "./pages/TrainingSchedule/TrainingSchedule";
 import Exercises from "./pages/Exercises/Exercises";
 import Help from "./pages/Help/Help";
 import About from "./pages/About/About";
-import Profile from "./pages/Profile/Profile";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
