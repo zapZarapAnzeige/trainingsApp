@@ -106,6 +106,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     <Checkbox
                       checked={training.onDays.includes(day)}
                       sx={{ marginBottom: 1 }}
+                      readOnly
                     />
                     <FormLabel>{day}</FormLabel>
                   </FormControl>

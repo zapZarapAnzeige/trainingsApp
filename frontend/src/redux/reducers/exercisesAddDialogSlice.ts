@@ -1,13 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { ExercisesAddDialog } from "../../types";
-import { weekdaysAbbreviation } from "../../constants";
 import { moveString } from "../../utils";
 
-export type exercisesAddDialogState = {
+export type ExercisesAddDialogState = {
   value: ExercisesAddDialog;
 };
 
-const initialState: exercisesAddDialogState = {
+const initialState: ExercisesAddDialogState = {
   value: {
     exerciseName: "",
     exercise: { minutes: 0 },
@@ -16,18 +15,8 @@ const initialState: exercisesAddDialogState = {
   },
 };
 
-function sortAndInsertDay(days: string[], dayToAdd: string) {
-  days.push(dayToAdd);
-
-  days.sort((a: string, b: string) => {
-    return weekdaysAbbreviation.indexOf(a) - weekdaysAbbreviation.indexOf(b);
-  });
-
-  return days;
-}
-
 const exercisesAddDialogSlice = createSlice({
-  name: "currentPage",
+  name: "exercisesAddDialog",
   initialState,
   reducers: {
     addToTraining: (state, action: PayloadAction<string>) => {

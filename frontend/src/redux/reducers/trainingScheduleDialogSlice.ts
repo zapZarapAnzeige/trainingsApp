@@ -1,27 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Exercise, Training } from "../../types";
-import { weekdaysAbbreviation } from "../../constants";
+import { sortAndInsertDay } from "../../utils";
 
-export type trainingScheduleDialogState = {
+export type TrainingScheduleDialogState = {
   value: Training;
 };
 
-const initialState: trainingScheduleDialogState = {
+const initialState: TrainingScheduleDialogState = {
   value: { name: "", onDays: [], exercises: [] },
 };
 
-function sortAndInsertDay(days: string[], dayToAdd: string) {
-  days.push(dayToAdd);
-
-  days.sort((a: string, b: string) => {
-    return weekdaysAbbreviation.indexOf(a) - weekdaysAbbreviation.indexOf(b);
-  });
-
-  return days;
-}
-
 const trainingScheduleDialogSlice = createSlice({
-  name: "currentPage",
+  name: "trainingScheduleDialog",
   initialState,
   reducers: {
     setName: (state, action: PayloadAction<string>) => {

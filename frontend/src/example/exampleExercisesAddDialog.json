@@ -1,5 +1,4 @@
 {
-  "exerciseName": "Irgendwas",
   "inTraining": ["Training1", "Training2"],
   "notInTraining": ["Training3", "Training4"]
 }

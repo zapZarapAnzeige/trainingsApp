@@ -4,6 +4,7 @@ import userSlice from "./reducers/userSlice";
 import trainingScheduleDialogSlice from "./reducers/trainingScheduleDialogSlice";
 import tagsSlice from "./reducers/tagsSlice";
 import exercisesAddDialogSlice from "./reducers/exercisesAddDialogSlice";
+import exercisesInfoDialogSlice from "./reducers/exercisesInfoDialogSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     trainingScheduleDialog: trainingScheduleDialogSlice,
     tags: tagsSlice,
     exercisesAddDialog: exercisesAddDialogSlice,
+    exercisesInfoDialog: exercisesInfoDialogSlice,
   },
 });
 

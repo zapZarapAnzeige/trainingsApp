@@ -215,3 +215,13 @@ export function moveString(
     );
   }
 }
+
+export function sortAndInsertDay(days: string[], dayToAdd: string) {
+  days.push(dayToAdd);
+
+  days.sort((a: string, b: string) => {
+    return weekdaysAbbreviation.indexOf(a) - weekdaysAbbreviation.indexOf(b);
+  });
+
+  return days;
+}

@@ -9,7 +9,7 @@ const initialState: tagsState = {
 };
 
 const tagsSlice = createSlice({
-  name: "currentPage",
+  name: "tags",
   initialState,
   reducers: {
     addTag: (state, action: PayloadAction<string>) => {

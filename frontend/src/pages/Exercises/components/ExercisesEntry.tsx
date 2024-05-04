@@ -12,8 +12,12 @@ import ExercisesAddDialog from "./ExercisesAddDialog";
 import { useAppDispatch } from "../../../hooks";
 import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
 
+import ExercisesInfoDialog from "./ExercisesInfoDialog";
+import { setexercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
+
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
+import exercisesInfoDialogData from "../../../example/exampleExercisesInfoDialog.json";
 
 type ExercisesEntryProps = {
   exercisesEntryData: ExercisesEntryData;
@@ -52,13 +56,24 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   dispatch(
     setExercisesAddDialog({
       ...exercisesAddDialogData,
+      exerciseName: exercisesEntryData.exerciseName,
       exercise: { minutes: 0 },
+    })
+  );
+
+  dispatch(
+    setexercisesInfoDialog({
+      ...exercisesInfoDialogData,
+      exerciseName: exercisesEntryData.exerciseName,
+      primaryTags: exercisesEntryData.primaryTags,
+      secondaryTags: exercisesEntryData.secondaryTags,
     })
   );
 
   return (
     <>
       <ExercisesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} />
+      <ExercisesInfoDialog open={openInfoDialog} setOpen={setOpenInfoDialog} />
       <Card>
         <Typography level="title-lg" mx="auto">
           {exercisesEntryData.exerciseName}

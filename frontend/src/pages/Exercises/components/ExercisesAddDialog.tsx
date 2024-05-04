@@ -3,19 +3,26 @@ import * as React from "react";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
 import {
+  Checkbox,
   DialogTitle,
   Divider,
   FormControl,
   FormLabel,
   IconButton,
   Input,
+  List,
+  ListItem,
+  ListItemContent,
   Stack,
+  Typography,
 } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import {
-  setExercisesAddDialog,
+  addToTraining,
+  clearAll,
+  removeFromTraining,
   setMinutes,
   setRepetitionAmount,
   setSetAmount,
@@ -44,10 +51,16 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
           spacing={2}
         >
           <DialogTitle>{exercisesAddDialog.exerciseName}</DialogTitle>
-          <IconButton onClick={() => setOpen(false)}>
+          <IconButton
+            onClick={() => {
+              dispatch(clearAll());
+              setOpen(false);
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Stack>
+        <Divider />
         {"minutes" in exercisesAddDialog.exercise && (
           <FormControl>
             <FormLabel>Minuten</FormLabel>
@@ -106,11 +119,45 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
           </>
         )}
         <Divider />
+        <Typography sx={{ mx: "auto" }} fontSize="lg">
+          Übung zu Training hinzufügen
+        </Typography>
+        <List>
+          {exercisesAddDialog.inTraining
+            .concat(exercisesAddDialog.notInTraining)
+            .sort()
+            .map((training) => {
+              return (
+                <ListItem>
+                  <ListItemContent>
+                    <Stack direction="row" justifyContent="space-around">
+                      <Checkbox
+                        defaultChecked={exercisesAddDialog.inTraining.includes(
+                          training
+                        )}
+                        onChange={(e) => {
+                          setIsDataDirty(true);
+                          dispatch(
+                            e.target.checked
+                              ? addToTraining(training)
+                              : removeFromTraining(training)
+                          );
+                        }}
+                      />
+                      <Typography fontSize="lg">{training}</Typography>
+                    </Stack>
+                  </ListItemContent>
+                </ListItem>
+              );
+            })}
+        </List>
+
+        <Divider />
         <IconButton
           variant="solid"
           color="primary"
           disabled={!isDataDirty}
-          onClick={() => {}}
+          onClick={() => {}} // Nada API implemtierung
         >
           <CheckIcon />
         </IconButton>
