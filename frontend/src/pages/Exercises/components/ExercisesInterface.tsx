@@ -13,6 +13,7 @@ import { tags } from "../../../constants";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { addTag, removeTag } from "../../../redux/reducers/tagsSlice";
 import { CloseRounded } from "@mui/icons-material";
+import { arraysEqual } from "../../../utils";
 
 export default function ExercisesInterface() {
   const currentTags = useAppSelector((state) => state.tags.value);
@@ -29,6 +30,7 @@ export default function ExercisesInterface() {
     >
       <Stack direction="column" spacing={2}>
         <Select
+          disabled={arraysEqual(tags, currentTags)}
           onChange={(
             event: React.SyntheticEvent | null,
             newValue: string | null
@@ -39,9 +41,13 @@ export default function ExercisesInterface() {
           }}
           sx={{ minWidth: 320 }}
         >
-          {tags.map((tag) => {
-            return <Option value={tag}>{tag}</Option>;
-          })}
+          {tags
+            .filter((tag) => !currentTags.includes(tag))
+            .map((tag) => (
+              <Option key={tag} value={tag}>
+                {tag}
+              </Option>
+            ))}
         </Select>
         <Stack direction="row" spacing={2}>
           {currentTags.map((tag) => {
