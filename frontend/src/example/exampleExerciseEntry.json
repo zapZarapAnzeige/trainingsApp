@@ -1,7 +1,6 @@
 [
   {
     "exerciseName": "Irgendwas",
-    "exerciseType": "weighted",
     "exercise": {
       "repetitionAmount": 15,
       "setAmount": 5,
@@ -9,18 +8,47 @@
     },
     "rating": 4.5,
     "reviews": 6,
-    "primaryTags": ["a, b"],
+    "primaryTags": ["a"],
+    "secondaryTags": ["b"]
+  },
+  {
+    "exerciseName": "Irgendwas",
+    "exercise": {
+      "minutes": 15
+    },
+    "rating": 2.5,
+    "reviews": 3,
+    "primaryTags": ["d", "e"],
     "secondaryTags": ["c"]
   },
   {
     "exerciseName": "Irgendwas",
-    "exerciseType": "cardio",
     "exercise": {
       "minutes": 15
     },
-    "rating": 3.0,
+    "rating": 1.5,
     "reviews": 3,
-    "primaryTags": ["a, b"],
-    "secondaryTags": ["c"]
+    "primaryTags": ["f", "g"],
+    "secondaryTags": ["a"]
+  },
+  {
+    "exerciseName": "Irgendwas",
+    "exercise": {
+      "minutes": 15
+    },
+    "rating": 2.0,
+    "reviews": 3,
+    "primaryTags": ["e", "d"],
+    "secondaryTags": ["f"]
+  },
+  {
+    "exerciseName": "asdasdsad",
+    "exercise": {
+      "minutes": 15
+    },
+    "rating": 5.0,
+    "reviews": 3,
+    "primaryTags": ["i", "c"],
+    "secondaryTags": ["a"]
   }
 ]

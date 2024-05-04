@@ -2,18 +2,29 @@ import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
 import { ExercisesEntryData } from "../../../types";
-import { FC } from "react";
+import { FC, useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import AddIcon from "@mui/icons-material/Add";
+import ExercisesAddDialog from "./ExercisesAddDialog";
+import { useAppDispatch } from "../../../hooks";
+import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
+
+// TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
+import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
 
 type ExercisesEntryProps = {
   exercisesEntryData: ExercisesEntryData;
 };
 
 const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
+  const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+  const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+
   const starRating = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -38,43 +49,63 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
     return <>{stars}</>;
   };
 
+  dispatch(
+    setExercisesAddDialog({
+      ...exercisesAddDialogData,
+      exercise: { minutes: 0 },
+    })
+  );
+
   return (
-    <Card>
-      <Typography level="title-lg" mx="auto">
-        {exercisesEntryData.exerciseName}
-      </Typography>
-      <AspectRatio minHeight="120px" maxHeight="200px">
-        <img
-          src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-          srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-          loading="lazy"
-          alt=""
-        />
-      </AspectRatio>
-      <Stack></Stack>
-      <CardContent>
-        <Stack direction="row" justifyContent="space-between" spacing={1}>
-          <Stack direction="column">
-            <Stack direction="row">
-              <Typography fontSize="lg" fontWeight="lg" mr={1}>
-                {exercisesEntryData.rating.toFixed(1)}
+    <>
+      <ExercisesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} />
+      <Card>
+        <Typography level="title-lg" mx="auto">
+          {exercisesEntryData.exerciseName}
+        </Typography>
+        <AspectRatio minHeight="120px" maxHeight="200px">
+          <img
+            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
+            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+            loading="lazy"
+            alt=""
+          />
+        </AspectRatio>
+        <Stack></Stack>
+        <CardContent>
+          <Stack direction="row" justifyContent="space-between" spacing={1}>
+            <Stack direction="column">
+              <Stack direction="row">
+                <Typography fontSize="lg" fontWeight="lg" mr={1}>
+                  {exercisesEntryData.rating.toFixed(1)}
+                </Typography>
+                {starRating(exercisesEntryData.rating)}
+              </Stack>
+              <Typography level="body-xs">
+                {exercisesEntryData.reviews}{" "}
+                {exercisesEntryData.reviews === 1 ? "Bewertung" : "Bewertungen"}
               </Typography>
-              {starRating(exercisesEntryData.rating)}
             </Stack>
-            <Typography level="body-xs">
-              {exercisesEntryData.reviews}{" "}
-              {exercisesEntryData.reviews === 1 ? "Bewertung" : "Bewertungen"}
-            </Typography>
+            <IconButton
+              variant="outlined"
+              color="primary"
+              sx={{ width: "100%" }}
+              onClick={() => setOpenAddDialog(true)}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              variant="outlined"
+              color="neutral"
+              sx={{ width: "100%" }}
+              onClick={() => setOpenInfoDialog(true)}
+            >
+              <InfoIcon />
+            </IconButton>
           </Stack>
-          <IconButton variant="outlined" color="primary" sx={{ width: "100%" }}>
-            <FitnessCenterIcon />
-          </IconButton>
-          <IconButton variant="outlined" color="neutral" sx={{ width: "100%" }}>
-            <InfoIcon />
-          </IconButton>
-        </Stack>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

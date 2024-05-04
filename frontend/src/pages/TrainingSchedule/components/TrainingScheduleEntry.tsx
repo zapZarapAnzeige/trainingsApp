@@ -20,7 +20,7 @@ import { Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { weekdaysAbbreviation } from "../../../constants";
-import { setTraining } from "../../../redux/reducers/trainingScheduleSlice";
+import { setTraining } from "../../../redux/reducers/trainingScheduleDialogSlice";
 
 type TrainingScheduleEntryProps = {
   training: Training;

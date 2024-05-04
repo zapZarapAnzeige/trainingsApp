@@ -38,6 +38,11 @@ export type ExercisesEntryData = Exercise & {
   secondaryTags: string[];
 };
 
+export type ExercisesAddDialog = Exercise & {
+  inTraining: string[];
+  notInTraining: string[];
+};
+
 export type Help = {
   title: string;
   text: string;

@@ -20,7 +20,19 @@ export const weekdaysAbbreviation: string[] = [
   "So.",
 ];
 
-export const tags: string[] = ["a", "b", "c"];
+export const tags: string[] = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "I",
+  "j",
+  "k",
+];
 
 export const exercises: Exercise[] = [
   { exerciseName: "Laufen", exercise: { minutes: 10 } },

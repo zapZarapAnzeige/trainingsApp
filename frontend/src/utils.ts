@@ -199,3 +199,19 @@ export function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
 
   return true;
 }
+
+export function moveString(
+  sourceArray: string[],
+  targetArray: string[],
+  searchString: string
+): void {
+  const index = sourceArray.indexOf(searchString);
+  if (index !== -1) {
+    const removedItem = sourceArray.splice(index, 1)[0];
+    targetArray.push(removedItem);
+  } else {
+    console.log(
+      `Der String "${searchString}" wurde nicht im Quellarray gefunden.`
+    );
+  }
+}

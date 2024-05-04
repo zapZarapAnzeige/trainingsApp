@@ -33,7 +33,7 @@ import {
   addExercise,
   removeExercise,
   clearAll,
-} from "../../../redux/reducers/trainingScheduleSlice";
+} from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
 
 type TrainingScheduleDialogProps = {
