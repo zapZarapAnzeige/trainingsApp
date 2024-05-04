@@ -33,6 +33,9 @@ export type CalendarDayData = {
 // Exercises
 export type ExercisesEntryData = Exercise & {
   rating: number;
+  reviews: number;
+  primaryTags: string[];
+  secondaryTags: string[];
 };
 
 export type Help = {

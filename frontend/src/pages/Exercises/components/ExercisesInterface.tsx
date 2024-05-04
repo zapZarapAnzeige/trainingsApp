@@ -6,56 +6,59 @@ import {
   Stack,
   Typography,
   Option,
+  IconButton,
 } from "@mui/joy";
 import { useState } from "react";
 import { tags } from "../../../constants";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { addTag, removeTag } from "../../../redux/reducers/tagsSlice";
+import { CloseRounded } from "@mui/icons-material";
 
 export default function ExercisesInterface() {
-  const currentPage = useAppSelector((state) => state.tags.value);
+  const currentTags = useAppSelector((state) => state.tags.value);
   const dispatch = useAppDispatch();
 
   return (
-    <>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        marginBottom={1}
-        bgcolor="primary.main"
-        color="white"
-      >
-        <Box display="flex" alignItems="center">
-          <Select>
-            {tags.map((tag) => {
-              return <Option value={tag}>{tag}</Option>;
-            })}
-          </Select>
-        </Box>
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <div>
-            <Typography level="title-lg" id="best-movie" mb={2}>
-              Best Movie
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              {tags.map((name) => {
-                return (
-                  <Chip
-                    variant="soft"
-                    color="danger"
-                    endDecorator={
-                      <ChipDelete onDelete={() => alert("Delete")} />
-                    }
-                  >
-                    Delete
-                  </Chip>
-                );
-              })}
-            </Stack>
-          </div>
-        </Box>
-      </Box>
-    </>
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      marginBottom={1}
+      bgcolor="primary.main"
+      color="white"
+    >
+      <Stack direction="column" spacing={2}>
+        <Select
+          onChange={(
+            event: React.SyntheticEvent | null,
+            newValue: string | null
+          ) => {
+            if (newValue) {
+              dispatch(addTag(newValue));
+            }
+          }}
+          sx={{ minWidth: 320 }}
+        >
+          {tags.map((tag) => {
+            return <Option value={tag}>{tag}</Option>;
+          })}
+        </Select>
+        <Stack direction="row" spacing={2}>
+          {currentTags.map((tag) => {
+            return (
+              <Chip
+                variant="soft"
+                color="danger"
+                endDecorator={
+                  <ChipDelete onDelete={() => dispatch(removeTag(tag))} />
+                }
+              >
+                {tag}
+              </Chip>
+            );
+          })}
+        </Stack>
+      </Stack>
+    </Box>
   );
 }
