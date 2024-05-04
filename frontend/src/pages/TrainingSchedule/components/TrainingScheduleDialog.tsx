@@ -9,6 +9,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import DialogTitle from "@mui/joy/DialogTitle";
 import Stack from "@mui/joy/Stack";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Exercise, Training } from "../../../types";
 import Option from "@mui/joy/Option";
 import {
@@ -278,6 +279,15 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
               return (
                 <List>
                   <ListItem>
+                    <ListItemContent>
+                      <IconButton
+                        onClick={() => {
+                          dispatch(removeExercise(exercise.exerciseName));
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemContent>
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
                     {"minutes" in exercise.exercise ? (
                       <ListItemContent>
