@@ -39,7 +39,7 @@ import { mapNumberToWeekdayString } from "../../../utils";
 type TrainingScheduleDialogProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  editTraining?: Training;
+  editTraining: boolean;
 };
 
 const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
@@ -254,6 +254,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Input
+                defaultValue={trainingScheduleDialog.name}
                 autoFocus
                 required
                 onChange={(e) => {
@@ -324,6 +325,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                         e.target.checked
                       )
                     }
+                    defaultChecked={trainingScheduleDialog.onDays.includes(day)}
                   />
                   <FormLabel>{day}</FormLabel>
                 </FormControl>

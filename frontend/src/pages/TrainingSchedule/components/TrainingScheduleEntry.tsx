@@ -13,12 +13,14 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
+import { useAppDispatch } from "../../../hooks";
 import FormLabel from "@mui/joy/FormLabel";
 import CreateIcon from "@mui/icons-material/Create";
 import { Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { weekdaysAbbreviation } from "../../../constants";
+import { setTraining } from "../../../redux/reducers/trainingScheduleSlice";
 
 type TrainingScheduleEntryProps = {
   training: Training;
@@ -29,9 +31,20 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
+  const handleOpenEditDialog = () => {
+    dispatch(setTraining(training));
+    setOpen(true);
+  };
+
   return (
     <>
-      <TrainingScheduleDialog open={open} setOpen={setOpen} />
+      <TrainingScheduleDialog
+        open={open}
+        setOpen={setOpen}
+        editTraining={true}
+      />
       <Card
         sx={{
           maxWidth: "100%",
@@ -47,7 +60,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                 <Typography level="h4">{training.name}</Typography>
               </Grid>
               <Grid>
-                <IconButton aria-label="edit" onClick={() => setOpen(true)}>
+                <IconButton aria-label="edit" onClick={handleOpenEditDialog}>
                   <CreateIcon />
                 </IconButton>
               </Grid>

@@ -7,9 +7,14 @@ import { useState } from "react";
 
 export default function TrainingScheduleInterface() {
   const [open, setOpen] = useState<boolean>(false);
+
   return (
     <>
-      <TrainingScheduleDialog open={open} setOpen={setOpen} />
+      <TrainingScheduleDialog
+        editTraining={false}
+        open={open}
+        setOpen={setOpen}
+      />
       <Box
         display="flex"
         alignItems="center"
