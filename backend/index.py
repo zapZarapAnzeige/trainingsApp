@@ -58,12 +58,19 @@ async def upload_user_data(
     if plz:
         if not len(plz) == 5:
             return INVALID_PLZ_LENGTH_ERROR
-
     if plz:
         user_data["plz"] = plz
-    if searching_for_partner:
+    if bio:
+        user_data["bio"] = bio
+    if nickname:
+        user_data["nickname"] = nickname
+    if searching_for_partner is not None:
         user_data["searching_for_partner"] = searching_for_partner
-    await update_user_data(profile_picture, current_user.get("user_id"), user_data)
+    res = await update_user_data(
+        profile_picture, current_user.get("user_id"), user_data
+    )
+    print(res)
+    return res
 
 
 @app.websocket("/chat")

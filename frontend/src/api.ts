@@ -53,11 +53,35 @@ export const getUserData = (token: string) => {
 };
 
 export const findNewPartner = (token: string, plz: string) => {
-  return axiosInstance.post(
-    "/chat",
-    {},
-    { ...addAuth(token), params: { plz: plz } }
-  );
+  return axiosInstance.post("/chat", undefined, {
+    ...addAuth(token),
+    params: { plz: plz },
+  });
+};
+
+export const changeUserData = (
+  token: string,
+  nickname?: string,
+  searchingForPartner?: boolean,
+  plz?: string,
+  profilePicture?: File | string,
+  bio?: string
+) => {
+  let formData: FormData | undefined = undefined;
+  if (profilePicture && typeof profilePicture !== "string") {
+    formData = new FormData();
+    // if profilePicture is of type string it was not updated and therefore does not have to be updated
+    formData.append("profile_picture", profilePicture);
+  }
+  return axiosInstance.put("user", formData, {
+    ...addAuth(token),
+    params: {
+      plz: plz,
+      nickname: nickname,
+      searching_for_partner: searchingForPartner,
+      bio: bio,
+    },
+  });
 };
 
 export const changeBlockStatus = (
@@ -65,18 +89,11 @@ export const changeBlockStatus = (
   currentlyBlocked: boolean,
   partnerId: number
 ) => {
-  axiosInstance.patch(
-    "/chat",
-    {
+  axiosInstance.patch("/chat", undefined, {
+    ...addAuth(token),
+    params: {
       currently_blocked: currentlyBlocked,
       partner_id: partnerId,
     },
-    {
-      ...addAuth(token),
-      params: {
-        currently_blocked: currentlyBlocked,
-        partner_id: partnerId,
-      },
-    }
-  );
+  });
 };

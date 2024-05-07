@@ -18,15 +18,18 @@ import {
   Select,
   CardActions,
   Button,
-  FormHelperText,
   Option,
   Avatar,
 } from "@mui/joy";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { PartnerData, UserData } from "../../types";
 import { getImageFromBase64 } from "../../utils";
+import { changeUserData, getUserData } from "../../api";
+import { useAuthHeader } from "react-auth-kit";
+import { useDispatch } from "react-redux";
+import { changeUser } from "../../redux/reducers/userSlice";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;
@@ -38,8 +41,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
     return setViewProfile === undefined;
   };
 
-  const intl = useIntl();
-  const [lookingForPartner, setLookingForPartner] = useState<boolean | null>(
+  const [searchingForPartner, setSearchingForPartner] = useState<boolean>(
     isUserData(userData) ? userData.searchingForPartner : false
   );
   const [bio, setBio] = useState<string>(userData.bio ?? "");
@@ -49,13 +51,49 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
     isUserData(userData) ? userData.plz ?? "" : ""
   );
 
+  // TODO: can be done with 1 useState
+  const [profilePicture, setProfilePicture] = useState<
+    string | undefined | File
+  >(userData.profilePicture);
+
+  const [convertedProfilePicture, setConvertedProfilePicture] = useState<{
+    picture: string | undefined;
+    isObjectURL: boolean;
+  }>({ picture: userData.profilePicture, isObjectURL: false });
+
+  useEffect(() => {
+    let fileURL: undefined | string;
+    if (profilePicture && typeof profilePicture !== "string") {
+      fileURL = URL.createObjectURL(profilePicture);
+      setConvertedProfilePicture({
+        picture: fileURL,
+        isObjectURL: true,
+      });
+    }
+    return () => {
+      fileURL && URL.revokeObjectURL(fileURL);
+    };
+  }, [profilePicture]);
+
+  const intl = useIntl();
+  const auth = useAuthHeader();
+  const dispatch = useDispatch();
+
   const getMessage = (id: string) => {
     return intl.formatMessage({ id: id });
   };
 
-  const getProfileImage = (userName: string, base64Image?: string) => {
-    const image = getImageFromBase64(base64Image);
-
+  const getProfileImage = (
+    userName: string,
+    base64Image?: string,
+    isObjectURL?: boolean
+  ) => {
+    let image: any;
+    if (!isObjectURL) {
+      image = getImageFromBase64(base64Image);
+    } else if (base64Image) {
+      image = base64Image;
+    }
     if (typeof image === "string") {
       return <img src={image} loading="lazy" alt="" />;
     } else {
@@ -93,7 +131,11 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                 maxHeight={200}
                 sx={{ flex: 1, minWidth: 120, borderRadius: "100%" }}
               >
-                {getProfileImage(userData.name, userData.profilePicture)}
+                {getProfileImage(
+                  userData.name,
+                  convertedProfilePicture.picture,
+                  convertedProfilePicture.isObjectURL
+                )}
               </AspectRatio>
               {isUserData(userData) && (
                 <IconButton
@@ -101,6 +143,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   size="sm"
                   variant="outlined"
                   color="neutral"
+                  component="label"
                   sx={{
                     bgcolor: "background.body",
                     position: "absolute",
@@ -112,6 +155,18 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   }}
                 >
                   <EditRoundedIcon />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ clip: "rect(0 0 0 0)", position: "absolute" }}
+                    onChange={(e) => {
+                      const files = (e.target as HTMLInputElement).files;
+
+                      if (files && files.length > 0) {
+                        setProfilePicture(files[0]);
+                      }
+                    }}
+                  />
                 </IconButton>
               )}
             </Stack>
@@ -151,8 +206,12 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   </FormLabel>
                   <FormControl sx={{ flexGrow: 1 }}>
                     <Select
-                      value={lookingForPartner}
-                      onChange={(e, newVal) => setLookingForPartner(newVal)}
+                      value={searchingForPartner}
+                      onChange={(e, newVal) =>
+                        newVal
+                          ? setSearchingForPartner(newVal)
+                          : setSearchingForPartner(false)
+                      }
                       size="sm"
                       startDecorator={<AccessTimeFilledRoundedIcon />}
                     >
@@ -174,9 +233,6 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                       size="sm"
                       startDecorator={<EmailRoundedIcon />}
                       placeholder={getMessage("profile.label.plz")}
-                      defaultValue={
-                        userData.name //TODO
-                      }
                       sx={{ flexGrow: 1 }}
                     />
                   </FormControl>
@@ -184,21 +240,6 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
               )}
             </Stack>
           </Stack>
-
-          {isUserData(userData) && (
-            <CardOverflow
-              sx={{ borderTop: "1px solid", borderColor: "divider" }}
-            >
-              <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button size="sm" variant="outlined" color="neutral">
-                  {getMessage("profile.label.cancel")}
-                </Button>
-                <Button size="sm" variant="solid">
-                  {getMessage("profile.label.save")}
-                </Button>
-              </CardActions>
-            </CardOverflow>
-          )}
         </Card>
         <Card>
           <Box sx={{ mb: 1 }}>
@@ -218,24 +259,58 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                 setBio(e.target.value);
               }}
             />
-            {isUserData(userData) && (
-              <FormHelperText sx={{ mt: 0.75, fontSize: "xs" }}>
-                275 characters left
-                {
-                  //TODO
-                }
-              </FormHelperText>
-            )}
           </Stack>
           {isUserData(userData) && (
             <CardOverflow
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button size="sm" variant="outlined" color="neutral">
+                <Button
+                  size="sm"
+                  variant="outlined"
+                  color="neutral"
+                  onClick={() => {
+                    setSearchingForPartner(userData.searchingForPartner);
+                    setBio(userData.bio ?? "");
+                    setNickname(userData.nickname ?? "");
+                    setConvertedProfilePicture({
+                      picture: userData.profilePicture,
+                      isObjectURL: false,
+                    });
+                    setProfilePicture(userData.profilePicture);
+                    setPlz(userData.plz ?? "");
+                  }}
+                >
                   {getMessage("profile.label.cancel")}
                 </Button>
-                <Button size="sm" variant="solid">
+                <Button
+                  size="sm"
+                  variant="solid"
+                  onClick={() => {
+                    changeUserData(
+                      auth(),
+                      nickName,
+                      searchingForPartner,
+                      plz,
+                      profilePicture,
+                      bio
+                    ).then((res) =>
+                      getUserData(auth()).then((res) =>
+                        dispatch(
+                          changeUser({
+                            id: userData.id,
+                            name: userData.name,
+                            searchingForPartner: res.data.searching_for_partner,
+                            bio: res.data.bio,
+                            nickname: res.data.nickname,
+                            plz: res.data.plz,
+                            profilePicture: res.data.profile_picture,
+                          })
+                        )
+                      )
+                    );
+                  }}
+                >
                   {getMessage("profile.label.save")}
                 </Button>
               </CardActions>
