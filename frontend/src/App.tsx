@@ -18,9 +18,11 @@ import { getUserData } from "./api";
 import { changeUser } from "./redux/reducers/userSlice";
 import TrainingSchedule from "./pages/TrainingSchedule/TrainingSchedule";
 import Exercises from "./pages/Exercises/Exercises";
+import { Profile } from "./pages/Profile/Profile";
 
 export default function App() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+  const userData = useAppSelector((state) => state.user.value);
   const isAuthenticated = useIsAuthenticated();
   const auth = useAuthHeader();
   const dispatch = useAppDispatch();
@@ -38,7 +40,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (isAuthenticated()) {
+    if (isAuthenticated() && userData.id < 0) {
       getUserData(auth()).then((res) => {
         dispatch(
           changeUser({
@@ -73,6 +75,8 @@ export default function App() {
         return <Calendar />;
       case "about":
         return <Calendar />;
+      case "user":
+        return <Profile userData={userData} />;
       default:
         return <Calendar />;
     }

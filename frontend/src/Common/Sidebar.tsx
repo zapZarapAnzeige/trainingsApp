@@ -196,13 +196,20 @@ export default function Sidebar() {
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <ProfilePicture
-          base64ProfilePicture={userData.profilePicture}
-          partnerName={userData.name}
-        />
+        <IconButton
+          onClick={() => {
+            dispatch(changePage("user"));
+            console.log("here");
+          }}
+        >
+          <ProfilePicture
+            base64ProfilePicture={userData.profilePicture}
+            partnerName={userData.name}
+          />
+        </IconButton>
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography level="title-sm">{userData.name}</Typography>
-          <Typography level="body-xs">{userData.name}</Typography>
+          <Typography level="body-xs">{userData.nickname}</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral" onClick={logout}>
           <LogoutRoundedIcon />
