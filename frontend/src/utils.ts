@@ -42,6 +42,8 @@ export function getPageName(page: string) {
       return "Hilfe";
     case "about":
       return "Über uns";
+    case "profile":
+      return "Mein Profil";
     default:
       return "";
   }
@@ -180,3 +182,46 @@ export const getImageFromBase64 = (base64ProfilePicture?: string) => {
   }
   return "data:image/" + extension + ";base64," + base64ProfilePicture;
 };
+
+export function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  const sortedArr1 = arr1.slice().sort();
+  const sortedArr2 = arr2.slice().sort();
+
+  for (let i = 0; i < sortedArr1.length; i++) {
+    if (sortedArr1[i] !== sortedArr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function moveString(
+  sourceArray: string[],
+  targetArray: string[],
+  searchString: string
+): void {
+  const index = sourceArray.indexOf(searchString);
+  if (index !== -1) {
+    const removedItem = sourceArray.splice(index, 1)[0];
+    targetArray.push(removedItem);
+  } else {
+    console.log(
+      `Der String "${searchString}" wurde nicht im Quellarray gefunden.`
+    );
+  }
+}
+
+export function sortAndInsertDay(days: string[], dayToAdd: string) {
+  days.push(dayToAdd);
+
+  days.sort((a: string, b: string) => {
+    return weekdaysAbbreviation.indexOf(a) - weekdaysAbbreviation.indexOf(b);
+  });
+
+  return days;
+}

@@ -15,7 +15,7 @@ export type ExerciseCardio = {
 };
 
 export type ExerciseWeighted = {
-  repititionAmount: number;
+  repetitionAmount: number;
   setAmount: number;
   weight: number;
 };
@@ -31,8 +31,31 @@ export type CalendarDayData = {
 };
 
 // Exercises
-export type ExercisesEntryData = Exercise & {
-  rating: number;
+export type ExercisesEntryData = Exercise &
+  Tags & {
+    rating: number;
+    reviews: number;
+  };
+
+type Tags = {
+  primaryTags: string[];
+  secondaryTags: string[];
+};
+
+export type ExercisesAddDialog = Exercise & {
+  inTraining: string[];
+  notInTraining: string[];
+};
+
+export type ExercisesInfoDialog = Tags & {
+  exerciseName: string;
+  exerciseText: string;
+  video: string;
+};
+
+export type Help = {
+  title: string;
+  text: string;
 };
 
 export type ChatsOverview = {

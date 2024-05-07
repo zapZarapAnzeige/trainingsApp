@@ -13,12 +13,14 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
+import { useAppDispatch } from "../../../hooks";
 import FormLabel from "@mui/joy/FormLabel";
 import CreateIcon from "@mui/icons-material/Create";
 import { Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { weekdaysAbbreviation } from "../../../constants";
+import { setTraining } from "../../../redux/reducers/trainingScheduleDialogSlice";
 
 type TrainingScheduleEntryProps = {
   training: Training;
@@ -29,15 +31,26 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
+  const handleOpenEditDialog = () => {
+    dispatch(setTraining(training));
+    setOpen(true);
+  };
+
   return (
     <>
-      <TrainingScheduleDialog open={open} setOpen={setOpen} />
+      <TrainingScheduleDialog
+        open={open}
+        setOpen={setOpen}
+        editTraining={true}
+      />
       <Card
         sx={{
-          width: 320,
           maxWidth: "100%",
           boxShadow: "lg",
           margin: "auto",
+          height: "50vh",
         }}
       >
         <CardOverflow sx={{ bgcolor: "background.level1" }}>
@@ -47,14 +60,14 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                 <Typography level="h4">{training.name}</Typography>
               </Grid>
               <Grid>
-                <IconButton aria-label="edit" onClick={() => setOpen(true)}>
+                <IconButton aria-label="edit" onClick={handleOpenEditDialog}>
                   <CreateIcon />
                 </IconButton>
               </Grid>
             </Grid>
           </CardContent>
         </CardOverflow>
-        <CardContent>
+        <CardContent sx={{ overflow: "auto" }}>
           <List>
             {training.exercises.map((exercise, index) => {
               return (
@@ -68,7 +81,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     ) : (
                       <ListItemContent>
                         {exercise.exercise.setAmount} x{" "}
-                        {exercise.exercise.repititionAmount} Wdh.
+                        {exercise.exercise.repetitionAmount} Wdh.
                       </ListItemContent>
                     )}
                   </ListItem>
@@ -93,6 +106,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     <Checkbox
                       checked={training.onDays.includes(day)}
                       sx={{ marginBottom: 1 }}
+                      readOnly
                     />
                     <FormLabel>{day}</FormLabel>
                   </FormControl>

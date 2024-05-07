@@ -4,12 +4,20 @@ import AddIcon from "@mui/icons-material/Add";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { useState } from "react";
+import { changePage } from "../../../redux/reducers/currentPageSlice";
+import { useAppDispatch } from "../../../hooks";
 
 export default function TrainingScheduleInterface() {
   const [open, setOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
   return (
     <>
-      <TrainingScheduleDialog open={open} setOpen={setOpen} />
+      <TrainingScheduleDialog
+        editTraining={false}
+        open={open}
+        setOpen={setOpen}
+      />
       <Box
         display="flex"
         alignItems="center"
@@ -28,7 +36,10 @@ export default function TrainingScheduleInterface() {
           </Button>
         </Box>
         <Box>
-          <IconButton aria-label="Info">
+          <IconButton
+            aria-label="Info"
+            onClick={() => dispatch(changePage("help"))}
+          >
             <HelpOutlineIcon />
           </IconButton>
         </Box>

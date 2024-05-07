@@ -5,9 +5,8 @@
     "exercises": [
       {
         "exerciseName": "Irgendwas",
-        "exerciseType": "weighted",
         "exercise": {
-          "repititionAmount": 15,
+          "repetitionAmount": 15,
           "setAmount": 5,
           "weight": 3
         },
@@ -15,7 +14,6 @@
       },
       {
         "exerciseName": "Irgendwas",
-        "exerciseType": "cardio",
         "exercise": {
           "minutes": 15
         },
@@ -31,9 +29,8 @@
     "exercises": [
       {
         "exerciseName": "Irgendwas",
-        "exerciseType": "weighted",
         "exercise": {
-          "repititionAmount": 15,
+          "repetitionAmount": 15,
           "setAmount": 5,
           "weight": 3
         },

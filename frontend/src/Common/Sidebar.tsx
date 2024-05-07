@@ -46,7 +46,6 @@ export default function Sidebar() {
           md: "none",
         },
         transition: "transform 0.4s, width 0.4s",
-        zIndex: 10000,
         height: "100dvh",
         width: "var(--Sidebar-width)",
         top: 0,
@@ -183,7 +182,7 @@ export default function Sidebar() {
 
           <ListItem>
             <ListItemButton
-              onClick={() => dispatch(changePage("login"))}
+              onClick={() => dispatch(changePage("about"))}
               selected={isSelected("about")}
             >
               <InfoIcon />
@@ -207,7 +206,10 @@ export default function Sidebar() {
             partnerName={userData.name}
           />
         </IconButton>
-        <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Box
+          sx={{ minWidth: 0, flex: 1 }}
+          onClick={() => dispatch(changePage("profile"))}
+        >
           <Typography level="title-sm">{userData.name}</Typography>
           <Typography level="body-xs">{userData.nickname}</Typography>
         </Box>

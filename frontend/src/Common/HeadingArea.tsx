@@ -10,6 +10,7 @@ import { getPageName } from "../utils";
 
 export default function HeadingArea() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -19,12 +20,7 @@ export default function HeadingArea() {
           separator={<ChevronRightRoundedIcon fontSize="small" />}
           sx={{ pl: 0 }}
         >
-          <Link
-            underline="none"
-            color="neutral"
-            href="/calendar"
-            aria-label="Home"
-          >
+          <Link underline="none" color="neutral" href="/" aria-label="Home">
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" fontWeight={500} fontSize={12}>
