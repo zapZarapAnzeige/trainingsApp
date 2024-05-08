@@ -16,6 +16,7 @@ type ChatContentPageProps = {
   websocket: WebSocket;
   setActivePartner: (sender: PartnerData) => void;
   setViewProfile: (viewProfile: boolean) => void;
+  setNewLastMessage: (message: SingleChatHistory) => void;
 };
 
 export const ChatContentPage: FC<ChatContentPageProps> = ({
@@ -25,6 +26,7 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
   setChatsOverview,
   setActivePartner,
   setViewProfile,
+  setNewLastMessage,
 }) => {
   const userData = useAppSelector((state) => state.user.value);
   const [textAreaValue, setTextAreaValue] = useState<string>("");
@@ -32,12 +34,14 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
 
   const sendMessage = () => {
     if (websocket) {
-      chatHistory.push({
+      const newMessage = {
         content: textAreaValue,
         sender: userData.id,
         timestamp: Date.now(),
         tempId: tempMessageId,
-      });
+      };
+      chatHistory.push(newMessage);
+      setNewLastMessage({ ...newMessage, sender: activePartner.id });
 
       websocket.send(
         JSON.stringify({

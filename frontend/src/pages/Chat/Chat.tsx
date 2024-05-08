@@ -40,27 +40,31 @@ export const Chat: FC = () => {
     }
   }, [activePartner]);
 
+  const setNewLastMessage = (data: SingleChatHistory) => {
+    setChatsOverview(
+      chatsOverview.map((overview) =>
+        overview.partnerId === data.sender
+          ? {
+              ...overview,
+              lastMessageTimestamp: data.timestamp,
+              lastMessage: data.content,
+              unreadMessages:
+                overview.partnerId === activePartner.id
+                  ? 0
+                  : overview.unreadMessages + 1,
+            }
+          : overview
+      )
+    );
+  };
+
   const websocket = useWebsocket((e) => {
     const data: SingleChatHistory | WSError = JSON.parse(e.data);
     if (isSingleChatHistory(data)) {
       if (activePartner.id === data.sender) {
         setChatHistory([...chatHistory, data]);
       }
-      setChatsOverview(
-        chatsOverview.map((overview) =>
-          overview.partnerId === data.sender
-            ? {
-                ...overview,
-                lastMessageTimestamp: data.timestamp,
-                lastMessage: data.content,
-                unreadMessages:
-                  overview.partnerId === activePartner.id
-                    ? 0
-                    : overview.unreadMessages + 1,
-              }
-            : overview
-        )
-      );
+      setNewLastMessage(data);
     } else if (isWSError(data)) {
       setErrorMessage(
         data.error_message ?? intl.formatMessage({ id: "error.unknown" })
@@ -138,6 +142,7 @@ export const Chat: FC = () => {
         activePartner={activePartner}
         chatHistory={chatHistory}
         websocket={websocket}
+        setNewLastMessage={setNewLastMessage}
       />
       <DismissDialog
         dismissDialogType={DismissDialogType.ERROR}
