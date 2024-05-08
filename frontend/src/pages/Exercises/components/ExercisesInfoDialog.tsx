@@ -7,6 +7,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { clearAll } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import Chip from "@mui/joy/Chip";
+import Rating from "@mui/material/Rating";
+import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from "@mui/material/styles";
 
 type ExercisesInfoDialogProps = {
   open: boolean;
@@ -43,6 +45,18 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
         </Stack>
         <Divider />
         VIDEO AREA
+        <Divider />
+        <Stack direction="row" spacing={2}>
+          <Typography>Deine Bewertung:</Typography>
+          <MaterialCssVarsProvider>
+            <Rating
+              precision={0.5}
+              name="simple-controlled"
+              value={exercisesInfoDialog.userRating}
+              readOnly
+            />
+          </MaterialCssVarsProvider>
+        </Stack>
         <Divider />
         <Typography sx={{ mx: "auto" }}>
           {exercisesInfoDialog.exerciseText}

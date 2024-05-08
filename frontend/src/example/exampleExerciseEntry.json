@@ -7,6 +7,7 @@
       "weight": 3
     },
     "rating": 4.5,
+    "userRating": 4,
     "reviews": 6,
     "primaryTags": ["a"],
     "secondaryTags": ["b"]
@@ -17,6 +18,7 @@
       "minutes": 15
     },
     "rating": 2.5,
+    "userRating": 3,
     "reviews": 3,
     "primaryTags": ["d", "e"],
     "secondaryTags": ["c"]
@@ -27,6 +29,7 @@
       "minutes": 15
     },
     "rating": 1.5,
+    "userRating": 4,
     "reviews": 3,
     "primaryTags": ["f", "g"],
     "secondaryTags": ["a"]
@@ -37,6 +40,7 @@
       "minutes": 15
     },
     "rating": 2.0,
+    "userRating": 4,
     "reviews": 3,
     "primaryTags": ["e", "d"],
     "secondaryTags": ["f"]
@@ -47,6 +51,7 @@
       "minutes": 15
     },
     "rating": 5.0,
+    "userRating": 4,
     "reviews": 3,
     "primaryTags": ["i", "c"],
     "secondaryTags": ["a"]

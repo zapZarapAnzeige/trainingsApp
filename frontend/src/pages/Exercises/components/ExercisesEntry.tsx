@@ -4,16 +4,21 @@ import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
 import { ExercisesEntryData } from "../../../types";
 import { FC, useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
+import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import AddIcon from "@mui/icons-material/Add";
 import ExercisesAddDialog from "./ExercisesAddDialog";
-import { useAppDispatch } from "../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
+import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from "@mui/material/styles";
 
 import ExercisesInfoDialog from "./ExercisesInfoDialog";
-import { setexercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
+import {
+  setExercisesInfoDialog,
+  setUserRating,
+} from "../../../redux/reducers/exercisesInfoDialogSlice";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
@@ -29,30 +34,6 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   const dispatch = useAppDispatch();
 
-  const starRating = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const halfStar = rating - fullStars >= 0.5;
-
-    // Vollständige Sterne hinzufügen
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<StarIcon color="warning" key={i} />);
-    }
-
-    // Halben Stern hinzufügen, wenn vorhanden
-    if (halfStar) {
-      stars.push(<StarHalfIcon color="warning" key="half" />);
-    }
-
-    // Leere Sterne hinzufügen, bis zu insgesamt 5
-    const totalStars = stars.length;
-    for (let i = totalStars; i < 5; i++) {
-      stars.push(<StarBorderIcon color="warning" key={i} />);
-    }
-
-    return <>{stars}</>;
-  };
-
   dispatch(
     setExercisesAddDialog({
       ...exercisesAddDialogData,
@@ -62,9 +43,10 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   );
 
   dispatch(
-    setexercisesInfoDialog({
+    setExercisesInfoDialog({
       ...exercisesInfoDialogData,
       exerciseName: exercisesEntryData.exerciseName,
+      userRating: exercisesEntryData.userRating,
       primaryTags: exercisesEntryData.primaryTags,
       secondaryTags: exercisesEntryData.secondaryTags,
     })
@@ -94,7 +76,16 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                 <Typography fontSize="lg" fontWeight="lg" mr={1}>
                   {exercisesEntryData.rating.toFixed(1)}
                 </Typography>
-                {starRating(exercisesEntryData.rating)}
+                <MaterialCssVarsProvider>
+                  <Rating
+                    precision={0.5}
+                    name="simple-controlled"
+                    defaultValue={exercisesEntryData.rating}
+                    onChange={(event, newValue) => {
+                      dispatch(setUserRating(newValue ?? 0));
+                    }}
+                  />
+                </MaterialCssVarsProvider>
               </Stack>
               <Typography level="body-xs">
                 {exercisesEntryData.reviews}{" "}

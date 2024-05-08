@@ -34,6 +34,7 @@ export type CalendarDayData = {
 export type ExercisesEntryData = Exercise &
   Tags & {
     rating: number;
+    userRating: number;
     reviews: number;
   };
 
@@ -51,6 +52,7 @@ export type ExercisesInfoDialog = Tags & {
   exerciseName: string;
   exerciseText: string;
   video: string;
+  userRating: number;
 };
 
 export type Help = {
@@ -77,6 +79,11 @@ type BaseUserData = {
   profilePicture?: string;
   nickname?: string;
   bio?: string;
+};
+
+export type UserRating = {
+  exerciseName: string;
+  rating: number;
 };
 
 export type UserData = BaseUserData & {

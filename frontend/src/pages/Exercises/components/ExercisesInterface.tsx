@@ -1,18 +1,7 @@
-import {
-  Box,
-  Chip,
-  ChipDelete,
-  Select,
-  Stack,
-  Typography,
-  Option,
-  IconButton,
-} from "@mui/joy";
-import { useState } from "react";
+import { Box, Chip, ChipDelete, Select, Stack, Option } from "@mui/joy";
 import { tags } from "../../../constants";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { addTag, removeTag } from "../../../redux/reducers/tagsSlice";
-import { CloseRounded } from "@mui/icons-material";
 import { arraysEqual } from "../../../utils";
 
 export default function ExercisesInterface() {
@@ -53,10 +42,13 @@ export default function ExercisesInterface() {
           {currentTags.map((tag) => {
             return (
               <Chip
-                variant="soft"
-                color="danger"
+                variant="outlined"
                 endDecorator={
-                  <ChipDelete onDelete={() => dispatch(removeTag(tag))} />
+                  <ChipDelete
+                    onDelete={() => {
+                      dispatch(removeTag(tag));
+                    }}
+                  />
                 }
               >
                 {tag}
