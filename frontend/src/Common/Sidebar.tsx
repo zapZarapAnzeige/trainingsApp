@@ -28,6 +28,7 @@ import { closeSidebar, getPageName } from "../utils";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { ProfilePicture } from "./ProfilePicture";
 import { useSignOut } from "react-auth-kit";
+import { Button } from "@mui/joy";
 
 export default function Sidebar() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
@@ -195,24 +196,23 @@ export default function Sidebar() {
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <IconButton
+        <Button
+          sx={{ flexGrow: 1 }}
+          variant="plain"
           onClick={() => {
             dispatch(changePage("user"));
-            console.log("here");
           }}
         >
           <ProfilePicture
             base64ProfilePicture={userData.profilePicture}
             partnerName={userData.name}
           />
-        </IconButton>
-        <Box
-          sx={{ minWidth: 0, flex: 1 }}
-          onClick={() => dispatch(changePage("profile"))}
-        >
-          <Typography level="title-sm">{userData.name}</Typography>
-          <Typography level="body-xs">{userData.nickname}</Typography>
-        </Box>
+
+          <Box sx={{ minWidth: 0, flex: 1, alignItems: "start" }}>
+            <Typography level="title-sm">{userData.name}</Typography>
+            <Typography level="body-xs">{userData.nickname}</Typography>
+          </Box>
+        </Button>
         <IconButton size="sm" variant="plain" color="neutral" onClick={logout}>
           <LogoutRoundedIcon />
         </IconButton>

@@ -20,6 +20,7 @@ import {
   Button,
   Option,
   Avatar,
+  Switch,
 } from "@mui/joy";
 
 import { FC, useEffect, useState } from "react";
@@ -205,23 +206,13 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     {getMessage("profile.label.lookingForPartner")}
                   </FormLabel>
                   <FormControl sx={{ flexGrow: 1 }}>
-                    <Select
-                      value={searchingForPartner}
-                      onChange={(e, newVal) =>
-                        newVal
-                          ? setSearchingForPartner(newVal)
-                          : setSearchingForPartner(false)
+                    <Switch
+                      sx={{ m: "auto" }}
+                      checked={searchingForPartner}
+                      onChange={(event) =>
+                        setSearchingForPartner(event.target.checked)
                       }
-                      size="sm"
-                      startDecorator={<AccessTimeFilledRoundedIcon />}
-                    >
-                      <Option value={true}>
-                        {getMessage("profile.label.yes")}
-                      </Option>
-                      <Option value={false}>
-                        {getMessage("profile.label.no")}
-                      </Option>
-                    </Select>
+                    />
                   </FormControl>
                   <FormLabel>{getMessage("profile.label.plz")}</FormLabel>
                   <FormControl sx={{ flexGrow: 1 }}>

@@ -41,7 +41,7 @@
   "chat.info.newPartner": "\uD83C\uDF89 neuer Trainingspartner: {partnerName} \uD83C\uDF89",
 "profile.label.name":"Name",
 "profile.label.nickName":"Spitzname",
-"profile.label.lookingForPartner":"Auf der Suche nach einem Trainingspartner?",
+"profile.label.lookingForPartner":"Suchst du einen Trainingspartner?",
 "profile.label.plz":"PLZ",
 "profile.label.yes":"JA",
 "profile.label.no":"NEIN",
