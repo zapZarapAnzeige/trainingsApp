@@ -64,12 +64,14 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
         backgroundColor: "background.level1",
       }}
     >
-      <ChatContentPageHeader
-        setViewProfile={setViewProfile}
-        setSender={setActivePartner}
-        sender={activePartner}
-        setChatsOverview={setChatsOverview}
-      />
+      {activePartner.id > 0 && (
+        <ChatContentPageHeader
+          setViewProfile={setViewProfile}
+          setSender={setActivePartner}
+          sender={activePartner}
+          setChatsOverview={setChatsOverview}
+        />
+      )}
       <Box
         sx={{
           display: "flex",
@@ -109,11 +111,14 @@ export const ChatContentPage: FC<ChatContentPageProps> = ({
           })}
         </Stack>
       </Box>
-      <MessageInput
-        textAreaValue={textAreaValue}
-        setTextAreaValue={setTextAreaValue}
-        onSubmit={sendMessage}
-      />
+
+      {activePartner.id > 0 && (
+        <MessageInput
+          textAreaValue={textAreaValue}
+          setTextAreaValue={setTextAreaValue}
+          onSubmit={sendMessage}
+        />
+      )}
     </Sheet>
   );
 };
