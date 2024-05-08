@@ -10,6 +10,7 @@ const initialState: ExercisesInfoDialogState = {
     exerciseName: "",
     exerciseText: "",
     video: "",
+    userRating: 0,
     primaryTags: [],
     secondaryTags: [],
   },
@@ -19,16 +20,20 @@ const exercisesInfoDialogSlice = createSlice({
   name: "exercisesInfoDialog",
   initialState,
   reducers: {
-    setexercisesInfoDialog: (
+    setExercisesInfoDialog: (
       state,
       action: PayloadAction<ExercisesInfoDialog>
     ) => {
       state.value = action.payload;
     },
+    setUserRating: (state, action: PayloadAction<number>) => {
+      state.value.userRating = action.payload;
+    },
     clearAll: (state) => {
       state.value = {
         exerciseName: "",
         exerciseText: "",
+        userRating: 0,
         video: "",
         primaryTags: [],
         secondaryTags: [],
@@ -37,6 +42,6 @@ const exercisesInfoDialogSlice = createSlice({
   },
 });
 
-export const { setexercisesInfoDialog, clearAll } =
+export const { setExercisesInfoDialog, setUserRating, clearAll } =
   exercisesInfoDialogSlice.actions;
 export default exercisesInfoDialogSlice.reducer;

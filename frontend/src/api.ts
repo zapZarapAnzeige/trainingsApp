@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { ExercisesAddDialog, Training } from "./types";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -95,5 +96,50 @@ export const changeBlockStatus = (
       currently_blocked: currentlyBlocked,
       partner_id: partnerId,
     },
+  });
+};
+
+// Gets
+export const getTrainingData = (token: string) => {
+  return axiosInstance.get("/trainingSchedule", addAuth(token));
+};
+
+export const getExercisesData = (token: string) => {
+  return axiosInstance.get("/exercisesData", addAuth(token));
+};
+
+export const getExercisesAdd = (token: string) => {
+  return axiosInstance.get("/exercisesAdd", addAuth(token));
+};
+
+export const getExercisesInfo = (token: string) => {
+  return axiosInstance.get("/exercisesInfo", addAuth(token));
+};
+
+// Posts
+export const postTrainingData = (token: string, trainingData: Training[]) => {
+  axiosInstance.post("/trainingSchedule", undefined, {
+    ...addAuth(token),
+    params: { trainingData: trainingData },
+  });
+};
+
+export const postExercisesAdd = (
+  token: string,
+  exercisesAdd: ExercisesAddDialog
+) => {
+  axiosInstance.post("/ExercisesAdd", undefined, {
+    ...addAuth(token),
+    params: { exercisesAdd: exercisesAdd },
+  });
+};
+
+export const postExerciseNewUserRating = (
+  token: string,
+  userRating: number
+) => {
+  axiosInstance.post("/ExerciseNewUserRating", undefined, {
+    ...addAuth(token),
+    params: { userRating: userRating },
   });
 };

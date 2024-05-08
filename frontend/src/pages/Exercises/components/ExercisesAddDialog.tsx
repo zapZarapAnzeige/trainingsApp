@@ -41,8 +41,14 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
   );
   const dispatch = useAppDispatch();
 
+  const handleClose = () => {
+    setIsDataDirty(false);
+    dispatch(clearAll());
+    setOpen(false);
+  };
+
   return (
-    <Modal open={open} onClose={() => setOpen(false)}>
+    <Modal open={open} onClose={handleClose}>
       <ModalDialog>
         <Stack
           direction="row"
@@ -51,12 +57,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
           spacing={2}
         >
           <DialogTitle>{exercisesAddDialog.exerciseName}</DialogTitle>
-          <IconButton
-            onClick={() => {
-              dispatch(clearAll());
-              setOpen(false);
-            }}
-          >
+          <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Stack>
@@ -71,7 +72,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
               type="number"
               onChange={(e) => {
                 setIsDataDirty(true);
-                setMinutes(parseInt(e.target.value));
+                dispatch(setMinutes(parseInt(e.target.value)));
               }}
             />
           </FormControl>
@@ -88,7 +89,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                 type="number"
                 onChange={(e) => {
                   setIsDataDirty(true);
-                  setWeight(parseInt(e.target.value));
+                  dispatch(setWeight(parseInt(e.target.value)));
                 }}
               />
             </FormControl>
@@ -100,7 +101,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                 type="number"
                 onChange={(e) => {
                   setIsDataDirty(true);
-                  setRepetitionAmount(parseInt(e.target.value));
+                  dispatch(setRepetitionAmount(parseInt(e.target.value)));
                 }}
               />
             </FormControl>
@@ -112,7 +113,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                 type="number"
                 onChange={(e) => {
                   setIsDataDirty(true);
-                  setSetAmount(parseInt(e.target.value));
+                  dispatch(setSetAmount(parseInt(e.target.value)));
                 }}
               />
             </FormControl>
