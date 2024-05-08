@@ -88,9 +88,10 @@ async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     new_match = await find_trainingspartner(plz, matched_persons)
     is_inserted = await insert_new_partner(user_id, new_match)
     if is_inserted:
-        new_match["profile_picture"] = base64.b64encode(
-            new_match["profile_picture"]
-        ).decode("utf-8")
+        if new_match["profile_picture"]:
+            new_match["profile_picture"] = base64.b64encode(
+                new_match["profile_picture"]
+            ).decode("utf-8")
         return new_match
     else:
         return "No people to match found"
