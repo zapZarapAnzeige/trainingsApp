@@ -30,7 +30,7 @@ mongo_uri = f"mongodb://{mongo_user}:{mongo_pwd}@{mongo_host}:{mongo_port}"
 client = AsyncIOMotorClient(mongo_uri)
 
 
-database = client.get_database('trainingsApp_Mongo_DB')
+database = client.get_database(f"{mongo_db_name}")
 
 
 grid_fs_bucket = AsyncIOMotorGridFSBucket(database, bucket_name="videos")
