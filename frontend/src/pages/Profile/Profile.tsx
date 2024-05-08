@@ -45,6 +45,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
   const [searchingForPartner, setSearchingForPartner] = useState<boolean>(
     isUserData(userData) ? userData.searchingForPartner : false
   );
+  const [isDataDirty, setIsDataDirty] = useState<boolean>(false);
   const [bio, setBio] = useState<string>(userData.bio ?? "");
   const [name, setName] = useState<string>(userData.name);
   const [nickName, setNickname] = useState<string>(userData.nickname ?? "");
@@ -61,6 +62,19 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
     picture: string | undefined;
     isObjectURL: boolean;
   }>({ picture: userData.profilePicture, isObjectURL: false });
+
+  useEffect(() => {
+    if (
+      bio !== (userData.bio ?? "") ||
+      nickName !== (userData.nickname ?? "") ||
+      plz !== (isUserData(userData) ? userData.plz ?? "" : "") ||
+      profilePicture !== userData.profilePicture
+    ) {
+      setIsDataDirty(true);
+    } else {
+      setIsDataDirty(false);
+    }
+  }, [bio, nickName, plz, profilePicture]);
 
   useEffect(() => {
     let fileURL: undefined | string;
@@ -257,6 +271,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
                 <Button
+                  disabled={!isDataDirty}
                   size="sm"
                   variant="outlined"
                   color="neutral"
@@ -275,6 +290,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   {getMessage("profile.label.cancel")}
                 </Button>
                 <Button
+                  disabled={!isDataDirty}
                   size="sm"
                   variant="solid"
                   onClick={() => {
