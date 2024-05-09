@@ -11,7 +11,6 @@ if [ "$current_user" = "root" ]; then
         # this is needed because of the creation of a gridFS bucket which can not be done in the init script of the container
         echo "inserting demo Data" 
         pip3 install motor
-        fi
         python3 ./scripts/insert_data_mongo.py
     fi
 else
