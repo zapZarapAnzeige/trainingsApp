@@ -1,9 +1,18 @@
 current_user=$(whoami)
-echo "$(whoami)"
+set -a 
+. "../.env"
+set +a 
+
+doesMongoContainerExist=$(docker-compose --env-file=../.env ps | grep "$MONGO_DB_CONTAINER_NAME")
 if [ "$current_user" = "root" ]; then
-docker-compose --env-file=../.env  up -d
-echo "created Container"
-python3 ./scripts/insert_data_mongo.py
+    docker-compose --env-file=../.env  up -d
+    echo "created Container"
+    if [ -z "$doesMongoContainerExist" ]; then 
+        echo "inserting demo Data" 
+        pip3 install motor
+        fi
+        python3 ./scripts/insert_data_mongo.py
+    fi
 else
     echo "Please execute the script as root"
 fi
