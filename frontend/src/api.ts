@@ -136,10 +136,11 @@ export const postExercisesAdd = (
 
 export const postExerciseNewUserRating = (
   token: string,
-  userRating: number
+  userRating: number,
+  excercise: string
 ) => {
-  axiosInstance.post("/ExerciseNewUserRating", undefined, {
+  axiosInstance.post("/ExerciseRating", undefined, {
     ...addAuth(token),
-    params: { userRating: userRating },
+    params: { userRating: userRating, excercise: excercise },
   });
 };

@@ -1,8 +1,14 @@
 import base64
-from fastapi import HTTPException, UploadFile, Response
+from fastapi import HTTPException, UploadFile, Response, status
 from db_connection import session
-from db_models import Users
-from sqlalchemy import select, insert, and_
+from db_models import (
+    Users,
+    Excercises,
+    Individual_Excercise_Ratings,
+    Overall_Excercise_Ratings,
+)
+from sqlalchemy.dialects.mysql import insert
+from sqlalchemy import select, and_
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 
@@ -91,6 +97,25 @@ def insert_new_user(username: str, password: str):
 
 def get_all_usernames():
     return session.execute(select(Users.c.user_name).select_from(Users)).scalars().all()
+
+
+async def save_excercise_rating(rating: int, excercise: str, user_id: int):
+    excercise_id = session.execute(
+        select(Excercises.c.excercise_id).where(
+            Excercises.c.excercise_name == excercise
+        )
+    ).scalar_one()
+    if excercise_id:
+        session.execute(
+            insert(Individual_Excercise_Ratings)
+            .values(excercise_id=excercise_id, user_id=user_id, rating=rating)
+            .on_duplicate_key_update(rating=rating)
+        )
+        session.commit()
+        return {"inserted": True}
+    return Response(
+        status_code=status.HTTP_404_NOT_FOUND, content="Invalid excercise ID"
+    )
 
 
 async def find_trainingspartner(plz: str, matched_people: List[int]):

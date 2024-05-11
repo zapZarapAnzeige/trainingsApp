@@ -2,7 +2,13 @@ import base64
 from typing import Optional
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status, Response
 from fastapi.middleware.cors import CORSMiddleware
-from sql import get_overview, get_profile_pic, find_trainingspartner, update_user_data
+from sql import (
+    get_overview,
+    get_profile_pic,
+    find_trainingspartner,
+    update_user_data,
+    save_excercise_rating,
+)
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 from authentication.authentication import (
@@ -40,9 +46,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-INVALID_PLZ_LENGTH_ERROR = Response(
-    status_code=status.HTTP_412_PRECONDITION_FAILED, content="invalid plz length"
-)
+
+
+def INVALID_PRECONDITION(content: str):
+    return Response(status_code=status.HTTP_412_PRECONDITION_FAILED, content=content)
 
 
 @app.put("/user")
@@ -57,7 +64,7 @@ async def upload_user_data(
     user_data = {}
     if plz:
         if not len(plz) == 5:
-            return INVALID_PLZ_LENGTH_ERROR
+            return INVALID_PRECONDITION("invalid plz length")
     if plz:
         user_data["plz"] = plz
     if bio:
@@ -82,7 +89,7 @@ async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token
 @app.post("/chat")
 async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
     if not len(plz) == 5:
-        return INVALID_PLZ_LENGTH_ERROR
+        return INVALID_PRECONDITION("invalid plz length")
     user_id = current_user.get("user_id")
     matched_persons = await get_all_chats_from_user(user_id)
     new_match = await find_trainingspartner(plz, matched_persons)
@@ -169,6 +176,15 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
         }
     )
     return response
+
+
+@app.post("/ExerciseRating")
+async def post_excercise_rating(
+    rating: int, excercise: str, current_user=Depends(get_current_active_user)
+):
+    if rating > 5 or rating < 1:
+        return INVALID_PRECONDITION("invalid rating")
+    await save_excercise_rating(rating, excercise, current_user.get("user_id"))
 
 
 @app.get("/users/me")
