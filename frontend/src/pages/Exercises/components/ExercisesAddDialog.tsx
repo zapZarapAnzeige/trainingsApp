@@ -28,6 +28,7 @@ import {
   setSetAmount,
   setWeight,
 } from "../../../redux/reducers/exercisesAddDialogSlice";
+import { postExercisesAdd } from "../../../api";
 
 type ExercisesAddDialogProps = {
   open: boolean;
@@ -45,6 +46,16 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
     setIsDataDirty(false);
     dispatch(clearAll());
     setOpen(false);
+  };
+
+  const handleSave = () => {
+    postExercisesAdd("TOKEN__", {
+      exerciseName: exercisesAddDialog.exerciseName,
+      exercise: exercisesAddDialog.exercise,
+      inTraining: exercisesAddDialog.inTraining,
+      notInTraining: exercisesAddDialog.notInTraining,
+    });
+    handleClose();
   };
 
   return (
@@ -158,7 +169,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
           variant="solid"
           color="primary"
           disabled={!isDataDirty}
-          onClick={() => {}} // Nada API implemtierung
+          onClick={handleSave}
         >
           <CheckIcon />
         </IconButton>

@@ -26,9 +26,6 @@ const exercisesInfoDialogSlice = createSlice({
     ) => {
       state.value = action.payload;
     },
-    setUserRating: (state, action: PayloadAction<number>) => {
-      state.value.userRating = action.payload;
-    },
     clearAll: (state) => {
       state.value = {
         exerciseName: "",
@@ -42,6 +39,6 @@ const exercisesInfoDialogSlice = createSlice({
   },
 });
 
-export const { setExercisesInfoDialog, setUserRating, clearAll } =
+export const { setExercisesInfoDialog, clearAll } =
   exercisesInfoDialogSlice.actions;
 export default exercisesInfoDialogSlice.reducer;

@@ -35,6 +35,7 @@ import {
   clearAll,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
+import { postTrainingData } from "../../../api";
 
 type TrainingScheduleDialogProps = {
   open: boolean;
@@ -132,6 +133,11 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
       setSelectedExercise(undefined);
     }
   }, [openExerciseDialog]);
+
+  const handleSave = () => {
+    postTrainingData("TOKEN__", trainingScheduleDialog);
+    handleClose();
+  };
 
   return (
     <>
@@ -333,7 +339,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             })}
           </Stack>
           <Divider />
-          <IconButton variant="solid" color="primary" disabled={!isDataDirty}>
+          <IconButton
+            variant="solid"
+            color="primary"
+            disabled={!isDataDirty}
+            onClick={handleSave}
+          >
             <CheckIcon />
           </IconButton>
         </ModalDialog>

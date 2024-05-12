@@ -3,13 +3,26 @@ import ExercisesEntry from "./ExercisesEntry";
 import { useAppSelector } from "../../../hooks";
 
 // TESTDATEN // Benötigt werden Daten vom Typ Training
-import exercisesTestData from "../../../example/exampleExerciseEntry.json";
+// import exercisesTestData from "../../../example/exampleExerciseEntry.json";
 import { ExercisesEntryData } from "../../../types";
 import { useEffect, useState } from "react";
+import { getExercisesData } from "../../../api";
 
 export default function ExercisesContent() {
   const currentTags = useAppSelector((state) => state.tags.value);
   const [sortedEntries, setSortedEntries] = useState<ExercisesEntryData[]>([]);
+  const [exercisesEntryData, setExercisesEntryData] =
+    useState<ExercisesEntryData[]>();
+
+  useEffect(() => {
+    getExercisesData("TOKEN__")
+      .then((data: ExercisesEntryData[]) => {
+        setExercisesEntryData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+  }, []);
 
   function sortExerciseEntriesByTags(
     exerciseEntryData: ExercisesEntryData[]
@@ -38,7 +51,9 @@ export default function ExercisesContent() {
   }
 
   useEffect(() => {
-    setSortedEntries([...sortExerciseEntriesByTags(exercisesTestData)]);
+    if (exercisesEntryData) {
+      setSortedEntries([...sortExerciseEntriesByTags(exercisesEntryData)]);
+    }
   }, [currentTags]);
 
   return (

@@ -1,28 +1,27 @@
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
-import { ExercisesEntryData } from "../../../types";
-import { FC, useState } from "react";
+import { ExerciseAdd, ExerciseInfo, ExercisesEntryData } from "../../../types";
+import { FC, useEffect, useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
 import Rating from "@mui/material/Rating";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import StarHalfIcon from "@mui/icons-material/StarHalf";
 import AddIcon from "@mui/icons-material/Add";
 import ExercisesAddDialog from "./ExercisesAddDialog";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
 import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from "@mui/material/styles";
+import {
+  getExercisesAdd,
+  getExercisesInfo,
+  postExerciseNewUserRating,
+} from "../../../api";
 
 import ExercisesInfoDialog from "./ExercisesInfoDialog";
-import {
-  setExercisesInfoDialog,
-  setUserRating,
-} from "../../../redux/reducers/exercisesInfoDialogSlice";
+import { setExercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
-import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
-import exercisesInfoDialogData from "../../../example/exampleExercisesInfoDialog.json";
+//import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
+//import exercisesInfoDialogData from "../../../example/exampleExercisesInfoDialog.json";
 
 type ExercisesEntryProps = {
   exercisesEntryData: ExercisesEntryData;
@@ -34,23 +33,42 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   const dispatch = useAppDispatch();
 
-  dispatch(
-    setExercisesAddDialog({
-      ...exercisesAddDialogData,
-      exerciseName: exercisesEntryData.exerciseName,
-      exercise: { minutes: 0 },
-    })
-  );
+  useEffect(() => {
+    if (openAddDialog) {
+      getExercisesAdd("TOKEN__", exercisesEntryData.exerciseName)
+        .then((exercisesAddDialogData: ExerciseAdd) => {
+          dispatch(
+            setExercisesAddDialog({
+              ...exercisesAddDialogData,
+              exerciseName: exercisesEntryData.exerciseName,
+              exercise: { minutes: 0 },
+            })
+          );
+        })
+        .catch((error) => {
+          console.error("Error fetching data", error);
+        });
+    }
+  }, [openAddDialog]);
 
-  dispatch(
-    setExercisesInfoDialog({
-      ...exercisesInfoDialogData,
-      exerciseName: exercisesEntryData.exerciseName,
-      userRating: exercisesEntryData.userRating,
-      primaryTags: exercisesEntryData.primaryTags,
-      secondaryTags: exercisesEntryData.secondaryTags,
-    })
-  );
+  useEffect(() => {
+    if (openInfoDialog) {
+      getExercisesInfo("TOKEN__", exercisesEntryData.exerciseName)
+        .then((exercisesInfoDialogData: ExerciseInfo) => {
+          dispatch(
+            setExercisesInfoDialog({
+              ...exercisesInfoDialogData,
+              exerciseName: exercisesEntryData.exerciseName,
+              primaryTags: exercisesEntryData.primaryTags,
+              secondaryTags: exercisesEntryData.secondaryTags,
+            })
+          );
+        })
+        .catch((error) => {
+          console.error("Error fetching data", error);
+        });
+    }
+  });
 
   return (
     <>
@@ -82,7 +100,11 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                     name="simple-controlled"
                     defaultValue={exercisesEntryData.rating}
                     onChange={(event, newValue) => {
-                      dispatch(setUserRating(newValue ?? 0));
+                      postExerciseNewUserRating(
+                        "TOKEN__",
+                        newValue ?? 0,
+                        exercisesEntryData.exerciseName
+                      );
                     }}
                   />
                 </MaterialCssVarsProvider>

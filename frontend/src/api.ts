@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from "axios";
-import { ExercisesAddDialog, Training } from "./types";
+import {
+  ExerciseAdd,
+  ExerciseInfo,
+  ExercisesAddDialog,
+  ExercisesEntryData,
+  Training,
+} from "./types";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -100,31 +106,66 @@ export const changeBlockStatus = (
 };
 
 // Gets
-export const getTrainingData = (token: string) => {
-  return axiosInstance.get("/trainingSchedule", addAuth(token));
+export const getTrainingData = async (token: string) => {
+  try {
+    const response = await axiosInstance.get(
+      "/trainingSchedule",
+      addAuth(token)
+    );
+    return response.data as Training[];
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getExercisesData = (token: string) => {
-  return axiosInstance.get("/exercisesData", addAuth(token));
+export const getExercisesData = async (token: string) => {
+  try {
+    const response = await axiosInstance.get("/exercisesData", addAuth(token));
+    return response.data as ExercisesEntryData[];
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getExercisesAdd = (token: string) => {
-  return axiosInstance.get("/exercisesAdd", addAuth(token));
+// Add Dialog
+export const getExercisesAdd = async (token: string, exercise: string) => {
+  try {
+    const response = await axiosInstance.get("/exercisesAdd", {
+      ...addAuth(token),
+      params: { exercise: exercise },
+    });
+
+    return response.data as ExerciseAdd;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getExercisesInfo = (token: string) => {
-  return axiosInstance.get("/exercisesInfo", addAuth(token));
+// Info Dialog
+export const getExercisesInfo = async (token: string, exercise: string) => {
+  try {
+    const response = await axiosInstance.get("/exercisesInfo", {
+      ...addAuth(token),
+      params: { exercise: exercise },
+    });
+    return response.data as ExerciseInfo;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Posts
-export const postTrainingData = (token: string, trainingData: Training[]) => {
+export const postTrainingData = async (
+  token: string,
+  trainingData: Training
+) => {
   axiosInstance.post("/trainingSchedule", undefined, {
     ...addAuth(token),
     params: { trainingData: trainingData },
   });
 };
 
-export const postExercisesAdd = (
+export const postExercisesAdd = async (
   token: string,
   exercisesAdd: ExercisesAddDialog
 ) => {
@@ -134,7 +175,7 @@ export const postExercisesAdd = (
   });
 };
 
-export const postExerciseNewUserRating = (
+export const postExerciseNewUserRating = async (
   token: string,
   userRating: number,
   excercise: string

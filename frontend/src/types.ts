@@ -43,17 +43,21 @@ type Tags = {
   secondaryTags: string[];
 };
 
-export type ExercisesAddDialog = Exercise & {
+export type ExerciseAdd = {
   inTraining: string[];
   notInTraining: string[];
 };
 
-export type ExercisesInfoDialog = Tags & {
+export type ExercisesAddDialog = Exercise & ExerciseAdd;
+
+export type ExerciseInfo = {
   exerciseName: string;
   exerciseText: string;
   video: string;
   userRating: number;
 };
+
+export type ExercisesInfoDialog = Tags & ExerciseInfo;
 
 export type Help = {
   title: string;
