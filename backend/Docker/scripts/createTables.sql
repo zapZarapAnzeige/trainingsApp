@@ -1,3 +1,4 @@
+-- Active: 1709628091053@@127.0.0.1@3306@trainings_DB
 USE trainings_DB;
 
 CREATE TABLE IF NOT EXISTS Users (
@@ -45,4 +46,28 @@ CREATE TABLE IF NOT EXISTS Overall_Excercise_Ratings (
     rating FLOAT CHECK (rating BETWEEN 1 and 5),
     PRIMARY KEY (excercise_id),
     FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Trainings_plan (
+    trainings_id INT AUTO_INCREMENT,
+    trainings_name VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    PRIMARY KEY (trainings_id),
+    FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Trainings_plan2Excercise (
+    trainings_id INT NOT NULL,
+    excercise_id INT NOT NULL,
+    PRIMARY KEY (trainings_id, excercise_id),
+    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
+    FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Trainings_plan2Days (
+    trainings_plan2Days_id INT AUTO_INCREMENT,
+    trainings_id INT NOT NULL,
+    day DATE NOT NULL,
+    PRIMARY KEY (trainings_plan2Days_id),
+    FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
 );

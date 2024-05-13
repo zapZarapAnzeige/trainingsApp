@@ -128,6 +128,7 @@ export const getExercisesData = async (token: string) => {
 };
 
 // Add Dialog
+// done
 export const getExercisesAdd = async (token: string, exercise: string) => {
   try {
     const response = await axiosInstance.get("/exercisesAdd", {
@@ -142,6 +143,7 @@ export const getExercisesAdd = async (token: string, exercise: string) => {
 };
 
 // Info Dialog
+// done
 export const getExercisesInfo = async (token: string, exercise: string) => {
   try {
     const response = await axiosInstance.get("/exercisesInfo", {

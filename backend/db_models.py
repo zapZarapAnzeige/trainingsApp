@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     PrimaryKeyConstraint,
     Float,
+    Date,
 )
 from db_connection import metaData
 
@@ -28,6 +29,16 @@ Users = Table(
     Column("bio", Text, nullable=True),
 )
 
+Trainings_plan = Table(
+    "Trainings_plan",
+    metaData,
+    Column("trainings_id", Integer, primary_key=True, autoincrement=True),
+    Column("trainings_name", String(255), nullable=False),
+    Column("user_id", Integer, nullable=False),
+    ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
+)
+
+
 Excercises = Table(
     "Excercises",
     metaData,
@@ -37,6 +48,34 @@ Excercises = Table(
     Column("constant_unit_of_measure", Enum("SxWdh", "Min"), nullable=False),
     Column("trackable_unit_of_measure", String(255), nullable=True),
 )
+
+Trainings_plan2Excercise = Table(
+    "Trainings_plan2Excercise",
+    metaData,
+    Column("trainings_id", Integer, nullable=False),
+    Column("excercise_id", String(255), nullable=False),
+    ForeignKeyConstraint(
+        ["trainings_id"], ["Trainings_plan.trainings_id"], ondelete="CASCADE"
+    ),
+    ForeignKeyConstraint(
+        ["excercise_id"], ["Excercises.excercise_id"], ondelete="CASCADE"
+    ),
+    PrimaryKeyConstraint("trainings_id", "excercise_id"),
+)
+
+
+Trainings_plan2Days = Table(
+    "Trainings_plan2Days",
+    metaData,
+    Column("trainings_plan2Days_id", Integer, autoincrement=True),
+    Column("trainings_id", Integer),
+    Column("day", Date, nullable=False),
+    ForeignKeyConstraint(
+        ["trainings_id"], ["Trainings_plan.trainings_id"], ondelete="CASCADE"
+    ),
+    PrimaryKeyConstraint("trainings_plan2Days_id"),
+)
+
 
 Tags = Table(
     "Tags",

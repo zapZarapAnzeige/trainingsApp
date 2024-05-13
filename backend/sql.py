@@ -6,9 +6,12 @@ from db_models import (
     Excercises,
     Individual_Excercise_Ratings,
     Overall_Excercise_Ratings,
+    Trainings_plan,
+    Trainings_plan2Days,
+    Trainings_plan2Excercise,
 )
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, distinct
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 
@@ -118,6 +121,51 @@ async def save_excercise_rating(rating: int, excercise: str, user_id: int):
     )
 
 
+def get_excercise_for_dialog(excercise_name: str, user_id: int):
+    result = (
+        session.execute(
+            select(
+                Trainings_plan.c.trainings_id,
+                Trainings_plan.c.trainings_name,
+                Trainings_plan.c.excercise_name,
+            )
+            .select_from(Trainings_plan)
+            .where(and_(Trainings_plan.c.user_id == user_id))
+            .join(
+                Trainings_plan2Excercise,
+                Trainings_plan2Excercise.c.trainings_id
+                == Trainings_plan.c.trainings_id,
+            )
+            .join(
+                Excercises,
+                Trainings_plan2Excercise.c.excercise_id == Excercises.c.excercise_id,
+            )
+        )
+        .fetchall()
+        ._asdict()
+    )
+    in_training = {}
+    not_in_training = {}
+    print(result)
+    for val in result.values():
+        if val["excercise_name"] == excercise_name:
+            in_training.append({val["trainings_id"]: {val}})
+        else:
+            not_in_training.append({val["trainings_id"]: {val}})
+
+    for k, v in not_in_training.values():
+        if k in in_training.keys():
+            del not_in_training[k]
+    return {
+        "in_training": in_training.values(),
+        "not_in_training": not_in_training.values(),
+    }
+
+
+def get_excercise_not_in_training(excercise_name: str, user_id: int):
+    pass
+
+
 async def find_trainingspartner(plz: str, matched_people: List[int]):
     try:
         partner = session.execute(
@@ -141,3 +189,29 @@ async def find_trainingspartner(plz: str, matched_people: List[int]):
             return None
     except NoResultFound:
         return None
+
+
+def get_general_excercise_info(excercise: str, user_id: int):
+    info = session.execute(
+        select(
+            Excercises.c.excercise_id,
+            Excercises.c.excercise_name,
+            Excercises.c.description,
+            Individual_Excercise_Ratings.c.rating,
+        )
+        .select_from(Excercises)
+        .join(
+            Individual_Excercise_Ratings,
+            and_(
+                Individual_Excercise_Ratings.c.excercise_id
+                == Excercises.c.excercise_id,
+                Individual_Excercise_Ratings.c.user_id == user_id,
+            ),
+            isouter=True,
+        )
+        .where(Excercises.c.excercise_name == excercise)
+    ).first()
+    if info:
+        return info._asdict()
+    else:
+        raise HTTPException(status_code=404, detail="Excercise not found")

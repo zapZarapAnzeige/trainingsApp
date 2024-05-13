@@ -8,6 +8,8 @@ from sql import (
     find_trainingspartner,
     update_user_data,
     save_excercise_rating,
+    get_excercise_for_dialog,
+    get_general_excercise_info,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -30,6 +32,7 @@ from no_sql import (
     get_video_by_id,
     block_user,
     unblock_user,
+    get_video_by_name,
 )
 
 app = FastAPI()
@@ -199,3 +202,23 @@ async def get_user_data(current_user=Depends(get_current_active_user)):
         else None
     }
     return {**current_user, **profile_picture}
+
+
+@app.get("exercisesAdd")
+async def get_excercise_add(
+    exercise: str, current_user=Depends(get_current_active_user)
+):
+    return get_excercise_for_dialog(exercise, current_user.get("user_id"))
+
+
+@app.get("/exercisesInfo")
+async def get_excercise_info(
+    exercise: str, current_user=Depends(get_current_active_user)
+):
+    print(await get_video_by_name(exercise))
+    return {
+        "video": await get_video_by_name(exercise),
+        **get_general_excercise_info(exercise, current_user.get("user_id")),
+    }
+
+    pass

@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from io import BytesIO
 from bson import ObjectId
 from pymongo.results import UpdateResult
+import base64
 
 
 chats = database.get_collection("chats")
@@ -22,7 +23,7 @@ async def get_chat_partners(user_id: int):
             "unread_messages": 0,
             "last_message_timestamp": participants.get("last_message_timestamp"),
             "disabled": participants.get("disabled"),
-            "last_sender_id": participants.get("last_sender_id")
+            "last_sender_id": participants.get("last_sender_id"),
         }
         if participants.get("last_sender_id") == user_id
         else {
@@ -31,7 +32,7 @@ async def get_chat_partners(user_id: int):
             "unread_messages": participants.get("unread_messages"),
             "last_message_timestamp": participants.get("last_message_timestamp"),
             "disabled": participants.get("disabled"),
-            "last_sender_id": participants.get("last_sender_id")
+            "last_sender_id": participants.get("last_sender_id"),
         }
         for participants in await chats.find({"participants": user_id}).to_list(
             length=None
@@ -43,8 +44,7 @@ async def get_chat_partners(user_id: int):
 
 async def block_user(user_id: int, partner_id: int):
     update: UpdateResult = await chats.update_one(
-        filter={"participants": {
-            "$all": [user_id, partner_id]}, "disabled": False},
+        filter={"participants": {"$all": [user_id, partner_id]}, "disabled": False},
         update={
             "$set": {
                 "disabled": True,
@@ -85,6 +85,17 @@ async def upload_video(file: UploadFile):
     await grid_fs_upload_stream.close()
     # TODO: insert id into mysql
     return {"filename": file.filename, "id": str(grid_fs_upload_stream._id)}
+
+
+async def get_video_by_name(file_name: str):
+    try:
+        download_stream = await grid_fs_bucket.open_download_stream_by_name(file_name)
+        file_data = await download_stream.read()
+        print(file_data)
+        return base64.b64encode(file_data).decode("utf-8")
+    except Exception as e:
+        print(e)
+        return None
 
 
 async def get_video_by_id(file_id: str):
@@ -145,8 +156,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: int, time
     )
     if not chat:
         chat = await chats.find_one_and_update(
-            {"participants": {
-                "$all": [sender_id, recipient_id]}, "disabled": False},
+            {"participants": {"$all": [sender_id, recipient_id]}, "disabled": False},
             {
                 "$set": {
                     "last_message_timestamp": timestamp,
@@ -176,8 +186,7 @@ async def save_new_message(message: str, sender_id: int, recipient_id: int, time
 
 async def get_content_of_chat(partner_id: int, user_id: int):
     chat = await chats.find_one_and_update(
-        {"participants": {"$all": [partner_id, user_id]},
-            "last_sender_id": partner_id},
+        {"participants": {"$all": [partner_id, user_id]}, "last_sender_id": partner_id},
         {"$set": {"unread_messages": 0}},
     )
     if not chat:
