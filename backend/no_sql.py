@@ -89,10 +89,17 @@ async def upload_video(file: UploadFile):
 
 async def get_video_by_name(file_name: str):
     try:
-        download_stream = await grid_fs_bucket.open_download_stream_by_name(file_name)
-        file_data = await download_stream.read()
-        print(file_data)
-        return base64.b64encode(file_data).decode("utf-8")
+        video_info = await database.get_collection("videos.files").find_one(
+            {"filename": {"$regex": f"{file_name}.*"}}
+        )
+        if video_info:
+            download_stream = await grid_fs_bucket.open_download_stream(
+                video_info["_id"]
+            )
+            file_data = await download_stream.read()
+            return base64.b64encode(file_data).decode("utf-8")
+        else:
+            return None
     except Exception as e:
         print(e)
         return None
