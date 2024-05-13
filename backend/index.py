@@ -204,7 +204,7 @@ async def get_user_data(current_user=Depends(get_current_active_user)):
     return {**current_user, **profile_picture}
 
 
-@app.get("exercisesAdd")
+@app.get("/exercisesAdd")
 async def get_excercise_add(
     exercise: str, current_user=Depends(get_current_active_user)
 ):

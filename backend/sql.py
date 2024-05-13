@@ -11,7 +11,7 @@ from db_models import (
     Trainings_plan2Excercise,
 )
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct
+from sqlalchemy import select, and_
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 
@@ -127,7 +127,7 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
             select(
                 Trainings_plan.c.trainings_id,
                 Trainings_plan.c.trainings_name,
-                Trainings_plan.c.excercise_name,
+                Excercises.c.excercise_name,
             )
             .select_from(Trainings_plan)
             .where(and_(Trainings_plan.c.user_id == user_id))
@@ -135,30 +135,31 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
                 Trainings_plan2Excercise,
                 Trainings_plan2Excercise.c.trainings_id
                 == Trainings_plan.c.trainings_id,
+                isouter=True,
             )
             .join(
                 Excercises,
                 Trainings_plan2Excercise.c.excercise_id == Excercises.c.excercise_id,
+                isouter=True,
             )
         )
+        .mappings()
         .fetchall()
-        ._asdict()
     )
     in_training = {}
     not_in_training = {}
-    print(result)
-    for val in result.values():
+    for val in result:
         if val["excercise_name"] == excercise_name:
-            in_training.append({val["trainings_id"]: {val}})
+            in_training[val["trainings_id"]] = val
         else:
-            not_in_training.append({val["trainings_id"]: {val}})
+            not_in_training[val["trainings_id"]] = val
 
-    for k, v in not_in_training.values():
+    for k in list(not_in_training.keys()):
         if k in in_training.keys():
             del not_in_training[k]
     return {
-        "in_training": in_training.values(),
-        "not_in_training": not_in_training.values(),
+        "in_training": list(in_training.values()),
+        "not_in_training": list(not_in_training.values()),
     }
 
 

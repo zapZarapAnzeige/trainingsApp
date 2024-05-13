@@ -22,6 +22,7 @@ const addAuth = (token: string) => {
   return { headers: { Authorization: token } };
 };
 
+//done
 export const getChatHistory = async (token: string, partnerId: number) => {
   return await axiosInstance.get("/chat/content", {
     ...addAuth(token),
@@ -29,10 +30,12 @@ export const getChatHistory = async (token: string, partnerId: number) => {
   });
 };
 
+// done
 export const getChatsOverview = (token: string) => {
   return axiosInstance.get("/chats", addAuth(token));
 };
 
+//done
 export const getUsers = (
   token: string,
   onSuccess: (res: AxiosResponse) => void
@@ -41,24 +44,26 @@ export const getUsers = (
     res && onSuccess(res);
   });
 };
-
+//done
 export const signUp = async (username: string, password: string) => {
   await axiosInstance.post(
     "/api/v1/signUp",
     new URLSearchParams({ username: username, password: password })
   );
 };
-
+//done
 export const login = async (username: string, password: string) => {
   return await axiosInstance.post(
     "/api/v1/login",
     new URLSearchParams({ username: username, password: password })
   );
 };
+
+//done
 export const getUserData = (token: string) => {
   return axiosInstance.get("/users/me", addAuth(token));
 };
-
+//done
 export const findNewPartner = (token: string, plz: string) => {
   return axiosInstance.post("/chat", undefined, {
     ...addAuth(token),
@@ -66,6 +71,7 @@ export const findNewPartner = (token: string, plz: string) => {
   });
 };
 
+//done
 export const changeUserData = (
   token: string,
   nickname?: string,
@@ -91,6 +97,7 @@ export const changeUserData = (
   });
 };
 
+//done
 export const changeBlockStatus = (
   token: string,
   currentlyBlocked: boolean,
