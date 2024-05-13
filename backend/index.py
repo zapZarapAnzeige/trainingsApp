@@ -215,7 +215,6 @@ async def get_excercise_add(
 async def get_excercise_info(
     exercise: str, current_user=Depends(get_current_active_user)
 ):
-    print(await get_video_by_name(exercise))
     return {
         "video": await get_video_by_name(exercise),
         **get_general_excercise_info(exercise, current_user.get("user_id")),

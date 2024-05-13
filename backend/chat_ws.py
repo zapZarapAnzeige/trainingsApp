@@ -52,7 +52,6 @@ async def handle_session(websocket: WebSocket, user_id: int):
     while is_connected:
         try:
             data: Dict[Message_json] = await websocket.receive_json()
-            print(data)
 
             validation_result = validate_message(data, user_id)
 
@@ -72,7 +71,6 @@ async def handle_session(websocket: WebSocket, user_id: int):
             is_inserted = await save_new_message(
                 data.get("content"), user_id, data.get("recipient_id"), timestamp
             )
-            print(is_inserted)
             if is_inserted.get("error"):
                 # TODO: watch out for this error in frontend
                 await websocket.send_json(
