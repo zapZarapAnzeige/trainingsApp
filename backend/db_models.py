@@ -89,6 +89,7 @@ Excercises_history = Table(
     metaData,
     Column("excercises_history_id", Integer, nullable=False),
     Column("trainings_plan_history_id", Integer, nullable=False),
+    Column("user_id", Integer, nullable=False),
     Column("excercise_id", Integer, nullable=False),
     Column("completed", Boolean, nullable=False, default=False),
     Column("minutes", Integer, nullable=True),

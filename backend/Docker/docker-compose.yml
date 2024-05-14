@@ -14,6 +14,7 @@ services:
       - "./scripts/insertDemoData.sql:/docker-entrypoint-initdb.d/3.sql"
       - "./scripts/createProcedures.sql:/docker-entrypoint-initdb.d/4.sql"
       - "./scripts/createTriggers.sql:/docker-entrypoint-initdb.d/5.sql"
+      - "./scripts/createEvents.sql:/docker-entrypoint-initdb.d/6.sql"
       - "./bck:/var/lib/bck"
   mongo:
     image: mongo:latest

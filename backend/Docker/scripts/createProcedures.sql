@@ -1,6 +1,9 @@
 DELIMITER ?/
+
 USE trainings_DB ?/
+
 DROP PROCEDURE IF EXISTS Update_overall_ratings_by_excercise_id ?/
+
 CREATE PROCEDURE update_or_insert_overall_ratings_by_excercise_id
 (IN new_excercise_id INT) READS SQL DATA 
 BEGIN 
@@ -39,4 +42,5 @@ END
 END
 	IF;
 END ?/
+
 DELIMITER ;

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import TypedDict, Optional
+from typing import TypedDict, Optional, Union, List
 
 
 class Message_json(BaseModel):
@@ -38,7 +38,30 @@ class Unformatted_trainingsdata(TypedDict):
     weekday: str
     excercise_name: Optional[str]
     excercise_id: Optional[int]
+    weight: float
+    minutes: int
+    number_of_repetition: int
+    number_of_sets: int
+
+
+class ExerciseCardio(BaseModel):
+    minutes: float
+
+
+class ExerciseWeighted(BaseModel):
+    repetition_amount: int
+    set_amount: int
+    weight: int
+
+
+class ExerciseDetail(BaseModel):
+    excercise_id: int
+    exercise_name: str
+    exercise: Union[ExerciseCardio, ExerciseWeighted]
 
 
 class formatted_trainingsdata(BaseModel):
-    pass
+    name: str
+    trainings_id: int
+    on_days: List[str]
+    exercises: List[ExerciseDetail]

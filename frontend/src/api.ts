@@ -113,6 +113,7 @@ export const changeBlockStatus = (
 };
 
 // Gets
+//done
 export const getTrainingData = async (token: string) => {
   try {
     const response = await axiosInstance.get(

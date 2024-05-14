@@ -15,6 +15,7 @@ from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
+from db_parser import parse_trainings
 
 
 async def get_overview(partners: Dict):
@@ -220,7 +221,7 @@ def get_general_excercise_info(excercise: str, user_id: int):
 
 
 def get_trainings(user_id: int):
-    return (
+    return parse_trainings(
         session.execute(
             select(
                 Trainings_plan.c.trainings_id,
@@ -228,6 +229,11 @@ def get_trainings(user_id: int):
                 Days.c.weekday,
                 Excercises.c.excercise_name,
                 Excercises.c.excercise_id,
+                Excercises.c.constant_unit_of_measure,
+                User_current_performance.c.minutes,
+                User_current_performance.c.number_of_repetition,
+                User_current_performance.c.number_of_sets,
+                User_current_performance.c.weight,
             )
             .select_from(Trainings_plan)
             .join(
