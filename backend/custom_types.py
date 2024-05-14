@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import TypedDict, Optional
 
 
 class Message_json(BaseModel):
@@ -29,3 +30,15 @@ class User(BaseModel):
 class User_in_db(User):
     hashed_password: str
     user_name: str
+
+
+class Unformatted_trainingsdata(TypedDict):
+    trainings_id: int
+    trainings_name: str
+    weekday: str
+    excercise_name: Optional[str]
+    excercise_id: Optional[int]
+
+
+class formatted_trainingsdata(BaseModel):
+    pass

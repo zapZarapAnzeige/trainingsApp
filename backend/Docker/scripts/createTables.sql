@@ -53,21 +53,64 @@ CREATE TABLE IF NOT EXISTS Trainings_plan (
     trainings_name VARCHAR(255) NOT NULL,
     user_id INT NOT NULL,
     PRIMARY KEY (trainings_id),
-    FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users (user_id),
+    INDEX (trainings_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS Trainings_plan2Excercise (
+CREATE TABLE IF NOT EXISTS User_current_performance (
     trainings_id INT NOT NULL,
     excercise_id INT NOT NULL,
+    minutes INT,
+    number_of_repetition INT,
+    number_of_sets INT,
+    weight DECIMAL(5, 2),
     PRIMARY KEY (trainings_id, excercise_id),
     FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
     FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Trainings_plan2Days (
-    trainings_plan2Days_id INT AUTO_INCREMENT,
-    trainings_id INT NOT NULL,
+CREATE TABLE IF NOT EXISTS Trainings_plan_history (
+    trainings_plan_history_id INT AUTO_INCREMENT,
+    trainings_name VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
     day DATE NOT NULL,
-    PRIMARY KEY (trainings_plan2Days_id),
-    FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
+    PRIMARY KEY (trainings_plan_history_id),
+    FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE,
+    INDEX (
+        trainings_plan_history_id,
+        user_id
+    )
+);
+
+CREATE TABLE IF NOT EXISTS Excercises_history (
+    excercises_history_id INT AUTO_INCREMENT,
+    trainings_plan_history_id INT NOT NULL,
+    user_id INT NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    excercise_id INT NOT NULL,
+    minutes INT,
+    number_of_repetition INT,
+    number_of_sets INT,
+    weight DECIMAL(5, 2),
+    PRIMARY KEY (excercises_history_id),
+    FOREIGN KEY (trainings_plan_history_id) REFERENCES Trainings_plan_history (trainings_plan_history_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id)
+);
+
+CREATE TABLE IF NOT EXISTS Days (
+    days_id INT AUTO_INCREMENT,
+    weekday ENUM(
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ) NOT NULL,
+    user_id INT NOT NULL,
+    trainings_id INT NOT NULL,
+    PRIMARY KEY (days_id),
+    FOREIGN KEY (trainings_id, user_id) REFERENCES Trainings_plan (trainings_id, user_id) ON DELETE CASCADE
 );

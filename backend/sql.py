@@ -7,8 +7,9 @@ from db_models import (
     Individual_Excercise_Ratings,
     Overall_Excercise_Ratings,
     Trainings_plan,
-    Trainings_plan2Days,
-    Trainings_plan2Excercise,
+    Trainings_plan_history,
+    User_current_performance,
+    Days,
 )
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_
@@ -132,14 +133,14 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
             .select_from(Trainings_plan)
             .where(and_(Trainings_plan.c.user_id == user_id))
             .join(
-                Trainings_plan2Excercise,
-                Trainings_plan2Excercise.c.trainings_id
+                User_current_performance,
+                User_current_performance.c.trainings_id
                 == Trainings_plan.c.trainings_id,
                 isouter=True,
             )
             .join(
                 Excercises,
-                Trainings_plan2Excercise.c.excercise_id == Excercises.c.excercise_id,
+                User_current_performance.c.excercise_id == Excercises.c.excercise_id,
                 isouter=True,
             )
         )
@@ -216,3 +217,38 @@ def get_general_excercise_info(excercise: str, user_id: int):
         return info._asdict()
     else:
         raise HTTPException(status_code=404, detail="Excercise not found")
+
+
+def get_trainings(user_id: int):
+    return (
+        session.execute(
+            select(
+                Trainings_plan.c.trainings_id,
+                Trainings_plan.c.trainings_name,
+                Days.c.weekday,
+                Excercises.c.excercise_name,
+                Excercises.c.excercise_id,
+            )
+            .select_from(Trainings_plan)
+            .join(
+                Days,
+                and_(
+                    Days.c.trainings_id == Trainings_plan.c.trainings_id,
+                    Days.c.user_id == Trainings_plan.c.user_id,
+                ),
+            )
+            .join(
+                User_current_performance,
+                Trainings_plan.c.trainings_id
+                == User_current_performance.c.trainings_id,
+                isouter=True,
+            )
+            .join(
+                Excercises,
+                User_current_performance.c.excercise_id == Excercises.c.excercise_id,
+                isouter=True,
+            )
+        )
+        .mappings()
+        .fetchall()
+    )

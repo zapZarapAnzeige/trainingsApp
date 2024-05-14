@@ -10,6 +10,7 @@ from sql import (
     save_excercise_rating,
     get_excercise_for_dialog,
     get_general_excercise_info,
+    get_trainings,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -220,4 +221,7 @@ async def get_excercise_info(
         **get_general_excercise_info(exercise, current_user.get("user_id")),
     }
 
-    pass
+
+@app.get("/trainingSchedule")
+async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
+    return get_trainings(current_user.get("user_id"))
