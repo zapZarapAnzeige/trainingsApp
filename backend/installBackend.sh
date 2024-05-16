@@ -1,18 +1,19 @@
 # generated with ChatGPT
 current_user=$(whoami)
 if [ "$current_user" = "root" ]; then
-pip3 install fastapi
-pip3 install uvicorn
-pip3 install pydantic
-pip3 install python-multipart
-pip3 install python-jose[cryptography]
-pip3 install passlib[bcrypt]
-pip3 install sqlalchemy
-pip3 install pymysql
-pip3 install python-dotenv
-pip3 install schedule
-pip3 install websockets
-pip3 install motor
+pip3 install fastapi -q
+pip3 install uvicorn -q
+pip3 install pydantic -q
+pip3 install python-multipart -q
+pip3 install python-jose[cryptography] -q
+pip3 install passlib[bcrypt] -q
+pip3 install sqlalchemy -q
+pip3 install pymysql -q
+pip3 install python-dotenv -q
+pip3 install schedule -q
+pip3 install websockets -q
+pip3 install motor -q
+echo "installed modules"
 else
     echo "Please execute the script as root"
 fi
