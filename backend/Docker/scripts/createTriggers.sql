@@ -15,4 +15,10 @@ BEGIN
 	CALL update_or_insert_overall_ratings_by_excercise_id (NEW.excercise_id);
 END //
 
+CREATE TRIGGER update_Overall_Excercise_Ratings_on_delete AFTER 
+DELETE ON Individual_Excercise_Ratings FOR EACH ROW 
+BEGIN 
+	CALL update_or_insert_overall_ratings_by_excercise_id (OLD.excercise_id);
+END //
+
 DELIMITER ;

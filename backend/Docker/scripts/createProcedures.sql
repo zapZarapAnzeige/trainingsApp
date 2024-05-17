@@ -5,8 +5,6 @@ USE trainings_DB ?/
 DROP PROCEDURE IF EXISTS Update_overall_ratings_by_excercise_id ?/
 DROP PROCEDURE IF EXISTS insert_todays_plans_and_excercises ?/
 
-
-
 CREATE PROCEDURE update_or_insert_overall_ratings_by_excercise_id
 (IN new_excercise_id INT) READS SQL DATA 
 BEGIN 
@@ -20,30 +18,29 @@ DECLARE
 	FROM Individual_Excercise_Ratings
 	WHERE	    excercise_id = new_excercise_id;
 	IF total_ratings > 0 THEN
-	SET
-	    average_rating = (ratings_sum / total_ratings);
-	ELSE SET average_rating = 0;
-END
-	IF;
-	IF NOT EXISTS (
-	    SELECT 1
-	    FROM Overall_Excercise_Ratings
-	    WHERE
-	        excercise_id = new_excercise_id
-	) THEN
-	INSERT INTO
-	    Overall_Excercise_Ratings (excercise_id, rating)
-	VALUES (
-	        new_excercise_id, average_rating
-	    );
-	ELSE
-	UPDATE Overall_Excercise_Ratings
-	SET
-	    rating = average_rating
-	WHERE
-	    excercise_id = new_excercise_id;
-END
-	IF;
+		SET average_rating = (ratings_sum / total_ratings);
+		IF NOT EXISTS (
+		    SELECT 1
+		    FROM Overall_Excercise_Ratings
+		    WHERE
+		        excercise_id = new_excercise_id
+		) THEN
+			INSERT INTO Overall_Excercise_Ratings (excercise_id, rating, total_excercise_ratings)
+			VALUES (new_excercise_id, average_rating, total_ratings);
+		ELSE
+			UPDATE Overall_Excercise_Ratings SET rating = average_rating, total_excercise_ratings=total_ratings 
+			WHERE excercise_id = new_excercise_id;
+		END IF;
+	ELSE 
+	IF EXISTS (
+		    SELECT 1
+		    FROM Overall_Excercise_Ratings
+		    WHERE
+		        excercise_id = new_excercise_id
+		) THEN
+			DELETE FROM Overall_Excercise_Ratings WHERE excercise_id = new_excercise_id;
+		END IF;
+	END IF;
 END ?/
 
 CREATE PROCEDURE insert_todays_plans_and_excercises()

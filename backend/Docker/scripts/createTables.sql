@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS Individual_Excercise_Ratings (
 
 CREATE TABLE IF NOT EXISTS Overall_Excercise_Ratings (
     excercise_id INT,
-    rating FLOAT CHECK (rating BETWEEN 1 and 5),
+    rating FLOAT CHECK (rating BETWEEN 0 and 5),
+    total_excercise_ratings INT,
     PRIMARY KEY (excercise_id),
     FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
 );
