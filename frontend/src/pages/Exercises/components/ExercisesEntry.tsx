@@ -18,6 +18,7 @@ import {
 
 import ExercisesInfoDialog from "./ExercisesInfoDialog";
 import { setExercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
+import { useAuthHeader } from "react-auth-kit";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 //import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
@@ -28,6 +29,7 @@ type ExercisesEntryProps = {
 };
 
 const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
+  const auth = useAuthHeader();
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
 
@@ -35,12 +37,14 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   useEffect(() => {
     if (openAddDialog) {
-      getExercisesAdd("TOKEN__", exercisesEntryData.exerciseName)
+      getExercisesAdd(auth(), exercisesEntryData.exerciseName)
         .then((exercisesAddDialogData: ExerciseAdd) => {
           dispatch(
             setExercisesAddDialog({
               ...exercisesAddDialogData,
               exerciseName: exercisesEntryData.exerciseName,
+              exerciseId: exercisesEntryData.exerciseId,
+              exerciseType: exercisesEntryData.exerciseType,
               exercise: { minutes: 0 },
             })
           );
@@ -53,7 +57,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   useEffect(() => {
     if (openInfoDialog) {
-      getExercisesInfo("TOKEN__", exercisesEntryData.exerciseName)
+      getExercisesInfo(auth(), exercisesEntryData.exerciseName)
         .then((exercisesInfoDialogData: ExerciseInfo) => {
           dispatch(
             setExercisesInfoDialog({
@@ -68,7 +72,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
           console.error("Error fetching data", error);
         });
     }
-  });
+  }, [openInfoDialog]);
 
   return (
     <>
@@ -101,7 +105,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                     defaultValue={exercisesEntryData.rating}
                     onChange={(event, newValue) => {
                       postExerciseNewUserRating(
-                        "TOKEN__",
+                        auth(),
                         newValue ?? 0,
                         exercisesEntryData.exerciseName
                       );

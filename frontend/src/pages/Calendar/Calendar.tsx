@@ -19,14 +19,7 @@ export default function Calendar() {
       >
         <Grid container spacing={1} sx={{ flexGrow: 1 }}>
           {weekdays.map((dayName, index) => {
-            return (
-              <Grid xs={12 / 7}>
-                <CalendarDay
-                  dayName={dayName}
-                  calendarDayData={testCalendar[index]}
-                />
-              </Grid>
-            );
+            return <Grid xs={12 / 7}></Grid>;
           })}
         </Grid>
       </Sheet>

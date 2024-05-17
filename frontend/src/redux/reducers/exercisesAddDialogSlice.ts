@@ -9,6 +9,8 @@ export type ExercisesAddDialogState = {
 const initialState: ExercisesAddDialogState = {
   value: {
     exerciseName: "",
+    exerciseId: 0,
+    exerciseType: "cardio",
     exercise: { minutes: 0 },
     inTraining: [],
     notInTraining: [],
@@ -63,6 +65,8 @@ const exercisesAddDialogSlice = createSlice({
     clearAll: (state) => {
       state.value = {
         exerciseName: "",
+        exerciseId: 0,
+        exerciseType: "cardio",
         exercise: { minutes: 0 },
         inTraining: [],
         notInTraining: [],

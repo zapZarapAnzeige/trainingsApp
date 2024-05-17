@@ -10,6 +10,16 @@ export const weekdays: string[] = [
   "Sonntag",
 ];
 
+export const weekdaysNames: string[] = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 export const weekdaysAbbreviation: string[] = [
   "Mo.",
   "Di.",
@@ -32,12 +42,4 @@ export const tags: string[] = [
   "I",
   "j",
   "k",
-];
-
-export const exercises: Exercise[] = [
-  { exerciseName: "Laufen", exercise: { minutes: 10 } },
-  {
-    exerciseName: "Gewichte",
-    exercise: { weight: 10, repetitionAmount: 15, setAmount: 3 },
-  },
 ];

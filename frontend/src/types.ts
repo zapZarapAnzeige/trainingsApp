@@ -1,12 +1,15 @@
 // Trainingstypen
 export type Training = {
   name: string;
+  trainingId: number;
   onDays: string[];
   exercises: Exercise[];
 };
 
 export type Exercise = {
   exerciseName: string;
+  exerciseId: number;
+  exerciseType: string;
   exercise: ExerciseCardio | ExerciseWeighted;
 };
 
@@ -34,7 +37,6 @@ export type CalendarDayData = {
 export type ExercisesEntryData = Exercise &
   Tags & {
     rating: number;
-    userRating: number;
     reviews: number;
   };
 
@@ -135,3 +137,5 @@ export const isWSError = (
 ): value is WSError => {
   return "error" in value && "message" in value;
 };
+
+type AnyObject = { [key: string]: any };
