@@ -1,5 +1,5 @@
 import { IntlShape } from "react-intl";
-import { weekdaysAbbreviation } from "./constants";
+import { weekdaysNames } from "./constants";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {
@@ -130,7 +130,7 @@ export const formatTimestamp = (date: string | number, intl: IntlShape) => {
 };
 
 export function mapNumberToWeekdayString(index: number) {
-  return weekdaysAbbreviation[index];
+  return weekdaysNames[index];
 }
 
 const getImageExtension = (base64ProfilePicture: string) => {
@@ -220,8 +220,26 @@ export function sortAndInsertDay(days: string[], dayToAdd: string) {
   days.push(dayToAdd);
 
   days.sort((a: string, b: string) => {
-    return weekdaysAbbreviation.indexOf(a) - weekdaysAbbreviation.indexOf(b);
+    return weekdaysNames.indexOf(a) - weekdaysNames.indexOf(b);
   });
 
   return days;
+}
+
+function snakeToCamel(snake: string): string {
+  return snake.replace(/(_\w)/g, (match) => match[1].toUpperCase());
+}
+
+export function keysToCamelCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => keysToCamelCase(item));
+  } else if (obj !== null && typeof obj === "object") {
+    return Object.keys(obj).reduce((acc, key) => {
+      const camelKey = snakeToCamel(key);
+      acc[camelKey] = keysToCamelCase(obj[key]);
+      return acc;
+    }, {} as Record<string, any>);
+  } else {
+    return obj;
+  }
 }

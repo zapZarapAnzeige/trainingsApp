@@ -7,7 +7,7 @@ export type TrainingScheduleDialogState = {
 };
 
 const initialState: TrainingScheduleDialogState = {
-  value: { name: "", onDays: [], exercises: [] },
+  value: { name: "", trainingId: 0, onDays: [], exercises: [] },
 };
 
 const trainingScheduleDialogSlice = createSlice({
@@ -37,7 +37,7 @@ const trainingScheduleDialogSlice = createSlice({
       state.value = action.payload;
     },
     clearAll: (state) => {
-      state.value = { name: "", onDays: [], exercises: [] };
+      state.value = { name: "", trainingId: 0, onDays: [], exercises: [] };
     },
   },
 });

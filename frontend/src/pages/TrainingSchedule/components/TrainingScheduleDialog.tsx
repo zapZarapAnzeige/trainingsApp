@@ -24,7 +24,7 @@ import {
 } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { exercises, weekdaysAbbreviation } from "../../../constants";
+import { weekdaysAbbreviation, weekdaysNames } from "../../../constants";
 import { useAppSelector, useAppDispatch } from "../../../hooks";
 import {
   addDay,
@@ -35,7 +35,8 @@ import {
   clearAll,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
-import { postTrainingData } from "../../../api";
+import { getExercises, postTrainingData } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
 
 type TrainingScheduleDialogProps = {
   open: boolean;
@@ -48,6 +49,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   setOpen,
   editTraining,
 }) => {
+  const auth = useAuthHeader();
   const trainingScheduleDialog = useAppSelector(
     (state) => state.trainingScheduleDialog.value
   );
@@ -55,6 +57,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
 
   const [openExerciseDialog, setOpenExerciseDialog] = useState<boolean>(false);
   const [isDataDirty, setIsDataDirty] = useState<boolean>(false);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   // Excerise Dialog States
   const [selectedExercise, setSelectedExercise] = useState<Exercise>();
@@ -71,6 +74,18 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
     dispatch(check ? addDay(checkboxDay) : dispatch(removeDay(checkboxDay)));
     setIsDataDirty(true);
   };
+
+  useEffect(() => {
+    if (open) {
+      getExercises(auth())
+        .then((exercises: Exercise[]) => {
+          setExercises(exercises);
+        })
+        .catch((error) => {
+          console.error("Error fetching data", error);
+        });
+    }
+  }, [open]);
 
   const handleExerciseDialogClose = () => {
     setSelectedExercise(undefined);
@@ -112,10 +127,14 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
         "minutes" in selectedExercise.exercise
           ? addExercise({
               exerciseName: selectedExercise.exerciseName,
+              exerciseId: selectedExercise.exerciseId,
+              exerciseType: selectedExercise.exerciseType,
               exercise: { minutes: minutes },
             })
           : addExercise({
               exerciseName: selectedExercise.exerciseName,
+              exerciseId: selectedExercise.exerciseId,
+              exerciseType: selectedExercise.exerciseType,
               exercise: {
                 weight: weight,
                 repetitionAmount: repetitions,
@@ -135,7 +154,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   }, [openExerciseDialog]);
 
   const handleSave = () => {
-    postTrainingData("TOKEN__", trainingScheduleDialog);
+    postTrainingData(auth(), trainingScheduleDialog);
     handleClose();
   };
 
@@ -320,7 +339,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             justifyContent="space-between"
             alignItems="center"
           >
-            {weekdaysAbbreviation.map((day, index) => {
+            {weekdaysNames.map((day, index) => {
               return (
                 <FormControl key={index}>
                   <Checkbox
@@ -333,7 +352,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                     }
                     defaultChecked={trainingScheduleDialog.onDays.includes(day)}
                   />
-                  <FormLabel>{day}</FormLabel>
+                  <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                 </FormControl>
               );
             })}

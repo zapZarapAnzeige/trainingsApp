@@ -6,19 +6,21 @@ import TrainingScheduleEntry from "./TrainingScheduleEntry";
 import { Training } from "../../../types";
 import { useEffect, useState } from "react";
 import { getTrainingData } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
 
 export default function ExercisesContent() {
+  const auth = useAuthHeader();
   const [trainingData, setTrainingData] = useState<Training[]>();
 
   useEffect(() => {
-    getTrainingData("TOKEN__")
+    getTrainingData(auth())
       .then((data: Training[]) => {
         setTrainingData(data);
       })
       .catch((error) => {
         console.error("Error fetching data", error);
       });
-  });
+  }, []);
 
   return (
     <Sheet

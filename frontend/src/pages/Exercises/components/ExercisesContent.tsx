@@ -7,15 +7,17 @@ import { useAppSelector } from "../../../hooks";
 import { ExercisesEntryData } from "../../../types";
 import { useEffect, useState } from "react";
 import { getExercisesData } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
 
 export default function ExercisesContent() {
+  const auth = useAuthHeader();
   const currentTags = useAppSelector((state) => state.tags.value);
   const [sortedEntries, setSortedEntries] = useState<ExercisesEntryData[]>([]);
   const [exercisesEntryData, setExercisesEntryData] =
     useState<ExercisesEntryData[]>();
 
   useEffect(() => {
-    getExercisesData("TOKEN__")
+    getExercisesData(auth())
       .then((data: ExercisesEntryData[]) => {
         setExercisesEntryData(data);
       })

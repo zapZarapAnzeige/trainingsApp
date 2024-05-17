@@ -29,6 +29,7 @@ import {
   setWeight,
 } from "../../../redux/reducers/exercisesAddDialogSlice";
 import { postExercisesAdd } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
 
 type ExercisesAddDialogProps = {
   open: boolean;
@@ -36,6 +37,7 @@ type ExercisesAddDialogProps = {
 };
 
 const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
+  const auth = useAuthHeader();
   const [isDataDirty, setIsDataDirty] = useState<boolean>(false);
   const exercisesAddDialog = useAppSelector(
     (state) => state.exercisesAddDialog.value
@@ -49,8 +51,10 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
   };
 
   const handleSave = () => {
-    postExercisesAdd("TOKEN__", {
+    postExercisesAdd(auth(), {
       exerciseName: exercisesAddDialog.exerciseName,
+      exerciseId: exercisesAddDialog.exerciseId,
+      exerciseType: exercisesAddDialog.exerciseType,
       exercise: exercisesAddDialog.exercise,
       inTraining: exercisesAddDialog.inTraining,
       notInTraining: exercisesAddDialog.notInTraining,
