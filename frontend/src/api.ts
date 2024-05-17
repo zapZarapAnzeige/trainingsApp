@@ -128,6 +128,12 @@ export const getExercises = async (token: string) => {
   return keysToCamelCase(response.data) as Exercise[];
 };
 
+// I dont know if keysToCamelCase will break on String[] so dont even use it
+export const getTags = async (token: string) => {
+  const response = await axiosInstance.get("/tags", addAuth(token));
+  return response.data as string[];
+};
+
 export const getExercisesData = async (token: string) => {
   const response = await axiosInstance.get("/exercisesData", addAuth(token));
   return keysToCamelCase(response.data) as ExercisesEntryData[];
