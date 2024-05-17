@@ -23,14 +23,16 @@ export type ExerciseWeighted = {
   weight: number;
 };
 
-export type ExerciseCalendar = Exercise & {
-  done: boolean;
+export type CalendarData = {
+  pastTrainings: CalendarDayData[];
+  futureTrainings: CalendarDayData[];
 };
 
 export type CalendarDayData = {
-  name: string;
   day: string;
-  exercises: ExerciseCalendar[];
+  trainings: (Training & {
+    exercises: (Exercise & { completed: boolean })[];
+  })[];
 };
 
 // Exercises
