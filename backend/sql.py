@@ -10,6 +10,7 @@ from db_models import (
     Trainings_plan_history,
     User_current_performance,
     Days,
+    Excercises2Trainings_plans,
 )
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_
@@ -134,14 +135,14 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
             .select_from(Trainings_plan)
             .where(and_(Trainings_plan.c.user_id == user_id))
             .join(
-                User_current_performance,
-                User_current_performance.c.trainings_id
+                Excercises2Trainings_plans,
+                Excercises2Trainings_plans.c.trainings_id
                 == Trainings_plan.c.trainings_id,
                 isouter=True,
             )
             .join(
                 Excercises,
-                User_current_performance.c.excercise_id == Excercises.c.excercise_id,
+                Excercises2Trainings_plans.c.excercise_id == Excercises.c.excercise_id,
                 isouter=True,
             )
         )
@@ -244,17 +245,32 @@ def get_trainings(user_id: int):
                 ),
             )
             .join(
-                User_current_performance,
-                Trainings_plan.c.trainings_id
-                == User_current_performance.c.trainings_id,
-                isouter=True,
+                Excercises2Trainings_plans,
+                Excercises2Trainings_plans.c.trainings_id
+                == Trainings_plan.c.trainings_id,
             )
             .join(
                 Excercises,
                 User_current_performance.c.excercise_id == Excercises.c.excercise_id,
                 isouter=True,
             )
+            .join(
+                User_current_performance,
+                and_(
+                    Excercises.c.excercise_id
+                    == User_current_performance.c.excercise_id,
+                    User_current_performance.c.user_id == user_id,
+                ),
+                isouter=True,
+            )
         )
         .mappings()
         .fetchall()
+    )
+
+
+def get_all_excercises():
+    select(
+        Overall_Excercise_Ratings.c.rating,
+        Overall_Excercise_Ratings.c.total_excercise_ratings,
     )

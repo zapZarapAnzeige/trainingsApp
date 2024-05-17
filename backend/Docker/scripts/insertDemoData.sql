@@ -36,37 +36,33 @@ INSERT INTO
     `Excercises` (
         excercise_id,
         excercise_name,
-        constant_unit_of_measure,
-        trackable_unit_of_measure
+        constant_unit_of_measure
     )
-VALUES (1, "test", "Min", "lol");
+VALUES (1, "test", "Min");
 
 INSERT INTO
     `Excercises` (
         excercise_id,
         excercise_name,
-        constant_unit_of_measure,
-        trackable_unit_of_measure
+        constant_unit_of_measure
     )
-VALUES (2, "c", "SxWdh", "wfwe");
+VALUES (2, "c", "SxWdh");
 
 INSERT INTO
     `Excercises` (
         excercise_id,
         excercise_name,
-        constant_unit_of_measure,
-        trackable_unit_of_measure
+        constant_unit_of_measure
     )
-VALUES (3, "qew", "Min", "temp");
+VALUES (3, "qew", "Min");
 
 INSERT INTO
     `Excercises` (
         excercise_id,
         excercise_name,
-        constant_unit_of_measure,
-        trackable_unit_of_measure
+        constant_unit_of_measure
     )
-VALUES (4, "svd", "SxWdh", "lol");
+VALUES (4, "svd", "SxWdh");
 
 insert into
     `Trainings_plan` (
@@ -174,47 +170,31 @@ insert into
 values (7, "Sunday", 1, 1);
 
 insert into
-    `User_current_performance` (
+    `Excercises2Trainings_plans` (
         trainings_id,
-        excercise_id,
-        minutes,
-        number_of_repetition,
-        number_of_sets,
-        weight
+        excercise_id
     )
-values (1, 1, NULL, 10, 5, 10.5);
+values (1, 1);
 
 insert into
-    `User_current_performance` (
+    `Excercises2Trainings_plans` (
         trainings_id,
-        excercise_id,
-        minutes,
-        number_of_repetition,
-        number_of_sets,
-        weight
+        excercise_id
     )
-values (1, 2, 100, NULL, NULL, NULL);
+values (1, 2);
 
 insert into
-    `User_current_performance` (
+    `Excercises2Trainings_plans` (
         trainings_id,
-        excercise_id,
-        minutes,
-        number_of_repetition,
-        number_of_sets,
-        weight
+        excercise_id
     )
-values (1, 3, NULL, NULL, NULL, NULL);
+values (1, 3);
 
 insert into
-    `User_current_performance` (
+    `Excercises2Trainings_plans` (
         trainings_id,
-        excercise_id,
-        minutes,
-        number_of_repetition,
-        number_of_sets,
-        weight
+        excercise_id
     )
-values (1, 4, 13, NULL, NULL, NULL);
+values (1, 4);
 
 COMMIT;

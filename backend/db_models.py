@@ -47,25 +47,38 @@ Excercises = Table(
     Column("excercise_name", String(255), nullable=False, unique=True),
     Column("description", Text, nullable=True),
     Column("constant_unit_of_measure", Enum("SxWdh", "Min"), nullable=False),
-    Column("trackable_unit_of_measure", String(255), nullable=True),
 )
 
 User_current_performance = Table(
     "User_current_performance",
     metaData,
-    Column("trainings_id", Integer, nullable=False),
-    Column("excercise_id", String(255), nullable=False),
+    Column("user_id", Integer, nullable=False),
+    Column("excercise_id", Integer, nullable=False),
     Column("minutes", Integer, nullable=True),
     Column("number_of_repetition", Integer, nullable=True),
     Column("number_of_sets", Integer, nullable=True),
     Column("weight", DECIMAL(5, 2), nullable=True),
+    Column("value_trackable_unit_of_measure", DECIMAL(20, 3), nullable=True),
+    Column("trackable_unit_of_measure", String(255), nullable=True),
+    ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
+    ForeignKeyConstraint(
+        ["excercise_id"], ["Excercises.excercise_id"], ondelete="CASCADE"
+    ),
+    PrimaryKeyConstraint("user_id", "excercise_id"),
+)
+
+Excercises2Trainings_plans = Table(
+    "Excercises2Trainings_plans",
+    metaData,
+    Column("trainings_id", Integer, nullable=False),
+    Column("excercise_id", Integer, nullable=False),
+    PrimaryKeyConstraint("trainings_id", "excercise_id"),
     ForeignKeyConstraint(
         ["trainings_id"], ["Trainings_plan.trainings_id"], ondelete="CASCADE"
     ),
     ForeignKeyConstraint(
         ["excercise_id"], ["Excercises.excercise_id"], ondelete="CASCADE"
     ),
-    PrimaryKeyConstraint("trainings_id", "excercise_id"),
 )
 
 
@@ -73,6 +86,7 @@ Trainings_plan_history = Table(
     "Trainings_plan_history",
     metaData,
     Column("trainings_plan_history_id", Integer, autoincrement=True),
+    Column("trainings_id", Integer),
     Column("trainings_name", String),
     Column("day", Date, nullable=False),
     Column("user_id", Integer, nullable=False),
@@ -96,6 +110,8 @@ Excercises_history = Table(
     Column("number_of_repetition", Integer, nullable=True),
     Column("number_of_sets", Integer, nullable=True),
     Column("weight", DECIMAL(5, 2), nullable=True),
+    Column("value_trackable_unit_of_measure", DECIMAL(20, 3), nullable=True),
+    Column("trackable_unit_of_measure", String(255), nullable=True),
     ForeignKeyConstraint(
         ["excercise_id"],
         ["Excercises.excercise_id"],
@@ -143,6 +159,7 @@ Overall_Excercise_Ratings = Table(
     "Overall_Excercise_Ratings",
     metaData,
     Column("excercise_id", Integer, nullable=False),
+    Column("total_excercise_ratings", Integer, nullable=False),
     Column("rating", Float, nullable=True),
     ForeignKeyConstraint(
         ["excercise_id"], ["Excercises.excercise_id"], ondelete="CASCADE"
