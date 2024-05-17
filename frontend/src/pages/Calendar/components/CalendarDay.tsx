@@ -3,55 +3,106 @@ import {
   AccordionDetails,
   AccordionGroup,
   AccordionSummary,
-  accordionDetailsClasses,
-  accordionSummaryClasses,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  List,
+  ListItem,
+  ListItemContent,
+  Sheet,
+  Stack,
+  Typography,
 } from "@mui/joy";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { FC } from "react";
 import { CalendarDayData } from "../../../types";
+import { getWeekday } from "../../../utils";
 
 type CalendarDayProps = {
-  dayName: string;
   calendarDayData: CalendarDayData;
 };
 
-const CalendarDay: FC<CalendarDayProps> = ({ dayName, calendarDayData }) => {
+const CalendarDay: FC<CalendarDayProps> = ({ calendarDayData }) => {
   return (
     <>
-      <AccordionGroup
-        variant="outlined"
-        transition="0.2s"
-        sx={{
-          maxWidth: 400,
-          borderRadius: "lg",
-          [`& .${accordionSummaryClasses.button}:hover`]: {
-            bgcolor: "transparent",
-          },
-          [`& .${accordionDetailsClasses.content}`]: {
-            boxShadow: (theme) => `inset 0 1px ${theme.vars.palette.divider}`,
-            [`&.${accordionDetailsClasses.expanded}`]: {
-              paddingBlock: "0.75rem",
-            },
-          },
-        }}
-      >
-        <Accordion>
-          <AccordionSummary>{dayName}</AccordionSummary>
-          <AccordionDetails variant="soft">11.04.2024</AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>Second accordion</AccordionSummary>
-          <AccordionDetails variant="soft">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>Third accordion</AccordionSummary>
-          <AccordionDetails variant="soft">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </AccordionDetails>
-        </Accordion>
+      <Sheet variant="outlined" sx={{ mb: 1 }}>
+        <Typography sx={{ mx: "auto" }}>
+          {getWeekday(calendarDayData.date)}
+        </Typography>
+        <Typography sx={{ mx: "auto" }}>{calendarDayData.date}</Typography>
+      </Sheet>
+      <AccordionGroup variant="outlined" transition="0.2s">
+        {calendarDayData.trainings ? (
+          calendarDayData.trainings.map((training) => (
+            <Accordion>
+              <AccordionSummary>{training.name}</AccordionSummary>
+              <AccordionDetails variant="soft">
+                <List>
+                  {training.exercises.map((exercise) => (
+                    <>
+                      <ListItem>
+                        <ListItemContent>
+                          <Stack direction="row" justifyContent="space-between">
+                            <Typography>{exercise.exerciseName}</Typography>
+                            <IconButton>
+                              <InfoOutlinedIcon />
+                            </IconButton>
+                          </Stack>
+                        </ListItemContent>
+                      </ListItem>
+                      <Divider />
+                      {"minutes" in exercise.exercise ? (
+                        <ListItem>
+                          <ListItemContent>
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
+                            >
+                              <Typography>
+                                {exercise.exercise.minutes} Min.
+                              </Typography>
+                              <Checkbox />
+                            </Stack>
+                          </ListItemContent>
+                        </ListItem>
+                      ) : (
+                        <ListItem>
+                          <ListItemContent>
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
+                            >
+                              <Typography>
+                                {exercise.exercise.setAmount} x{" "}
+                                {exercise.exercise.repetitionAmount} Wdh.
+                              </Typography>
+                              <Checkbox />
+                            </Stack>
+                          </ListItemContent>
+                        </ListItem>
+                      )}
+                      <Divider />
+                      <FormControl>
+                        <FormLabel>
+                          {"minutes" in exercise.exercise ? "Distance" : "KG"}
+                        </FormLabel>
+                        <Input required type="number" />
+                      </FormControl>
+                    </>
+                  ))}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+          ))
+        ) : (
+          <Accordion disabled>
+            <AccordionSummary>Kein Training</AccordionSummary>
+            <AccordionDetails variant="soft">e</AccordionDetails>
+          </Accordion>
+        )}
       </AccordionGroup>
     </>
   );

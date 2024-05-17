@@ -19,7 +19,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import { Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
-import { weekdaysAbbreviation } from "../../../constants";
+import { weekdaysAbbreviation, weekdaysNames } from "../../../constants";
 import { setTraining } from "../../../redux/reducers/trainingScheduleDialogSlice";
 
 type TrainingScheduleEntryProps = {
@@ -29,6 +29,8 @@ type TrainingScheduleEntryProps = {
 const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
   training,
 }) => {
+  console.log("HERE");
+  console.log(training.onDays);
   const [open, setOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
@@ -100,7 +102,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
               justifyContent="space-between"
               alignItems="center"
             >
-              {weekdaysAbbreviation.map((day) => {
+              {weekdaysNames.map((day, index) => {
                 return (
                   <FormControl>
                     <Checkbox
@@ -108,7 +110,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                       sx={{ marginBottom: 1 }}
                       readOnly
                     />
-                    <FormLabel>{day}</FormLabel>
+                    <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                   </FormControl>
                 );
               })}

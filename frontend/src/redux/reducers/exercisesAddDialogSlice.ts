@@ -9,6 +9,8 @@ export type ExercisesAddDialogState = {
 const initialState: ExercisesAddDialogState = {
   value: {
     exerciseName: "",
+    exerciseId: 0,
+    exerciseType: "cardio",
     exercise: { minutes: 0 },
     inTraining: [],
     notInTraining: [],
@@ -36,12 +38,6 @@ const exercisesAddDialogSlice = createSlice({
     setMinutes: (state, action: PayloadAction<number>) => {
       state.value.exercise = { minutes: action.payload };
     },
-    setWeight: (state, action: PayloadAction<number>) => {
-      state.value.exercise = {
-        ...state.value.exercise,
-        weight: action.payload,
-      };
-    },
     setRepetitionAmount: (state, action: PayloadAction<number>) => {
       state.value.exercise = {
         ...state.value.exercise,
@@ -63,6 +59,8 @@ const exercisesAddDialogSlice = createSlice({
     clearAll: (state) => {
       state.value = {
         exerciseName: "",
+        exerciseId: 0,
+        exerciseType: "cardio",
         exercise: { minutes: 0 },
         inTraining: [],
         notInTraining: [],
@@ -75,7 +73,6 @@ export const {
   addToTraining,
   removeFromTraining,
   setMinutes,
-  setWeight,
   setRepetitionAmount,
   setSetAmount,
   setExercisesAddDialog,

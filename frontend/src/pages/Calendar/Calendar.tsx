@@ -5,7 +5,9 @@ import CalendarDay from "./components/CalendarDay";
 import HeadingArea from "../../Common/HeadingArea";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
-import testCalendar from "../../example/week.json";
+import pastCalendar from "../../example/examplePastCalendar.json";
+import futureCalendar from "../../example/exampleFutureCalendar.json";
+import { CalendarData, CalendarDayData } from "../../types";
 
 export default function Calendar() {
   return (
@@ -18,13 +20,17 @@ export default function Calendar() {
         sx={{ width: "100%", height: "100%", p: 2 }}
       >
         <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-          {weekdays.map((dayName, index) => {
+          {pastCalendar.map((calendarDayData: CalendarDayData) => {
             return (
               <Grid xs={12 / 7}>
-                <CalendarDay
-                  dayName={dayName}
-                  calendarDayData={testCalendar[index]}
-                />
+                <CalendarDay calendarDayData={calendarDayData} />
+              </Grid>
+            );
+          })}
+          {futureCalendar.map((calendarDayData: CalendarDayData) => {
+            return (
+              <Grid xs={12 / 7}>
+                <CalendarDay calendarDayData={calendarDayData} />
               </Grid>
             );
           })}
