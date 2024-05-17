@@ -38,12 +38,6 @@ const exercisesAddDialogSlice = createSlice({
     setMinutes: (state, action: PayloadAction<number>) => {
       state.value.exercise = { minutes: action.payload };
     },
-    setWeight: (state, action: PayloadAction<number>) => {
-      state.value.exercise = {
-        ...state.value.exercise,
-        weight: action.payload,
-      };
-    },
     setRepetitionAmount: (state, action: PayloadAction<number>) => {
       state.value.exercise = {
         ...state.value.exercise,
@@ -79,7 +73,6 @@ export const {
   addToTraining,
   removeFromTraining,
   setMinutes,
-  setWeight,
   setRepetitionAmount,
   setSetAmount,
   setExercisesAddDialog,

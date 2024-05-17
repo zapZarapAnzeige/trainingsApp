@@ -1,0 +1,88 @@
+[
+  {
+    "date": "2024-05-16",
+    "trainings": [
+      {
+        "name": "Yoga",
+        "trainingId": 4,
+        "onDays": ["2024-05-16"],
+        "exercises": [
+          {
+            "exerciseName": "Sun Salutations",
+            "exerciseId": 401,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 20
+            },
+            "completed": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2024-05-17",
+    "trainings": [
+      {
+        "name": "Leg Day",
+        "trainingId": 5,
+        "onDays": ["2024-05-17"],
+        "exercises": [
+          {
+            "exerciseName": "Squats",
+            "exerciseId": 501,
+            "exerciseType": "Weighted",
+            "exercise": {
+              "repetitionAmount": 12,
+              "setAmount": 4,
+              "weight": 150
+            },
+            "completed": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2024-05-18",
+    "trainings": [
+      {
+        "name": "Cycling",
+        "trainingId": 6,
+        "onDays": ["2024-05-18"],
+        "exercises": [
+          {
+            "exerciseName": "Outdoor Cycling",
+            "exerciseId": 601,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 60
+            },
+            "completed": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2024-05-19",
+    "trainings": [
+      {
+        "name": "Rest Day",
+        "trainingId": 7,
+        "onDays": ["2024-05-19"],
+        "exercises": [
+          {
+            "exerciseName": "Stretching",
+            "exerciseId": 701,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 15
+            },
+            "completed": false
+          }
+        ]
+      }
+    ]
+  }
+]

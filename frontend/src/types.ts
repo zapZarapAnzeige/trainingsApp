@@ -20,7 +20,6 @@ export type ExerciseCardio = {
 export type ExerciseWeighted = {
   repetitionAmount: number;
   setAmount: number;
-  weight: number;
 };
 
 export type CalendarData = {
@@ -29,10 +28,27 @@ export type CalendarData = {
 };
 
 export type CalendarDayData = {
-  day: string;
+  date: string;
   trainings: (Training & {
     exercises: (Exercise & { completed: boolean })[];
   })[];
+};
+
+export type CalendarTraining = {
+  name: string;
+  trainingId: number;
+  onDays: string[];
+  exercises: CalendarExercise[];
+};
+
+export type CalendarExercise = {
+  exerciseName: string;
+  exerciseId: number;
+  exerciseType: string;
+  exercise:
+    | (ExerciseCardio & { distance: number })
+    | (ExerciseWeighted & { weight: number });
+  completed: boolean;
 };
 
 // Exercises

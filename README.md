@@ -42,3 +42,6 @@ v12.22.9
 | Aufgabe | frontend | backend | Status |
 | ------- | -------- | ------- | ------ |
 | Example | D        | C       | Offen  |
+
+fickma link:
+https://bcwgruppe.sharepoint.com/:u:/s/Anwendungsprojekt-Traningsapp/ETrlmAnwdjFHvX2atQ2fns4Bid7_Z8NWUYg1-pFcPOEo9Q?e=PMCJuX

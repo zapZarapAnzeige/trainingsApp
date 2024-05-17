@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  CalendarDayData,
   Exercise,
   ExerciseAdd,
   ExerciseInfo,
@@ -115,6 +116,24 @@ export const changeBlockStatus = (
 };
 
 // Gets
+export const getPastTrainings = async (token: string, kw: number) => {
+  const response = await axiosInstance.get("/pastTrainings", {
+    ...addAuth(token),
+    params: { kw: kw },
+  });
+
+  return keysToCamelCase(response.data) as CalendarDayData[];
+};
+
+export const getFutureTrainings = async (token: string, kw: number) => {
+  const response = await axiosInstance.get("/futureTrainings", {
+    ...addAuth(token),
+    params: { kw: kw },
+  });
+
+  return keysToCamelCase(response.data) as CalendarDayData[];
+};
+
 //done
 export const getTrainingData = async (token: string) => {
   const response = await axiosInstance.get("/trainingSchedule", addAuth(token));

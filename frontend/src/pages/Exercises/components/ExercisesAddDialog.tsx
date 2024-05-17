@@ -26,7 +26,6 @@ import {
   setMinutes,
   setRepetitionAmount,
   setSetAmount,
-  setWeight,
 } from "../../../redux/reducers/exercisesAddDialogSlice";
 import { postExercisesAdd } from "../../../api";
 import { useAuthHeader } from "react-auth-kit";
@@ -93,21 +92,8 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
           </FormControl>
         )}
 
-        {"weight" in exercisesAddDialog.exercise && (
+        {"repetitionAmount" in exercisesAddDialog.exercise && (
           <>
-            <FormControl>
-              <FormLabel>Gewicht</FormLabel>
-              <Input
-                value={exercisesAddDialog.exercise.weight}
-                autoFocus
-                required
-                type="number"
-                onChange={(e) => {
-                  setIsDataDirty(true);
-                  dispatch(setWeight(parseInt(e.target.value)));
-                }}
-              />
-            </FormControl>
             <FormControl>
               <FormLabel>Wiederholungen</FormLabel>
               <Input
