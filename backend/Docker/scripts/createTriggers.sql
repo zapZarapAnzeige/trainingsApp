@@ -63,6 +63,40 @@ BEGIN
 	CALL insert_user_performance_update (NEW.excercise_id, NEW.user_id, NEW.minutes, NEW.number_of_repetition, NEW.number_of_sets, NEW.weight , NEW.trackable_unit_of_measure , NEW.value_trackable_unit_of_measure);
 END //
 
--- TODO Excercises2Trainings_plans with Cursor INSERT and delete
+CREATE TRIGGER excercises2Trainings_plans_on_insert AFTER 
+INSERT ON Excercises2Trainings_plans FOR EACH ROW 
+BEGIN 
 
+	DECLARE done BOOLEAN DEFAULT FALSE;
+	DECLARE trainings_plan_history_id_var INT;
+    DECLARE this_user_id INT;
+    DECLARE history_cursor CURSOR FOR SELECT trainings_plan_history_id FROM Trainings_plan_history WHERE trainings_id = NEW.trainings_id AND day = CURDATE();
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    
+    SELECT user_id INTO this_user_id FROM Trainings_plan WHERE trainings_id = NEW.trainings_id;
+
+    OPEN history_cursor;
+	
+    read_loop: LOOP
+        FETCH history_cursor INTO trainings_plan_history_id_var;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        INSERT INTO Excercises_history(trainings_plan_history_id, user_id, completed, excercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure, weight)
+         SELECT trainings_plan_history_id_var, user_id, FALSE, excercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure, weight FROM User_current_performance WHERE user_id = this_user_id AND excercise_id = NEW.excercise_id;
+    END LOOP;
+
+    CLOSE history_cursor;
+
+END //
+
+CREATE TRIGGER excercises2Trainings_plans_on_delete AFTER 
+DELETE ON Excercises2Trainings_plans FOR EACH ROW 
+BEGIN 
+    DELETE ex FROM Excercises_history ex INNER JOIN Trainings_plan_history tph ON ex.trainings_plan_history_id = tph.trainings_plan_history_id WHERE ex.excercise_id = OLD.excercise_id AND tph.trainings_id = OLD.trainings_id AND day=CURDATE();
+END //
+
+-- TODO testing
 DELIMITER ;
