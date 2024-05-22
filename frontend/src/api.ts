@@ -153,6 +153,7 @@ export const getTags = async (token: string) => {
   return response.data as string[];
 };
 
+//done
 export const getExercisesData = async (token: string) => {
   const response = await axiosInstance.get("/exercisesData", addAuth(token));
   return keysToCamelCase(response.data) as ExercisesEntryData[];

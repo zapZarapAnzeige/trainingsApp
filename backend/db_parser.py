@@ -60,7 +60,6 @@ def get_exercise_formatted(d):
 
 def parse_exercises(data: List[Unformatted_exercises]):
     formatted_data: List[Formatted_exercises] = []
-    print(data)
     for d in data:
         obj = next(
             (

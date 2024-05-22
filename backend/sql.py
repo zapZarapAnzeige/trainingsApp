@@ -14,7 +14,7 @@ from db_models import (
     Tags,
 )
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, distinct
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 from db_parser import parse_trainings, parse_exercises
@@ -306,4 +306,12 @@ def get_all_exercises(user_id: int):
         )
         .mappings()
         .fetchall()
+    )
+
+
+def get_all_unique_tags():
+    return (
+        session.execute(select(distinct(Tags.c.tag_name)).select_from(Tags))
+        .scalars()
+        .all()
     )

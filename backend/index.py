@@ -12,6 +12,7 @@ from sql import (
     get_general_exercise_info,
     get_trainings,
     get_all_exercises,
+    get_all_unique_tags,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -230,8 +231,12 @@ async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
 
 @app.get("/exercisesData")
 async def get_exercises(current_user=Depends(get_current_active_user)):
-    # TODO
     return get_all_exercises(current_user.get("user_id"))
+
+
+@app.get("/tags")
+async def get_tags(current_user=Depends(get_current_active_user)):
+    return get_all_unique_tags()
 
 
 @app.post("/trainingSchedule")
