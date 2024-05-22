@@ -1,5 +1,5 @@
 import { IntlShape } from "react-intl";
-import { weekdaysNames } from "./constants";
+import { weekdays, weekdaysNames } from "./constants";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {
@@ -242,4 +242,11 @@ export function keysToCamelCase(obj: any): any {
   } else {
     return obj;
   }
+}
+
+export function getWeekday(dateString: string): string {
+  const date: Date = new Date(dateString);
+  const dayIndex: number = date.getDay();
+  const correctedDayIndex: number = (dayIndex + 6) % 7;
+  return weekdays[correctedDayIndex];
 }

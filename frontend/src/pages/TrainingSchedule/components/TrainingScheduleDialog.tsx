@@ -62,7 +62,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   // Excerise Dialog States
   const [selectedExercise, setSelectedExercise] = useState<Exercise>();
   const [minutes, setMinutes] = useState<number>(0);
-  const [weight, setWeight] = useState<number>(0);
   const [repetitions, setRepetitions] = useState<number>(0);
   const [sets, setSets] = useState<number>(0);
 
@@ -90,7 +89,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const handleExerciseDialogClose = () => {
     setSelectedExercise(undefined);
     setMinutes(0);
-    setWeight(0);
     setRepetitions(0);
     setSets(0);
     setOpenExerciseDialog(false);
@@ -113,8 +111,8 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
     if (selectedExercise) {
       if ("minutes" in selectedExercise.exercise) {
         return minutes !== 0;
-      } else if ("weight" in selectedExercise.exercise) {
-        return weight !== 0 && repetitions !== 0 && sets !== 0;
+      } else if ("repetitionAmount" in selectedExercise.exercise) {
+        return repetitions !== 0 && sets !== 0;
       } else {
         return false;
       }
@@ -136,7 +134,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
               exerciseId: selectedExercise.exerciseId,
               exerciseType: selectedExercise.exerciseType,
               exercise: {
-                weight: weight,
                 repetitionAmount: repetitions,
                 setAmount: sets,
               },
@@ -212,18 +209,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
 
               {selectedExercise && "weight" in selectedExercise.exercise && (
                 <>
-                  <FormControl>
-                    <FormLabel>Gewicht</FormLabel>
-                    <Input
-                      value={weight}
-                      autoFocus
-                      required
-                      type="number"
-                      onChange={(e) => {
-                        setWeight(parseInt(e.target.value));
-                      }}
-                    />
-                  </FormControl>
                   <FormControl>
                     <FormLabel>Wiederholungen</FormLabel>
                     <Input

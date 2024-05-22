@@ -90,7 +90,7 @@ async def upload_video(file: UploadFile):
 async def get_video_by_name(file_name: str):
     try:
         video_info = await database.get_collection("videos.files").find_one(
-            {"filename": {"$regex": f"{file_name}.*"}}
+            {"filename": {"$regex": file_name + r"\..*"}}
         )
         if video_info:
             download_stream = await grid_fs_bucket.open_download_stream(

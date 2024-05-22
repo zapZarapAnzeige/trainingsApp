@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS Excercises (
     excercise_name VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     constant_unit_of_measure ENUM("SxWdh", "Min") NOT NULL,
-    trackable_unit_of_measure VARCHAR(255),
     PRIMARY KEY (excercise_id)
 );
 
@@ -43,8 +42,8 @@ CREATE TABLE IF NOT EXISTS Individual_Excercise_Ratings (
 
 CREATE TABLE IF NOT EXISTS Overall_Excercise_Ratings (
     excercise_id INT,
-    rating FLOAT CHECK (rating BETWEEN 0 and 5),
-    total_excercise_ratings INT,
+    rating FLOAT CHECK (rating BETWEEN 1 and 5),
+    total_excercise_ratings INT NOT NULL,
     PRIMARY KEY (excercise_id),
     FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
 );
@@ -58,20 +57,30 @@ CREATE TABLE IF NOT EXISTS Trainings_plan (
     INDEX (trainings_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS User_current_performance (
+CREATE TABLE IF NOT EXISTS Excercises2Trainings_plans(
     trainings_id INT NOT NULL,
     excercise_id INT NOT NULL,
-    minutes INT,
-    number_of_repetition INT,
-    number_of_sets INT,
-    weight DECIMAL(5, 2),
     PRIMARY KEY (trainings_id, excercise_id),
     FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
     FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS User_current_performance (
+    excercise_id INT NOT NULL,
+    user_id INT NOT NULL,
+    minutes INT,
+    number_of_repetition INT,
+    number_of_sets INT,
+    trackable_unit_of_measure VARCHAR(255),
+    value_trackable_unit_of_measure DECIMAL(20, 3),
+    weight DECIMAL(5, 2),
+    PRIMARY KEY ( excercise_id, user_id),
+    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS Trainings_plan_history (
     trainings_plan_history_id INT AUTO_INCREMENT,
+    trainings_id INT NOT NULL,
     trainings_name VARCHAR(255) NOT NULL,
     user_id INT NOT NULL,
     day DATE NOT NULL,
@@ -92,6 +101,8 @@ CREATE TABLE IF NOT EXISTS Excercises_history (
     minutes INT,
     number_of_repetition INT,
     number_of_sets INT,
+    trackable_unit_of_measure VARCHAR(255),
+    value_trackable_unit_of_measure DECIMAL(20, 3),
     weight DECIMAL(5, 2),
     PRIMARY KEY (excercises_history_id),
     FOREIGN KEY (trainings_plan_history_id) REFERENCES Trainings_plan_history (trainings_plan_history_id) ON DELETE CASCADE,
