@@ -148,6 +148,7 @@ export const getExercises = async (token: string) => {
 };
 
 // I dont know if keysToCamelCase will break on String[] so dont even use it
+//done
 export const getTags = async (token: string) => {
   const response = await axiosInstance.get("/tags", addAuth(token));
   return response.data as string[];

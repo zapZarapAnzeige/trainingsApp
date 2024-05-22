@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, Union
 from custom_types import (
     Unformatted_trainingsdata,
     formatted_trainingsdata,
     Unformatted_exercises,
     Formatted_exercises,
+    Base_exercise,
 )
 
 
@@ -58,17 +59,20 @@ def get_exercise_formatted(d):
     }
 
 
-def parse_exercises(data: List[Unformatted_exercises]):
-    formatted_data: List[Formatted_exercises] = []
+def parse_exercises(data: List, is_base_user_data: bool = False):
+    formatted_data: List[Union[Formatted_exercises, Base_exercise]] = []
     for d in data:
-        obj = next(
-            (
-                element
-                for element in formatted_data
-                if element["exercise_id"] == d["exercise_id"]
-            ),
-            None,
-        )
+        if is_base_user_data:
+            obj = None
+        else:
+            obj = next(
+                (
+                    element
+                    for element in formatted_data
+                    if element["exercise_id"] == d["exercise_id"]
+                ),
+                None,
+            )
         if obj:
             if d["is_primary_tag"]:
                 add_tag(obj, "primary_tags", d["tag_name"])
@@ -77,31 +81,35 @@ def parse_exercises(data: List[Unformatted_exercises]):
         else:
             formatted_data.append(
                 {
-                    "rating": d["rating"],
-                    "reviews": d["total_exercise_ratings"],
                     "exercise_type": d["constant_unit_of_measure"],
                     "exercise_name": d["exercise_name"],
                     "exercise_id": d["exercise_id"],
-                    "exercise": {"minutes": d.minutes}
+                    "exercise": {"minutes": d["minutes"]}
                     if d["constant_unit_of_measure"] == "Min"
                     else {
-                        "repetition_amount": d.number_of_repetition,
-                        "set_amount": d.number_of_sets,
+                        "repetition_amount": d["number_of_repetition"],
+                        "set_amount": d["number_of_sets"],
                     },
-                    **get_tag(d["tag_name"], d["is_primary_tag"]),
+                    **get_exteded_user_data(d, is_base_user_data),
                 }
             )
 
     return formatted_data
 
 
-def get_tag(tag_name, is_primary_tag):
-    if not tag_name:
-        return {"secondary_tags": [], "primary_tags": []}
-    if is_primary_tag:
-        return {"secondary_tags": [], "primary_tags": [tag_name]}
+def get_exteded_user_data(d, is_base_user_data):
+    if is_base_user_data:
+        return {}
+    ret = {
+        "rating": d["rating"],
+        "reviews": d["total_exercise_ratings"],
+    }
+    if not d["tag_name"]:
+        return {"secondary_tags": [], "primary_tags": [], **ret}
+    if d["is_primary_tag"]:
+        return {"secondary_tags": [], "primary_tags": [d["tag_name"]], **ret}
     else:
-        return {"secondary_tags": [tag_name], "primary_tags": []}
+        return {"secondary_tags": [d["tag_name"]], "primary_tags": [], **ret}
 
 
 def add_tag(obj, tag_type, tag_name):

@@ -58,24 +58,30 @@ class Unformatted_exercises(BaseModel):
     is_primary_tag: Optional[bool]
 
 
-class ExerciseCardio(TypedDict):
+class Exercise_cardio(TypedDict):
     minutes: int
 
 
-class ExerciseWeighted(TypedDict):
+class Exercise_weighted(TypedDict):
     number_of_repetition: int
     number_of_sets: int
 
 
-class Formatted_exercises(TypedDict):
-    primary_tags: List[str]
-    secondary_tags: List[str]
-    rating: float
-    reviews: int
+class Base_exercise(TypedDict):
     exercise_name: str
     exercise_id: int
     exercise_type: str
-    exercise: Union[ExerciseCardio, ExerciseWeighted]
+    exercise: Union[Exercise_cardio, Exercise_weighted]
+
+
+class Tags(TypedDict):
+    primary_tags: List[str]
+    secondary_tags: List[str]
+
+
+class Formatted_exercises(Base_exercise, Tags):
+    rating: float
+    reviews: int
 
 
 class ExerciseCardio(BaseModel):

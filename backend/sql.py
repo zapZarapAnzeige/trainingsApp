@@ -271,7 +271,7 @@ def get_trainings(user_id: int):
     )
 
 
-def get_all_exercises(user_id: int):
+def get_all_exercises_for_user(user_id: int):
     return parse_exercises(
         session.execute(
             select(
@@ -314,4 +314,33 @@ def get_all_unique_tags():
         session.execute(select(distinct(Tags.c.tag_name)).select_from(Tags))
         .scalars()
         .all()
+    )
+
+
+def get_base_exercises(user_id: int):
+    return parse_exercises(
+        session.execute(
+            select(
+                Exercises.c.exercise_id,
+                Exercises.c.exercise_name,
+                Exercises.c.constant_unit_of_measure,
+                User_current_performance.c.minutes,
+                User_current_performance.c.number_of_repetition,
+                User_current_performance.c.number_of_sets,
+                User_current_performance.c.value_trackable_unit_of_measure,
+                User_current_performance.c.trackable_unit_of_measure,
+            )
+            .select_from(Exercises)
+            .join(
+                User_current_performance,
+                and_(
+                    User_current_performance.c.exercise_id == Exercises.c.exercise_id,
+                    User_current_performance.c.user_id == user_id,
+                ),
+                isouter=True,
+            )
+        )
+        .mappings()
+        .fetchall(),
+        True,
     )
