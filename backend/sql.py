@@ -11,12 +11,13 @@ from db_models import (
     User_current_performance,
     Days,
     Exercises2Trainings_plans,
+    Tags,
 )
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
-from db_parser import parse_trainings
+from db_parser import parse_trainings, parse_exercises
 
 
 async def get_overview(partners: Dict):
@@ -231,7 +232,8 @@ def get_trainings(user_id: int):
                 User_current_performance.c.minutes,
                 User_current_performance.c.number_of_repetition,
                 User_current_performance.c.number_of_sets,
-                User_current_performance.c.weight,
+                User_current_performance.c.trackable_unit_of_measure,
+                User_current_performance.c.value_trackable_unit_of_measure,
             )
             .select_from(Trainings_plan)
             .join(
@@ -269,8 +271,39 @@ def get_trainings(user_id: int):
     )
 
 
-def get_all_exercises():
-    select(
-        Overall_Exercise_Ratings.c.rating,
-        Overall_Exercise_Ratings.c.total_exercise_ratings,
+def get_all_exercises(user_id: int):
+    return parse_exercises(
+        session.execute(
+            select(
+                Exercises.c.exercise_name,
+                Exercises.c.exercise_id,
+                Exercises.c.constant_unit_of_measure,
+                Overall_Exercise_Ratings.c.rating,
+                Overall_Exercise_Ratings.c.total_exercise_ratings,
+                User_current_performance.c.minutes,
+                User_current_performance.c.number_of_repetition,
+                User_current_performance.c.number_of_sets,
+                User_current_performance.c.value_trackable_unit_of_measure,
+                User_current_performance.c.trackable_unit_of_measure,
+                Tags.c.tag_name,
+                Tags.c.is_primary_tag,
+            )
+            .select_from(Exercises)
+            .join(Tags, Exercises.c.exercise_id == Tags.c.exercise_id, isouter=True)
+            .join(
+                Overall_Exercise_Ratings,
+                Overall_Exercise_Ratings.c.exercise_id == Exercises.c.exercise_id,
+                isouter=True,
+            )
+            .join(
+                User_current_performance,
+                and_(
+                    User_current_performance.c.exercise_id == Exercises.c.exercise_id,
+                    User_current_performance.c.user_id == user_id,
+                ),
+                isouter=True,
+            )
+        )
+        .mappings()
+        .fetchall()
     )

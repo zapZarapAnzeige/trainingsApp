@@ -38,10 +38,44 @@ class Unformatted_trainingsdata(TypedDict):
     weekday: str
     exercise_name: Optional[str]
     exercise_id: Optional[int]
-    weight: float
     minutes: int
     number_of_repetition: int
     number_of_sets: int
+
+
+class Unformatted_exercises(BaseModel):
+    exercise_name: str
+    exercise_id: int
+    constant_unit_of_measure: Optional[str]
+    rating: Optional[int]
+    total_exercise_ratings: Optional[int]
+    minutes: Optional[int]
+    number_of_repetition: Optional[int]
+    number_of_sets: Optional[int]
+    value_trackable_unit_of_measure: Optional[float]
+    trackable_unit_of_measure: Optional[str]
+    tag_name: Optional[str]
+    is_primary_tag: Optional[bool]
+
+
+class ExerciseCardio(TypedDict):
+    minutes: int
+
+
+class ExerciseWeighted(TypedDict):
+    number_of_repetition: int
+    number_of_sets: int
+
+
+class Formatted_exercises(TypedDict):
+    primary_tags: List[str]
+    secondary_tags: List[str]
+    rating: float
+    reviews: int
+    exercise_name: str
+    exercise_id: int
+    exercise_type: str
+    exercise: Union[ExerciseCardio, ExerciseWeighted]
 
 
 class ExerciseCardio(BaseModel):
@@ -51,7 +85,6 @@ class ExerciseCardio(BaseModel):
 class ExerciseWeighted(BaseModel):
     repetition_amount: int
     set_amount: int
-    weight: int
 
 
 class ExerciseDetail(BaseModel):

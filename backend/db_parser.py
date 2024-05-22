@@ -1,5 +1,10 @@
 from typing import List
-from custom_types import Unformatted_trainingsdata, formatted_trainingsdata
+from custom_types import (
+    Unformatted_trainingsdata,
+    formatted_trainingsdata,
+    Unformatted_exercises,
+    Formatted_exercises,
+)
 
 
 def check_if_data_exists(data, primary_column):
@@ -49,6 +54,57 @@ def get_exercise_formatted(d):
         else {
             "repetition_amount": d.number_of_repetition,
             "set_amount": d.number_of_sets,
-            "weight": d.weight,
         },
     }
+
+
+def parse_exercises(data: List[Unformatted_exercises]):
+    formatted_data: List[Formatted_exercises] = []
+    print(data)
+    for d in data:
+        obj = next(
+            (
+                element
+                for element in formatted_data
+                if element["exercise_id"] == d["exercise_id"]
+            ),
+            None,
+        )
+        if obj:
+            if d["is_primary_tag"]:
+                add_tag(obj, "primary_tags", d["tag_name"])
+            else:
+                add_tag(obj, "secondary_tags", d["tag_name"])
+        else:
+            formatted_data.append(
+                {
+                    "rating": d["rating"],
+                    "reviews": d["total_exercise_ratings"],
+                    "exercise_type": d["constant_unit_of_measure"],
+                    "exercise_name": d["exercise_name"],
+                    "exercise_id": d["exercise_id"],
+                    "exercise": {"minutes": d.minutes}
+                    if d["constant_unit_of_measure"] == "Min"
+                    else {
+                        "repetition_amount": d.number_of_repetition,
+                        "set_amount": d.number_of_sets,
+                    },
+                    **get_tag(d["tag_name"], d["is_primary_tag"]),
+                }
+            )
+
+    return formatted_data
+
+
+def get_tag(tag_name, is_primary_tag):
+    if not tag_name:
+        return {"secondary_tags": [], "primary_tags": []}
+    if is_primary_tag:
+        return {"secondary_tags": [], "primary_tags": [tag_name]}
+    else:
+        return {"secondary_tags": [tag_name], "primary_tags": []}
+
+
+def add_tag(obj, tag_type, tag_name):
+    if tag_name not in obj[tag_type]:
+        obj[tag_type].append(tag_name)

@@ -45,3 +45,4 @@ v12.22.9
 
 fickma link:
 https://bcwgruppe.sharepoint.com/:u:/s/Anwendungsprojekt-Traningsapp/ETrlmAnwdjFHvX2atQ2fns4Bid7_Z8NWUYg1-pFcPOEo9Q?e=PMCJuX
+https://www.figma.com/design/1i9dzF8AZeZmVUVFQYsbu4/Trainingsapp?node-id=7617-80512

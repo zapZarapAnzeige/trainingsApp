@@ -57,7 +57,6 @@ User_current_performance = Table(
     Column("minutes", Integer, nullable=True),
     Column("number_of_repetition", Integer, nullable=True),
     Column("number_of_sets", Integer, nullable=True),
-    Column("weight", DECIMAL(5, 2), nullable=True),
     Column("value_trackable_unit_of_measure", DECIMAL(20, 3), nullable=True),
     Column("trackable_unit_of_measure", String(255), nullable=True),
     ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
@@ -109,7 +108,6 @@ Exercises_history = Table(
     Column("minutes", Integer, nullable=True),
     Column("number_of_repetition", Integer, nullable=True),
     Column("number_of_sets", Integer, nullable=True),
-    Column("weight", DECIMAL(5, 2), nullable=True),
     Column("value_trackable_unit_of_measure", DECIMAL(20, 3), nullable=True),
     Column("trackable_unit_of_measure", String(255), nullable=True),
     ForeignKeyConstraint(

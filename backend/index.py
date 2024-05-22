@@ -231,7 +231,7 @@ async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
 @app.get("/exercisesData")
 async def get_exercises(current_user=Depends(get_current_active_user)):
     # TODO
-    get_all_exercises()
+    return get_all_exercises(current_user.get("user_id"))
 
 
 @app.post("/trainingSchedule")

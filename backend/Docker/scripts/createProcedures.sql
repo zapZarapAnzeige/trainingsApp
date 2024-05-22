@@ -64,8 +64,8 @@ BEGIN
         INNER JOIN Days d ON d.trainings_id = tp.trainings_id AND d.user_id = tp.user_id
         WHERE tp.user_id = user_id_var AND d.weekday = DAYNAME(CURDATE());
 
-        INSERT INTO Exercises_history (trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, weight, trackable_unit_of_measure, value_trackable_unit_of_measure)
-        SELECT LAST_INSERT_ID(), user_id_var, FALSE, ucp.exercise_id, ucp.minutes, ucp.number_of_repetition, ucp.number_of_sets, ucp.weight, ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure
+        INSERT INTO Exercises_history (trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure)
+        SELECT LAST_INSERT_ID(), user_id_var, FALSE, ucp.exercise_id, ucp.minutes, ucp.number_of_repetition, ucp.number_of_sets, ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure
         FROM Trainings_plan tp
 		INNER JOIN Days d ON d.trainings_id = tp.trainings_id AND d.user_id = tp.user_id
 		INNER JOIN Exercises2Trainings_plans e2t ON tp.trainings_id = e2t.trainings_id
@@ -77,9 +77,9 @@ BEGIN
     CLOSE userCursor;
 END ?/
 
-CREATE PROCEDURE insert_user_performance_update(IN new_exercise_id INT, new_user_id INT, new_minutes INT, new_number_of_repetition INT, new_number_of_sets INT, new_weight DECIMAL(5,2), new_trackable_unit_of_measure VARCHAR(255), new_value_trackable_unit_of_measure DECIMAL(20, 3))
+CREATE PROCEDURE insert_user_performance_update(IN new_exercise_id INT, new_user_id INT, new_minutes INT, new_number_of_repetition INT, new_number_of_sets INT,  new_trackable_unit_of_measure VARCHAR(255), new_value_trackable_unit_of_measure DECIMAL(20, 3))
 BEGIN
-   UPDATE Exercises_history eh INNER JOIN Trainings_plan_history tph ON eh.trainings_plan_history_id=tph.trainings_plan_history_id  SET eh.minutes = new_user_id, eh.number_of_repetition = new_number_of_repetition, eh.number_of_sets = new_number_of_sets, eh.weight = new_weight, eh.trackable_unit_of_measure= new_trackable_unit_of_measure, eh.value_trackable_unit_of_measure = new_value_trackable_unit_of_measure WHERE eh.user_id = new_user_id AND eh.exercise_id = new_exercise_id AND tph.day = CURDATE();
+   UPDATE Exercises_history eh INNER JOIN Trainings_plan_history tph ON eh.trainings_plan_history_id=tph.trainings_plan_history_id  SET eh.minutes = new_user_id, eh.number_of_repetition = new_number_of_repetition, eh.number_of_sets = new_number_of_sets, eh.trackable_unit_of_measure= new_trackable_unit_of_measure, eh.value_trackable_unit_of_measure = new_value_trackable_unit_of_measure WHERE eh.user_id = new_user_id AND eh.exercise_id = new_exercise_id AND tph.day = CURDATE();
 END ?/
 
 DELIMITER ;
