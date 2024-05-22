@@ -113,5 +113,5 @@ CREATE TABLE IF NOT EXISTS Days (
     user_id INT NOT NULL,
     trainings_id INT NOT NULL,
     PRIMARY KEY (days_id),
-    FOREIGN KEY (trainings_id, user_id) REFERENCES Trainings_plan (trainings_id, user_id) ON DELETE CASCADE
+    FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
 );

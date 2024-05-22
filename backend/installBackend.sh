@@ -13,7 +13,10 @@ pip3 install python-dotenv -q
 pip3 install schedule -q
 pip3 install websockets -q
 pip3 install motor -q
+
 echo "installed modules"
+docker pull mongo:4.4.6
+docker pull mysql:latest
 else
     echo "Please execute the script as root"
 fi
