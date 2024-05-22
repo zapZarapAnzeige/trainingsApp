@@ -36,8 +36,8 @@ class Unformatted_trainingsdata(TypedDict):
     trainings_id: int
     trainings_name: str
     weekday: str
-    excercise_name: Optional[str]
-    excercise_id: Optional[int]
+    exercise_name: Optional[str]
+    exercise_id: Optional[int]
     weight: float
     minutes: int
     number_of_repetition: int
@@ -55,7 +55,7 @@ class ExerciseWeighted(BaseModel):
 
 
 class ExerciseDetail(BaseModel):
-    excercise_id: int
+    exercise_id: int
     exercise_name: str
     exercise: Union[ExerciseCardio, ExerciseWeighted]
 

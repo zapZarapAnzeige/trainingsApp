@@ -27,23 +27,23 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
                     "trainings_id": d.trainings_id,
                     "name": d.trainings_name,
                     "on_days": [d.weekday],
-                    "exercises": [get_excercise_formatted(d)]
-                    if d.excercise_id is not None
+                    "exercises": [get_exercise_formatted(d)]
+                    if d.exercise_id is not None
                     else [],
                 }
             )
         else:
             if d.weekday not in obj["on_days"]:
                 obj["on_days"].append(d.weekday)
-            if d.excercise_id not in obj["exercises"]:
-                obj["exercises"].append(get_excercise_formatted(d))
+            if d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]:
+                obj["exercises"].append(get_exercise_formatted(d))
     return check_if_data_exists(formatted_data, "trainings_id")
 
 
-def get_excercise_formatted(d):
+def get_exercise_formatted(d):
     return {
-        "excercise_id": d.excercise_id,
-        "exercise_name": d.excercise_name,
+        "exercise_id": d.exercise_id,
+        "exercise_name": d.exercise_name,
         "exercise": {"minutes": d.minutes}
         if d.constant_unit_of_measure == "Min"
         else {

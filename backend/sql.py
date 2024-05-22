@@ -3,14 +3,14 @@ from fastapi import HTTPException, UploadFile, Response, status
 from db_connection import session
 from db_models import (
     Users,
-    Excercises,
-    Individual_Excercise_Ratings,
-    Overall_Excercise_Ratings,
+    Exercises,
+    Individual_Exercise_Ratings,
+    Overall_Exercise_Ratings,
     Trainings_plan,
     Trainings_plan_history,
     User_current_performance,
     Days,
-    Excercises2Trainings_plans,
+    Exercises2Trainings_plans,
 )
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_
@@ -105,44 +105,42 @@ def get_all_usernames():
     return session.execute(select(Users.c.user_name).select_from(Users)).scalars().all()
 
 
-async def save_excercise_rating(rating: int, excercise: str, user_id: int):
-    excercise_id = session.execute(
-        select(Excercises.c.excercise_id).where(
-            Excercises.c.excercise_name == excercise
-        )
+async def save_exercise_rating(rating: int, exercise: str, user_id: int):
+    exercise_id = session.execute(
+        select(Exercises.c.exercise_id).where(Exercises.c.exercise_name == exercise)
     ).scalar_one()
-    if excercise_id:
+    if exercise_id:
         session.execute(
-            insert(Individual_Excercise_Ratings)
-            .values(excercise_id=excercise_id, user_id=user_id, rating=rating)
+            insert(Individual_Exercise_Ratings)
+            .values(exercise_id=exercise_id, user_id=user_id, rating=rating)
             .on_duplicate_key_update(rating=rating)
         )
         session.commit()
         return {"inserted": True}
     return Response(
-        status_code=status.HTTP_404_NOT_FOUND, content="Invalid excercise ID"
+        status_code=status.HTTP_404_NOT_FOUND, content="Invalid exercise ID"
     )
 
 
-def get_excercise_for_dialog(excercise_name: str, user_id: int):
+def get_exercise_for_dialog(exercise_name: str, user_id: int):
     result = (
         session.execute(
             select(
                 Trainings_plan.c.trainings_id,
                 Trainings_plan.c.trainings_name,
-                Excercises.c.excercise_name,
+                Exercises.c.exercise_name,
             )
             .select_from(Trainings_plan)
             .where(and_(Trainings_plan.c.user_id == user_id))
             .join(
-                Excercises2Trainings_plans,
-                Excercises2Trainings_plans.c.trainings_id
+                Exercises2Trainings_plans,
+                Exercises2Trainings_plans.c.trainings_id
                 == Trainings_plan.c.trainings_id,
                 isouter=True,
             )
             .join(
-                Excercises,
-                Excercises2Trainings_plans.c.excercise_id == Excercises.c.excercise_id,
+                Exercises,
+                Exercises2Trainings_plans.c.exercise_id == Exercises.c.exercise_id,
                 isouter=True,
             )
         )
@@ -152,7 +150,7 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
     in_training = {}
     not_in_training = {}
     for val in result:
-        if val["excercise_name"] == excercise_name:
+        if val["exercise_name"] == exercise_name:
             in_training[val["trainings_id"]] = val
         else:
             not_in_training[val["trainings_id"]] = val
@@ -166,7 +164,7 @@ def get_excercise_for_dialog(excercise_name: str, user_id: int):
     }
 
 
-def get_excercise_not_in_training(excercise_name: str, user_id: int):
+def get_exercise_not_in_training(exercise_name: str, user_id: int):
     pass
 
 
@@ -195,30 +193,29 @@ async def find_trainingspartner(plz: str, matched_people: List[int]):
         return None
 
 
-def get_general_excercise_info(excercise: str, user_id: int):
+def get_general_exercise_info(exercise: str, user_id: int):
     info = session.execute(
         select(
-            Excercises.c.excercise_id,
-            Excercises.c.excercise_name,
-            Excercises.c.description,
-            Individual_Excercise_Ratings.c.rating,
+            Exercises.c.exercise_id,
+            Exercises.c.exercise_name,
+            Exercises.c.description,
+            Individual_Exercise_Ratings.c.rating,
         )
-        .select_from(Excercises)
+        .select_from(Exercises)
         .join(
-            Individual_Excercise_Ratings,
+            Individual_Exercise_Ratings,
             and_(
-                Individual_Excercise_Ratings.c.excercise_id
-                == Excercises.c.excercise_id,
-                Individual_Excercise_Ratings.c.user_id == user_id,
+                Individual_Exercise_Ratings.c.exercise_id == Exercises.c.exercise_id,
+                Individual_Exercise_Ratings.c.user_id == user_id,
             ),
             isouter=True,
         )
-        .where(Excercises.c.excercise_name == excercise)
+        .where(Exercises.c.exercise_name == exercise)
     ).first()
     if info:
         return info._asdict()
     else:
-        raise HTTPException(status_code=404, detail="Excercise not found")
+        raise HTTPException(status_code=404, detail="Exercise not found")
 
 
 def get_trainings(user_id: int):
@@ -228,9 +225,9 @@ def get_trainings(user_id: int):
                 Trainings_plan.c.trainings_id,
                 Trainings_plan.c.trainings_name,
                 Days.c.weekday,
-                Excercises.c.excercise_name,
-                Excercises.c.excercise_id,
-                Excercises.c.constant_unit_of_measure,
+                Exercises.c.exercise_name,
+                Exercises.c.exercise_id,
+                Exercises.c.constant_unit_of_measure,
                 User_current_performance.c.minutes,
                 User_current_performance.c.number_of_repetition,
                 User_current_performance.c.number_of_sets,
@@ -243,25 +240,28 @@ def get_trainings(user_id: int):
                     Days.c.trainings_id == Trainings_plan.c.trainings_id,
                     Days.c.user_id == Trainings_plan.c.user_id,
                 ),
+                isouter=True,
             )
             .join(
-                Excercises2Trainings_plans,
-                Excercises2Trainings_plans.c.trainings_id
+                Exercises2Trainings_plans,
+                Exercises2Trainings_plans.c.trainings_id
                 == Trainings_plan.c.trainings_id,
+                isouter=True,
             )
             .join(
-                Excercises,
-                User_current_performance.c.excercise_id == Excercises.c.excercise_id,
+                Exercises,
+                Exercises2Trainings_plans.c.exercise_id == Exercises.c.exercise_id,
                 isouter=True,
             )
             .join(
                 User_current_performance,
-                and_(
-                    Excercises.c.excercise_id
-                    == User_current_performance.c.excercise_id,
-                    User_current_performance.c.user_id == user_id,
-                ),
+                Exercises.c.exercise_id == User_current_performance.c.exercise_id,
                 isouter=True,
+            )
+            .where(
+                and_(
+                    Trainings_plan.c.user_id == user_id,
+                )
             )
         )
         .mappings()
@@ -269,8 +269,8 @@ def get_trainings(user_id: int):
     )
 
 
-def get_all_excercises():
+def get_all_exercises():
     select(
-        Overall_Excercise_Ratings.c.rating,
-        Overall_Excercise_Ratings.c.total_excercise_ratings,
+        Overall_Exercise_Ratings.c.rating,
+        Overall_Exercise_Ratings.c.total_exercise_ratings,
     )

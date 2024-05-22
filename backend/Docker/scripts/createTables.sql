@@ -14,38 +14,38 @@ CREATE TABLE IF NOT EXISTS Users (
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS Excercises (
-    excercise_id INT AUTO_INCREMENT,
-    excercise_name VARCHAR(255) UNIQUE NOT NULL,
+CREATE TABLE IF NOT EXISTS Exercises (
+    exercise_id INT AUTO_INCREMENT,
+    exercise_name VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     constant_unit_of_measure ENUM("SxWdh", "Min") NOT NULL,
-    PRIMARY KEY (excercise_id)
+    PRIMARY KEY (exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS Tags (
     tag_id INT AUTO_INCREMENT,
-    excercise_id INT,
+    exercise_id INT,
     tag_name VARCHAR(255) NOT NULL,
     is_primary_tag BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (tag_id),
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Individual_Excercise_Ratings (
+CREATE TABLE IF NOT EXISTS Individual_Exercise_Ratings (
     user_id INT,
-    excercise_id INT,
+    exercise_id INT,
     rating TINYINT(1) UNSIGNED CHECK (rating BETWEEN 1 and 5),
-    PRIMARY KEY (excercise_id, user_id),
+    PRIMARY KEY (exercise_id, user_id),
     FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Overall_Excercise_Ratings (
-    excercise_id INT,
+CREATE TABLE IF NOT EXISTS Overall_Exercise_Ratings (
+    exercise_id INT,
     rating FLOAT CHECK (rating BETWEEN 1 and 5),
-    total_excercise_ratings INT NOT NULL,
-    PRIMARY KEY (excercise_id),
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE
+    total_exercise_ratings INT NOT NULL,
+    PRIMARY KEY (exercise_id),
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Trainings_plan (
@@ -57,16 +57,16 @@ CREATE TABLE IF NOT EXISTS Trainings_plan (
     INDEX (trainings_id, user_id)
 );
 
-CREATE TABLE IF NOT EXISTS Excercises2Trainings_plans(
+CREATE TABLE IF NOT EXISTS Exercises2Trainings_plans(
     trainings_id INT NOT NULL,
-    excercise_id INT NOT NULL,
-    PRIMARY KEY (trainings_id, excercise_id),
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
+    exercise_id INT NOT NULL,
+    PRIMARY KEY (trainings_id, exercise_id),
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE,
     FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS User_current_performance (
-    excercise_id INT NOT NULL,
+    exercise_id INT NOT NULL,
     user_id INT NOT NULL,
     minutes INT,
     number_of_repetition INT,
@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS User_current_performance (
     trackable_unit_of_measure VARCHAR(255),
     value_trackable_unit_of_measure DECIMAL(20, 3),
     weight DECIMAL(5, 2),
-    PRIMARY KEY ( excercise_id, user_id),
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id) ON DELETE CASCADE,
+    PRIMARY KEY ( exercise_id, user_id),
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS Trainings_plan_history (
@@ -92,22 +92,22 @@ CREATE TABLE IF NOT EXISTS Trainings_plan_history (
     )
 );
 
-CREATE TABLE IF NOT EXISTS Excercises_history (
-    excercises_history_id INT AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS Exercises_history (
+    exercises_history_id INT AUTO_INCREMENT,
     trainings_plan_history_id INT NOT NULL,
     user_id INT NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
-    excercise_id INT NOT NULL,
+    exercise_id INT NOT NULL,
     minutes INT,
     number_of_repetition INT,
     number_of_sets INT,
     trackable_unit_of_measure VARCHAR(255),
     value_trackable_unit_of_measure DECIMAL(20, 3),
     weight DECIMAL(5, 2),
-    PRIMARY KEY (excercises_history_id),
+    PRIMARY KEY (exercises_history_id),
     FOREIGN KEY (trainings_plan_history_id) REFERENCES Trainings_plan_history (trainings_plan_history_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (excercise_id) REFERENCES Excercises (excercise_id)
+    FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id)
 );
 
 CREATE TABLE IF NOT EXISTS Days (

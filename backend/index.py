@@ -7,11 +7,11 @@ from sql import (
     get_profile_pic,
     find_trainingspartner,
     update_user_data,
-    save_excercise_rating,
-    get_excercise_for_dialog,
-    get_general_excercise_info,
+    save_exercise_rating,
+    get_exercise_for_dialog,
+    get_general_exercise_info,
     get_trainings,
-    get_all_excercises,
+    get_all_exercises,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -184,12 +184,12 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @app.post("/ExerciseRating")
-async def post_excercise_rating(
-    rating: int, excercise: str, current_user=Depends(get_current_active_user)
+async def post_exercise_rating(
+    rating: int, exercise: str, current_user=Depends(get_current_active_user)
 ):
     if rating > 5 or rating < 1:
         return INVALID_PRECONDITION("invalid rating")
-    await save_excercise_rating(rating, excercise, current_user.get("user_id"))
+    await save_exercise_rating(rating, exercise, current_user.get("user_id"))
 
 
 @app.get("/users/me")
@@ -207,19 +207,19 @@ async def get_user_data(current_user=Depends(get_current_active_user)):
 
 
 @app.get("/exercisesAdd")
-async def get_excercise_add(
+async def get_exercise_add(
     exercise: str, current_user=Depends(get_current_active_user)
 ):
-    return get_excercise_for_dialog(exercise, current_user.get("user_id"))
+    return get_exercise_for_dialog(exercise, current_user.get("user_id"))
 
 
 @app.get("/exercisesInfo")
-async def get_excercise_info(
+async def get_exercise_info(
     exercise: str, current_user=Depends(get_current_active_user)
 ):
     return {
         "video": await get_video_by_name(exercise),
-        **get_general_excercise_info(exercise, current_user.get("user_id")),
+        **get_general_exercise_info(exercise, current_user.get("user_id")),
     }
 
 
@@ -229,9 +229,9 @@ async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
 
 
 @app.get("/exercisesData")
-async def get_excercises(current_user=Depends(get_current_active_user)):
+async def get_exercises(current_user=Depends(get_current_active_user)):
     # TODO
-    get_all_excercises()
+    get_all_exercises()
 
 
 @app.post("/trainingSchedule")
