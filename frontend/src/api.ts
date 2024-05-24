@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  CalendarData,
   CalendarDayData,
   Exercise,
   ExerciseAdd,
@@ -116,19 +117,19 @@ export const changeBlockStatus = (
 };
 
 // Gets
-export const getPastTrainings = async (token: string, kw: number) => {
+export const getPastTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/pastTrainings", {
     ...addAuth(token),
-    params: { kw: kw },
+    params: { week: week },
   });
 
   return keysToCamelCase(response.data) as CalendarDayData[];
 };
 
-export const getFutureTrainings = async (token: string, kw: number) => {
+export const getFutureTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/futureTrainings", {
     ...addAuth(token),
-    params: { kw: kw },
+    params: { week: week },
   });
 
   return keysToCamelCase(response.data) as CalendarDayData[];
@@ -208,5 +209,16 @@ export const postExerciseNewUserRating = async (
   axiosInstance.post("/ExerciseRating", undefined, {
     ...addAuth(token),
     params: { userRating: userRating, excercise: excercise },
+  });
+};
+
+export const postCalendar = async (
+  token: string,
+  calendarData: CalendarData,
+  week: string
+) => {
+  axiosInstance.post("/Calendar", undefined, {
+    ...addAuth(token),
+    params: { calendarData: calendarData, week: week },
   });
 };

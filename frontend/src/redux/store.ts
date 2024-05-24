@@ -5,11 +5,13 @@ import trainingScheduleDialogSlice from "./reducers/trainingScheduleDialogSlice"
 import tagsSlice from "./reducers/tagsSlice";
 import exercisesAddDialogSlice from "./reducers/exercisesAddDialogSlice";
 import exercisesInfoDialogSlice from "./reducers/exercisesInfoDialogSlice";
+import calendarSlice from "./reducers/calendarSlice";
 
 export const store = configureStore({
   reducer: {
     currentPage: currentPageSlice,
     user: userSlice,
+    calendar: calendarSlice,
     trainingScheduleDialog: trainingScheduleDialogSlice,
     tags: tagsSlice,
     exercisesAddDialog: exercisesAddDialogSlice,

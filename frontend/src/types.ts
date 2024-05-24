@@ -29,9 +29,7 @@ export type CalendarData = {
 
 export type CalendarDayData = {
   date: string;
-  trainings: (Training & {
-    exercises: (Exercise & { completed: boolean })[];
-  })[];
+  trainings: CalendarTraining[];
 };
 
 export type CalendarTraining = {
@@ -45,9 +43,7 @@ export type CalendarExercise = {
   exerciseName: string;
   exerciseId: number;
   exerciseType: string;
-  exercise:
-    | (ExerciseCardio & { distance: number })
-    | (ExerciseWeighted & { weight: number });
+  exercise: ExerciseCardio | (ExerciseWeighted & { weight: number });
   completed: boolean;
 };
 
@@ -155,5 +151,3 @@ export const isWSError = (
 ): value is WSError => {
   return "error" in value && "message" in value;
 };
-
-type AnyObject = { [key: string]: any };
