@@ -109,6 +109,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                       checked={training.onDays.includes(day)}
                       sx={{ marginBottom: 1 }}
                       readOnly
+                      color="neutral"
                     />
                     <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                   </FormControl>

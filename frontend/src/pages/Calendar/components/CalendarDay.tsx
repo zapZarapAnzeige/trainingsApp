@@ -1,8 +1,4 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionGroup,
-  AccordionSummary,
   Checkbox,
   Divider,
   FormControl,
@@ -20,90 +16,109 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { FC } from "react";
 import { CalendarDayData } from "../../../types";
 import { getWeekday } from "../../../utils";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { setIsDataDirty } from "../../../redux/reducers/calendarSlice";
 
 type CalendarDayProps = {
   calendarDayData: CalendarDayData;
+  completable: boolean;
 };
 
-const CalendarDay: FC<CalendarDayProps> = ({ calendarDayData }) => {
+const CalendarDay: FC<CalendarDayProps> = ({
+  calendarDayData,
+  completable,
+}) => {
+  const dispatch = useAppDispatch();
+
   return (
     <>
-      <Sheet variant="outlined" sx={{ mb: 1 }}>
+      <Sheet
+        variant="outlined"
+        sx={{ mb: 1, borderRadius: 5, textAlign: "center" }}
+      >
         <Typography sx={{ mx: "auto" }}>
           {getWeekday(calendarDayData.date)}
         </Typography>
         <Typography sx={{ mx: "auto" }}>{calendarDayData.date}</Typography>
       </Sheet>
-      <AccordionGroup variant="outlined" transition="0.2s">
-        {calendarDayData.trainings ? (
-          calendarDayData.trainings.map((training) => (
-            <Accordion>
-              <AccordionSummary>{training.name}</AccordionSummary>
-              <AccordionDetails variant="soft">
-                <List>
-                  {training.exercises.map((exercise) => (
-                    <>
-                      <ListItem>
+      {calendarDayData.trainings.length > 0 && (
+        <Sheet
+          variant="outlined"
+          sx={{
+            mb: 1,
+            borderRadius: 5,
+            textAlign: "center",
+            px: 0.5,
+            height: 200,
+            overflow: "auto",
+          }}
+        >
+          {calendarDayData.trainings ? (
+            calendarDayData.trainings.map((training) => (
+              <List sx={{ display: "flex", flexDirection: "column" }}>
+                {training.exercises.map((exercise) => (
+                  <>
+                    <ListItem sx={{ flexGrow: 6 }}>
+                      <ListItemContent>
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography>{exercise.exerciseName}</Typography>
+                          <IconButton>
+                            <InfoOutlinedIcon />
+                          </IconButton>
+                        </Stack>
+                      </ListItemContent>
+                    </ListItem>
+                    <Divider />
+                    {"minutes" in exercise.exercise ? (
+                      <ListItem sx={{ flexGrow: 6 }}>
                         <ListItemContent>
                           <Stack direction="row" justifyContent="space-between">
-                            <Typography>{exercise.exerciseName}</Typography>
-                            <IconButton>
-                              <InfoOutlinedIcon />
-                            </IconButton>
+                            <Typography>
+                              {exercise.exercise.minutes} Min.
+                            </Typography>
+                            <Checkbox
+                              disabled={!completable}
+                              color={completable ? "primary" : "neutral"}
+                              onClick={() => {
+                                if (completable) {
+                                  dispatch(setIsDataDirty(true));
+                                }
+                              }}
+                            />
                           </Stack>
                         </ListItemContent>
                       </ListItem>
-                      <Divider />
-                      {"minutes" in exercise.exercise ? (
-                        <ListItem>
-                          <ListItemContent>
-                            <Stack
-                              direction="row"
-                              justifyContent="space-between"
-                            >
-                              <Typography>
-                                {exercise.exercise.minutes} Min.
-                              </Typography>
-                              <Checkbox />
-                            </Stack>
-                          </ListItemContent>
-                        </ListItem>
-                      ) : (
-                        <ListItem>
-                          <ListItemContent>
-                            <Stack
-                              direction="row"
-                              justifyContent="space-between"
-                            >
-                              <Typography>
-                                {exercise.exercise.setAmount} x{" "}
-                                {exercise.exercise.repetitionAmount} Wdh.
-                              </Typography>
-                              <Checkbox />
-                            </Stack>
-                          </ListItemContent>
-                        </ListItem>
-                      )}
-                      <Divider />
+                    ) : (
+                      <ListItem sx={{ flexGrow: 6 }}>
+                        <ListItemContent>
+                          <Stack direction="row" justifyContent="space-between">
+                            <Typography>
+                              {exercise.exercise.setAmount} x{" "}
+                              {exercise.exercise.repetitionAmount} Wdh.
+                            </Typography>
+                            <Checkbox />
+                          </Stack>
+                        </ListItemContent>
+                      </ListItem>
+                    )}
+                    <Divider />
+                    {"setAmount" in exercise.exercise && (
                       <FormControl>
                         <FormLabel>
-                          {"minutes" in exercise.exercise ? "Distance" : "KG"}
+                          {"setAmount" in exercise.exercise && "KG"}
                         </FormLabel>
                         <Input required type="number" />
                       </FormControl>
-                    </>
-                  ))}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          ))
-        ) : (
-          <Accordion disabled>
-            <AccordionSummary>Kein Training</AccordionSummary>
-            <AccordionDetails variant="soft">e</AccordionDetails>
-          </Accordion>
-        )}
-      </AccordionGroup>
+                    )}
+                  </>
+                ))}
+              </List>
+            ))
+          ) : (
+            <></>
+          )}
+        </Sheet>
+      )}
     </>
   );
 };
