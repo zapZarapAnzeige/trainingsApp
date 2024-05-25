@@ -119,7 +119,7 @@ async def save_exercise_rating(rating: int, exercise: str, user_id: int):
             .on_duplicate_key_update(rating=rating)
         )
         session.commit()
-        return {"inserted": True}
+        return True
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="Invalid exercise ID"
     )
@@ -188,6 +188,7 @@ async def find_trainingspartner(plz: str, matched_people: List[int]):
                 )
             )
         ).first()
+        print(partner)
         if partner:
             return partner._asdict()
         else:

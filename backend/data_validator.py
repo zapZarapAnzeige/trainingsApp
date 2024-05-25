@@ -26,7 +26,10 @@ def validate_required_plz(plz: str = Query(...)):
     if not len(plz) == 5:
         INVALID_PRECONDITION("invalid plz length")
 
+    return plz
+
 
 def validate_rating(rating: int = Query(...)):
     if rating > 5 or rating < 1:
         INVALID_PRECONDITION("invalid rating")
+    return rating

@@ -1,5 +1,5 @@
 import base64
-from typing import Optional
+from typing import Optional, List, Union
 from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sql import (
@@ -25,7 +25,18 @@ from authentication.authentication import (
     create_access_token,
     create_new_user,
 )
-from custom_types import Token
+from custom_types import (
+    Token,
+    formatted_history_trainings_data,
+    Base_exercise,
+    Formatted_exercises,
+    formatted_trainingsdata,
+    response_model_exercisesInfo,
+    response_model_users_me,
+    response_model_chat_content,
+    response_model_get_chats,
+    response_model_post_chat,
+)
 from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
 from chat_ws import get_cookie_or_token, handle_session
@@ -63,7 +74,7 @@ app.add_middleware(
 )
 
 
-@app.put("/user")
+@app.put("/user", response_model=bool)
 async def upload_user_data(
     profile_picture: Optional[UploadFile] = File(None),
     plz: Optional[str] = Depends(validate_plz),
@@ -82,11 +93,8 @@ async def upload_user_data(
         user_data["nickname"] = nickname
     if searching_for_partner is not None:
         user_data["searching_for_partner"] = searching_for_partner
-    res = await update_user_data(
-        profile_picture, current_user.get("user_id"), user_data
-    )
-    print(res)
-    return res
+        await update_user_data(profile_picture, current_user.get("user_id"), user_data)
+    return True
 
 
 @app.websocket("/chat")
@@ -95,7 +103,7 @@ async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token
     await handle_session(websocket, current_user.get("user_id"))
 
 
-@app.post("/chat")
+@app.post("/chat", response_model=Union[None, str, response_model_post_chat])
 async def find_partner(
     plz: str = Depends(validate_required_plz),
     current_user=Depends(get_current_active_user),
@@ -114,26 +122,26 @@ async def find_partner(
         return "No people to match found"
 
 
-@app.get("/chats")
+@app.get("/chats", response_model=List[response_model_get_chats])
 async def get_chat_overview(current_user=Depends(get_current_active_user)):
     partners = await get_chat_partners(current_user.get("user_id"))
 
-    return {"chat_data": await get_overview(partners)}
+    return await get_overview(partners)
 
 
-@app.patch("/chat")
+@app.patch("/chat", response_model=bool)
 async def update_chat_disabled(
     currently_blocked: bool,
     partner_id: int,
     current_user=Depends(get_current_active_user),
 ):
     if currently_blocked:
-        return {"result": await unblock_user(current_user.get("user_id"), partner_id)}
+        return await unblock_user(current_user.get("user_id"), partner_id) > 0
     else:
-        return {"result": await block_user(current_user.get("user_id"), partner_id)}
+        return await block_user(current_user.get("user_id"), partner_id) > 0
 
 
-@app.get("/chat/content")
+@app.get("/chat/content", response_model=List[response_model_chat_content])
 async def get_chat_content(
     partner_id: int, current_user=Depends(get_current_active_user)
 ):
@@ -150,17 +158,22 @@ async def upload_file(file: UploadFile = File(...)):
     return await upload_video(file)
 
 
-@app.get("/files/{file_id}")
+@app.get(
+    "/files/{file_id}", responses={200: {"content": {"application/octet-stream": {}}}}
+)
 async def get_video(file_id: str):
     return await get_video_by_id(file_id)
 
 
-@app.get("/picture")
+@app.get(
+    "/picture",
+    responses={200: {"content": {"image/png": {}}}},
+)
 async def get_users(current_user=Depends(get_current_active_user)):
     return get_profile_pic(current_user.get("user_id"))
 
 
-@app.post("/api/v1/signUp")
+@app.post("/api/v1/signUp", response_model=bool)
 async def sign_up(form_data: OAuth2PasswordRequestForm = Depends()):
     return create_new_user(form_data.username, form_data.password)
 
@@ -188,7 +201,7 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
     return response
 
 
-@app.post("/ExerciseRating")
+@app.post("/ExerciseRating", response_model=bool)
 async def post_exercise_rating(
     exercise: str,
     rating: int = Depends(validate_rating),
@@ -197,7 +210,7 @@ async def post_exercise_rating(
     return await save_exercise_rating(rating, exercise, current_user.get("user_id"))
 
 
-@app.get("/users/me")
+@app.get("/users/me", response_model=response_model_users_me)
 async def get_user_data(current_user=Depends(get_current_active_user)):
     del current_user["password"]
     del current_user["expired"]
@@ -218,7 +231,7 @@ async def get_exercise_add(
     return get_exercise_for_dialog(exercise, current_user.get("user_id"))
 
 
-@app.get("/exercisesInfo")
+@app.get("/exercisesInfo", response_model=response_model_exercisesInfo)
 async def get_exercise_info(
     exercise: str, current_user=Depends(get_current_active_user)
 ):
@@ -228,27 +241,27 @@ async def get_exercise_info(
     }
 
 
-@app.get("/trainingSchedule")
+@app.get("/trainingSchedule", response_model=List[formatted_trainingsdata])
 async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
     return get_trainings(current_user.get("user_id"))
 
 
-@app.get("/exercisesData")
+@app.get("/exercisesData", response_model=List[Formatted_exercises])
 async def get_exercises_for_user(current_user=Depends(get_current_active_user)):
     return get_all_exercises_for_user(current_user.get("user_id"))
 
 
-@app.get("/tags")
+@app.get("/tags", response_model=List[str])
 async def get_tags(current_user=Depends(get_current_active_user)):
     return get_all_unique_tags()
 
 
-@app.get("/exercises")
+@app.get("/exercises", response_model=List[Base_exercise])
 async def get_exercises(current_user=Depends(get_current_active_user)):
     return get_base_exercises(current_user.get("user_id"))
 
 
-@app.get("/pastTrainings")
+@app.get("/pastTrainings", response_model=formatted_history_trainings_data)
 async def get_past_trainings(
     start_date: datetime = Depends(validate_date),
     current_user=Depends(get_current_active_user),
@@ -256,7 +269,7 @@ async def get_past_trainings(
     return get_past_trainings_from_start_date(start_date, current_user.get("user_id"))
 
 
-@app.get("/futureTrainings")
+@app.get("/futureTrainings", response_model=formatted_history_trainings_data)
 async def get_future_trainings(
     start_date: datetime = Depends(validate_date),
     current_user=Depends(get_current_active_user),

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional, Union, List
+from typing import Optional, List
+from fastapi.types import Union
 from typing_extensions import TypedDict
 from datetime import datetime
 
@@ -61,23 +62,46 @@ class Unformatted_exercises(BaseModel):
 
 
 class Exercise_cardio(TypedDict):
-    minutes: int
-    trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    minutes: Optional[int]
 
 
 class Exercise_weighted(TypedDict):
-    number_of_repetition: int
-    number_of_sets: int
-    trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    number_of_repetition: Optional[int]
+    number_of_sets: Optional[int]
+
+
+class Exercise_weighted_formatted(BaseModel):
+    repetition_amount: Optional[int]
+    set_amount: Optional[int]
+
+
+class Exercise_weighted_formatted_trackable_measurement(Exercise_weighted_formatted):
+    trackable_unit_of_measure: Optional[str] = None
+    value_trackable_unit_of_measure: Optional[float] = None
+
+
+class Exercise_weighted_trackable_measurement(Exercise_weighted):
+    trackable_unit_of_measure: Optional[str] = None
+    value_trackable_unit_of_measure: Optional[float] = None
+
+
+class Exercise_cardio_trackable_measurement(Exercise_weighted):
+    trackable_unit_of_measure: Optional[str] = None
+    value_trackable_unit_of_measure: Optional[float] = None
 
 
 class Base_exercise(TypedDict):
     exercise_name: str
     exercise_id: int
     exercise_type: str
-    exercise: Union[Exercise_cardio, Exercise_weighted]
+    exercise: Union[
+        Exercise_cardio,
+        Exercise_weighted_formatted,
+        Exercise_weighted,
+        Exercise_cardio_trackable_measurement,
+        Exercise_weighted_formatted_trackable_measurement,
+        Exercise_weighted_trackable_measurement,
+    ]
 
 
 class Tags(TypedDict):
@@ -86,23 +110,21 @@ class Tags(TypedDict):
 
 
 class Formatted_exercises(Base_exercise, Tags):
-    rating: float
-    reviews: int
-
-
-class ExerciseCardio(BaseModel):
-    minutes: float
-
-
-class ExerciseWeighted(BaseModel):
-    repetition_amount: int
-    set_amount: int
+    rating: Optional[float]
+    reviews: Optional[int]
 
 
 class ExerciseDetail(BaseModel):
     exercise_id: int
     exercise_name: str
-    exercise: Union[ExerciseCardio, ExerciseWeighted]
+    exercise: Union[
+        Exercise_cardio,
+        Exercise_weighted_formatted,
+        Exercise_weighted,
+        Exercise_cardio_trackable_measurement,
+        Exercise_weighted_formatted_trackable_measurement,
+        Exercise_weighted_trackable_measurement,
+    ]
 
 
 class formatted_trainingsdata(BaseModel):
@@ -132,7 +154,14 @@ class exercise_history(BaseModel):
     exercises_id: int
     exercise_type: str
     completed: bool
-    exercise: Union[Exercise_cardio, Exercise_weighted]
+    exercise: Union[
+        Exercise_cardio,
+        Exercise_weighted_formatted,
+        Exercise_weighted,
+        Exercise_cardio_trackable_measurement,
+        Exercise_weighted_formatted_trackable_measurement,
+        Exercise_weighted_trackable_measurement,
+    ]
 
 
 class trainings_history(BaseModel):
@@ -144,3 +173,48 @@ class trainings_history(BaseModel):
 class formatted_history_trainings_data(BaseModel):
     date: datetime
     trainings: List[trainings_history]
+
+
+class response_model_exercisesInfo(BaseModel):
+    video: Optional[str]
+    exercise_id: int
+    exercise_name: str
+    description: Optional[str]
+    rating: Optional[int]
+
+
+class response_model_users_me(BaseModel):
+    user_id: int
+    profile_picture: Optional[str]
+    nickname: Optional[str]
+    user_name: str
+    plz: Optional[int]
+    searching_for_partner: bool
+    bio: Optional[str]
+
+
+class response_model_chat_content(TypedDict):
+    content: str
+    sender: int
+    timestamp: datetime
+
+
+class response_model_get_chats(BaseModel):
+    bio: Optional[str]
+    nickname: Optional[str]
+    partner_name: str
+    partner_id: int
+    last_message: Optional[str]
+    unread_messages: int
+    last_message_timestamp: datetime
+    disabled: bool
+    last_sender_id: int
+    profile_picture: Optional[str]
+
+
+class response_model_post_chat(BaseModel):
+    user_name: str
+    user_id: int
+    profile_picture: Optional[str]
+    nickname: Optional[str]
+    bio: Optional[str]

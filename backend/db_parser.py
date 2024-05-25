@@ -87,11 +87,21 @@ def parse_exercises(data: List, is_base_user_data: bool = False):
                     "exercise_type": d["constant_unit_of_measure"],
                     "exercise_name": d["exercise_name"],
                     "exercise_id": d["exercise_id"],
-                    "exercise": {"minutes": d["minutes"]}
+                    "exercise": {
+                        "minutes": d["minutes"],
+                        "trackable_unit_of_measure": d["trackable_unit_of_measure"],
+                        "value_trackable_unit_of_measure": d[
+                            "value_trackable_unit_of_measure"
+                        ],
+                    }
                     if d["constant_unit_of_measure"] == "Min"
                     else {
                         "repetition_amount": d["number_of_repetition"],
                         "set_amount": d["number_of_sets"],
+                        "trackable_unit_of_measure": d["trackable_unit_of_measure"],
+                        "value_trackable_unit_of_measure": d[
+                            "value_trackable_unit_of_measure"
+                        ],
                     },
                     **get_exteded_user_data(d, is_base_user_data),
                 }
