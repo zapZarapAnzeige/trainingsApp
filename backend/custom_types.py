@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from typing import TypedDict, Optional, Union, List
+from typing import Optional, Union, List
+from typing_extensions import TypedDict
+from datetime import datetime
 
 
 class Message_json(BaseModel):
@@ -60,11 +62,15 @@ class Unformatted_exercises(BaseModel):
 
 class Exercise_cardio(TypedDict):
     minutes: int
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
 
 
 class Exercise_weighted(TypedDict):
     number_of_repetition: int
     number_of_sets: int
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
 
 
 class Base_exercise(TypedDict):
@@ -104,3 +110,37 @@ class formatted_trainingsdata(BaseModel):
     trainings_id: int
     on_days: List[str]
     exercises: List[ExerciseDetail]
+
+
+class unformatted_past_or_future_trainings_data(BaseModel):
+    day: Union[datetime, str]
+    trainings_name: str
+    trainings_id: int
+    exercise_id: int
+    exercise_name: str
+    completed: bool
+    constant_unit_of_measure: Optional[str]
+    minutes: Optional[int]
+    number_of_repetition: Optional[int]
+    number_of_sets: int
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
+
+
+class exercise_history(BaseModel):
+    exercise_name: str
+    exercises_id: int
+    exercise_type: str
+    completed: bool
+    exercise: Union[Exercise_cardio, Exercise_weighted]
+
+
+class trainings_history(BaseModel):
+    trainings_name: str
+    trainings_id: int
+    exercises: List[exercise_history]
+
+
+class formatted_history_trainings_data(BaseModel):
+    date: datetime
+    trainings: List[trainings_history]

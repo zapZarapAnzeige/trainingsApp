@@ -14,6 +14,8 @@ from sql import (
     get_all_exercises_for_user,
     get_all_unique_tags,
     get_base_exercises,
+    get_future_trainings_from_cur_date,
+    get_past_trainings_from_start_date,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -24,7 +26,7 @@ from authentication.authentication import (
     create_new_user,
 )
 from custom_types import Token
-from datetime import timedelta
+from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
 from chat_ws import get_cookie_or_token, handle_session
 from no_sql import (
@@ -37,6 +39,12 @@ from no_sql import (
     block_user,
     unblock_user,
     get_video_by_name,
+)
+from data_validator import (
+    validate_date,
+    validate_plz,
+    validate_required_plz,
+    validate_rating,
 )
 
 app = FastAPI()
@@ -55,23 +63,17 @@ app.add_middleware(
 )
 
 
-def INVALID_PRECONDITION(content: str):
-    return Response(status_code=status.HTTP_412_PRECONDITION_FAILED, content=content)
-
-
 @app.put("/user")
 async def upload_user_data(
     profile_picture: Optional[UploadFile] = File(None),
-    plz: str = None,
-    searching_for_partner: bool = None,
-    bio: str = None,
-    nickname: str = None,
+    plz: Optional[str] = Depends(validate_plz),
+    searching_for_partner: Optional[bool] = None,
+    bio: Optional[str] = None,
+    nickname: Optional[str] = None,
     current_user=Depends(get_current_active_user),
 ):
     user_data = {}
-    if plz:
-        if not len(plz) == 5:
-            return INVALID_PRECONDITION("invalid plz length")
+
     if plz:
         user_data["plz"] = plz
     if bio:
@@ -94,9 +96,10 @@ async def chat(*, websocket: WebSocket, current_user=Depends(get_cookie_or_token
 
 
 @app.post("/chat")
-async def find_partner(plz: str, current_user=Depends(get_current_active_user)):
-    if not len(plz) == 5:
-        return INVALID_PRECONDITION("invalid plz length")
+async def find_partner(
+    plz: str = Depends(validate_required_plz),
+    current_user=Depends(get_current_active_user),
+):
     user_id = current_user.get("user_id")
     matched_persons = await get_all_chats_from_user(user_id)
     new_match = await find_trainingspartner(plz, matched_persons)
@@ -187,11 +190,11 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.post("/ExerciseRating")
 async def post_exercise_rating(
-    rating: int, exercise: str, current_user=Depends(get_current_active_user)
+    exercise: str,
+    rating: int = Depends(validate_rating),
+    current_user=Depends(get_current_active_user),
 ):
-    if rating > 5 or rating < 1:
-        return INVALID_PRECONDITION("invalid rating")
-    await save_exercise_rating(rating, exercise, current_user.get("user_id"))
+    return await save_exercise_rating(rating, exercise, current_user.get("user_id"))
 
 
 @app.get("/users/me")
@@ -243,6 +246,24 @@ async def get_tags(current_user=Depends(get_current_active_user)):
 @app.get("/exercises")
 async def get_exercises(current_user=Depends(get_current_active_user)):
     return get_base_exercises(current_user.get("user_id"))
+
+
+@app.get("/pastTrainings")
+async def get_past_trainings(
+    start_date: datetime = Depends(validate_date),
+    current_user=Depends(get_current_active_user),
+):
+    return get_past_trainings_from_start_date(start_date, current_user.get("user_id"))
+
+
+@app.get("/futureTrainings")
+async def get_future_trainings(
+    start_date: datetime = Depends(validate_date),
+    current_user=Depends(get_current_active_user),
+):
+    if (datetime.now() - start_date) > timedelta(days=7):
+        return []
+    return get_future_trainings_from_cur_date(current_user.get("user_id"))
 
 
 @app.post("/trainingSchedule")

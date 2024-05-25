@@ -12,12 +12,14 @@ from db_models import (
     Days,
     Exercises2Trainings_plans,
     Tags,
+    Exercises_history,
 )
+from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct
+from sqlalchemy import select, and_, distinct, literal
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
-from db_parser import parse_trainings, parse_exercises
+from db_parser import parse_trainings, parse_exercises, parse_past_or_future_trainings
 
 
 async def get_overview(partners: Dict):
@@ -118,8 +120,8 @@ async def save_exercise_rating(rating: int, exercise: str, user_id: int):
         )
         session.commit()
         return {"inserted": True}
-    return Response(
-        status_code=status.HTTP_404_NOT_FOUND, content="Invalid exercise ID"
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Invalid exercise ID"
     )
 
 
@@ -343,4 +345,111 @@ def get_base_exercises(user_id: int):
         .mappings()
         .fetchall(),
         True,
+    )
+
+
+def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
+    end_date = start_date + timedelta(weeks=1)
+    cur_date = datetime.now()
+    if cur_date < end_date:
+        # not neccessary but makes query faster
+        end_date = cur_date
+    return parse_past_or_future_trainings(
+        session.execute(
+            select(
+                Trainings_plan_history.c.day,
+                Trainings_plan_history.c.trainings_name,
+                Trainings_plan_history.c.trainings_plan_history_id.label(
+                    "trainings_id"
+                ),
+                Exercises_history.c.exercises_history_id.label("exercise_id"),
+                Exercises.c.exercise_name,
+                Exercises_history.c.completed,
+                Exercises.c.constant_unit_of_measure,
+                Exercises_history.c.minutes,
+                Exercises_history.c.number_of_repetition,
+                Exercises_history.c.number_of_sets,
+                Exercises_history.c.value_trackable_unit_of_measure,
+                Exercises_history.c.trackable_unit_of_measure,
+            )
+            .select_from(Trainings_plan_history)
+            .where(
+                and_(
+                    Trainings_plan.c.user_id == user_id,
+                    Trainings_plan_history.c.day.between(start_date, end_date),
+                )
+            )
+            .join(
+                Exercises_history,
+                Trainings_plan_history.c.trainings_plan_history_id
+                == Exercises_history.c.trainings_plan_history_id,
+                isouter=True,
+            )
+            .join(
+                Exercises,
+                Exercises_history.c.exercise_id == Exercises_history.c.exercise_id,
+            )
+        )
+        .mappings()
+        .fetchall()
+    )
+
+
+def get_weekdays():
+    WEEKDAYS = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
+
+    days_start_ind = 6 - datetime.now().weekday()
+
+    return [WEEKDAYS[i * -1] for i in range(days_start_ind, 0, -1)]
+
+
+def get_future_trainings_from_cur_date(user_id: int):
+    return parse_past_or_future_trainings(
+        session.execute(
+            select(
+                Days.c.weekday.label("day"),
+                Trainings_plan.c.trainings_name,
+                Trainings_plan.c.trainings_id,
+                Exercises.c.exercise_id,
+                Exercises.c.exercise_name,
+                literal(False).label("completed"),
+                Exercises.c.constant_unit_of_measure,
+                User_current_performance.c.minutes,
+                User_current_performance.c.number_of_repetition,
+                User_current_performance.c.number_of_sets,
+                User_current_performance.c.value_trackable_unit_of_measure,
+                User_current_performance.c.trackable_unit_of_measure,
+            )
+            .select_from(Days)
+            .where(Days.c.user_id == user_id, Days.c.weekday.in_(get_weekdays()))
+            .join(Trainings_plan, Trainings_plan.c.trainings_id == Days.c.trainings_id)
+            .join(
+                Exercises2Trainings_plans,
+                Trainings_plan.c.trainings_id
+                == Exercises2Trainings_plans.c.trainings_id,
+                isouter=True,
+            )
+            .join(
+                Exercises,
+                Exercises2Trainings_plans.c.exercise_id == Exercises.c.exercise_id,
+            )
+            .join(
+                User_current_performance,
+                and_(
+                    User_current_performance.c.exercise_id == Exercises.c.exercise_id,
+                    User_current_performance.c.user_id == user_id,
+                ),
+                isouter=True,
+            )
+        )
+        .mappings()
+        .fetchall()
     )

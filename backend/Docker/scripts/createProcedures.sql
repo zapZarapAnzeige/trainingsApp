@@ -43,6 +43,7 @@ DECLARE
 	END IF;
 END ?/
 
+
 CREATE PROCEDURE insert_todays_plans_and_exercises()
 BEGIN
     DECLARE done BOOLEAN DEFAULT FALSE;
@@ -58,19 +59,19 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        INSERT INTO Trainings_plan_history (day, trainings_name, user_id, trainings_plan_id)
-        SELECT CURDATE(), tp.trainings_name, tp.user_id, tp.trainings_plan_id
+        INSERT INTO Trainings_plan_history (day, trainings_name, user_id, trainings_id)
+        SELECT CURDATE(), tp.trainings_name, tp.user_id, tp.trainings_id
         FROM Trainings_plan tp
         INNER JOIN Days d ON d.trainings_id = tp.trainings_id AND d.user_id = tp.user_id
         WHERE tp.user_id = user_id_var AND d.weekday = DAYNAME(CURDATE());
 
         INSERT INTO Exercises_history (trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure)
-        SELECT LAST_INSERT_ID(), user_id_var, FALSE, ucp.exercise_id, ucp.minutes, ucp.number_of_repetition, ucp.number_of_sets, ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure
+        SELECT LAST_INSERT_ID(), user_id_var, FALSE, ex.exercise_id, ucp.minutes, ucp.number_of_repetition, ucp.number_of_sets, ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure
         FROM Trainings_plan tp
 		INNER JOIN Days d ON d.trainings_id = tp.trainings_id AND d.user_id = tp.user_id
 		INNER JOIN Exercises2Trainings_plans e2t ON tp.trainings_id = e2t.trainings_id
 		INNER JOIN Exercises ex ON e2t.exercise_id = ex.exercise_id
-        LEFT OUTER JOIN User_current_performance ucp ON ex.exercise_id = ucp.exercise_id AND ucp.user_id = user_id_var
+        LEFT OUTER JOIN User_current_performance ucp ON ex.exercise_id = ucp.exercise_id AND ucp.user_id = @user_id_var
         WHERE tp.user_id = user_id_var AND d.weekday = DAYNAME(CURDATE());
     END LOOP;
 
@@ -83,3 +84,5 @@ BEGIN
 END ?/
 
 DELIMITER ;
+
+CALL insert_todays_plans_and_exercises ();

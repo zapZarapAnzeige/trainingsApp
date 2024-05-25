@@ -120,7 +120,7 @@ export const changeBlockStatus = (
 export const getPastTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/pastTrainings", {
     ...addAuth(token),
-    params: { week: week },
+    params: { start_date: week },
   });
 
   return keysToCamelCase(response.data) as CalendarDayData[];
@@ -129,7 +129,7 @@ export const getPastTrainings = async (token: string, week: string) => {
 export const getFutureTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/futureTrainings", {
     ...addAuth(token),
-    params: { week: week },
+    params: { start_date: week },
   });
 
   return keysToCamelCase(response.data) as CalendarDayData[];
@@ -143,6 +143,7 @@ export const getTrainingData = async (token: string) => {
 };
 
 // For TrainingSchedule
+//done
 export const getExercises = async (token: string) => {
   const response = await axiosInstance.get("/exercises", addAuth(token));
   return keysToCamelCase(response.data) as Exercise[];

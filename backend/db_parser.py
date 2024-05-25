@@ -5,7 +5,10 @@ from custom_types import (
     Unformatted_exercises,
     Formatted_exercises,
     Base_exercise,
+    unformatted_past_or_future_trainings_data,
+    formatted_history_trainings_data,
 )
+from datetime import datetime, timedelta, date
 
 
 def check_if_data_exists(data, primary_column):
@@ -115,3 +118,70 @@ def get_exteded_user_data(d, is_base_user_data):
 def add_tag(obj, tag_type, tag_name):
     if tag_name not in obj[tag_type]:
         obj[tag_type].append(tag_name)
+
+
+def parse_past_or_future_trainings(
+    data: List[unformatted_past_or_future_trainings_data],
+):
+    formatted_data: List[formatted_history_trainings_data] = []
+    for d in data:
+        trainings_day_obj = next(
+            (
+                element
+                for element in formatted_data
+                if element["date"] == get_date_from_weekday(d["day"])
+            ),
+            None,
+        )
+        exercise_obj = {
+            **get_exercise_formatted(d),
+            "exercise_type": d["constant_unit_of_measure"],
+            "completed": d["completed"],
+            "trackable_unit_of_measure": d["trackable_unit_of_measure"],
+            "value_trackable_unit_of_measure": d["value_trackable_unit_of_measure"],
+        }
+        trainings_obj = {
+            "trainings_name": d["trainings_name"],
+            "trainings_id": d["trainings_id"],
+            "exercises": [exercise_obj],
+        }
+        if trainings_day_obj:
+            obj = next(
+                (
+                    element
+                    for element in trainings_day_obj["trainings"]
+                    if element["trainings_id"] == d["trainings_id"]
+                ),
+                None,
+            )
+            if obj:
+                obj["exercises"].append(exercise_obj)
+            else:
+                trainings_day_obj["trainings"].append(trainings_obj)
+        else:
+            formatted_data.append(
+                {
+                    "date": get_date_from_weekday(d["day"]),
+                    "trainings": [trainings_obj],
+                }
+            )
+
+    return formatted_data
+
+
+def get_date_from_weekday(day: Union[datetime, str]):
+    WEEKDAY_MAP = {
+        "Monday": 0,
+        "Tuesday": 1,
+        "Wednesday": 2,
+        "Thursday": 3,
+        "Friday": 4,
+        "Saturday": 5,
+        "Sunday": 6,
+    }
+    if not isinstance(day, str):
+        return day
+    dif_from_curdate = WEEKDAY_MAP.get(day) - datetime.today().weekday()
+    if dif_from_curdate < 0:
+        dif_from_curdate += 7
+    return date.today() + timedelta(days=dif_from_curdate)
