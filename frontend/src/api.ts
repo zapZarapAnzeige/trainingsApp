@@ -23,8 +23,8 @@ export const axiosInstance = axios.create({
   },
 });
 
-const addAuth = (token: string) => {
-  return { headers: { Authorization: token } };
+const addAuth = (token: string, additionalHeaders?: Record<string, string>) => {
+  return { headers: { ...additionalHeaders, Authorization: token } };
 };
 
 //done
@@ -192,7 +192,7 @@ export const postTrainingData = async (
   trainingData: Training
 ) => {
   axiosInstance.post("/trainingSchedule", trainingData, {
-    headers: { Authorization: token, "Content-Type": "application/json" },
+    ...addAuth(token, { "Content-Type": "application/json" }),
   });
 };
 
@@ -201,7 +201,7 @@ export const postExercisesAdd = async (
   exercisesAdd: ExercisesAddDialog
 ) => {
   axiosInstance.put("/ExercisesAdd", exercisesAdd, {
-    headers: { Authorization: token, "Content-Type": "application/json" },
+    ...addAuth(token, { "Content-Type": "application/json" }),
   });
 };
 //done
@@ -236,7 +236,7 @@ export const postCalendar = async (
       )
     ),
     {
-      headers: { Authorization: token, "Content-Type": "application/json" },
+      ...addAuth(token, { "Content-Type": "application/json" }),
     }
   );
 };
