@@ -14,6 +14,7 @@ from db_models import (
     Tags,
     Exercises_history,
 )
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_, distinct, literal, delete, update
@@ -114,16 +115,18 @@ def get_all_usernames():
     return session.execute(select(Users.c.user_name).select_from(Users)).scalars().all()
 
 
-async def save_exercise_rating(rating: int, exercise: str, user_id: int):
-    exercise_id = session.execute(
-        select(Exercises.c.exercise_id).where(Exercises.c.exercise_name == exercise)
-    ).scalar_one()
+async def save_exercise_rating(rating: int, exercise_id: int, user_id: int):
     if exercise_id:
-        session.execute(
-            insert(Individual_Exercise_Ratings)
-            .values(exercise_id=exercise_id, user_id=user_id, rating=rating)
-            .on_duplicate_key_update(rating=rating)
-        )
+        try:
+            session.execute(
+                insert(Individual_Exercise_Ratings)
+                .values(exercise_id=exercise_id, user_id=user_id, rating=rating)
+                .on_duplicate_key_update(rating=rating)
+            )
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found"
+            )
         session.commit()
         return True
     raise HTTPException(
@@ -576,11 +579,23 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 def update_user_performance(
     exercises: List[post_trainingSchedule_Exercises], user_id: int, trainings_id
 ):
+    performances = [
+        {
+            "user_id": user_id,
+            "exercise_id": exercise.exerciseId,
+            "trainings_id": trainings_id,
+            "minutes": exercises.minutes,
+            "number_of_repetition": exercises.repetitionAmount,
+            "number_of_sets": exercises.setAmount,
+        }
+        for exercise in exercises
+    ]
     for exercise in exercises:
-        session.execute(insert(User_current_performance).values())
-
-
-# .on_duplicate_key_update(rating=rating)
+        session.execute(
+            insert(User_current_performance)
+            .values(performances)
+            .on_duplicate_key_update(performances)
+        )
 
 
 def insert_days(days: List[str], user_id: int, trainings_id: int):
