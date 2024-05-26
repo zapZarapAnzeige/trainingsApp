@@ -17,7 +17,10 @@ import {
 } from "../../../api";
 
 import ExercisesInfoDialog from "./ExercisesInfoDialog";
-import { setExercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
+import {
+  setExercisesInfoDialog,
+  setQuickInfo,
+} from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
@@ -32,6 +35,10 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   const auth = useAuthHeader();
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
+
+  const quickInfo = useAppSelector(
+    (state) => state.exercisesInfoDialog.quickInfo
+  );
 
   const dispatch = useAppDispatch();
 
@@ -73,6 +80,13 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
         });
     }
   }, [openInfoDialog]);
+
+  useEffect(() => {
+    if (quickInfo === exercisesEntryData.exerciseName) {
+      setOpenInfoDialog(true);
+      dispatch(setQuickInfo(""));
+    }
+  }, []);
 
   return (
     <>

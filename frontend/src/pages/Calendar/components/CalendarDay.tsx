@@ -14,10 +14,13 @@ import {
 } from "@mui/joy";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { FC } from "react";
-import { CalendarDayData } from "../../../types";
+import { CalendarDayData, CalendarExercise } from "../../../types";
 import { getWeekday } from "../../../utils";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { setIsDataDirty } from "../../../redux/reducers/calendarSlice";
+import { changePage } from "../../../redux/reducers/currentPageSlice";
+import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
+import { setQuickInfo } from "../../../redux/reducers/exercisesInfoDialogSlice";
 
 type CalendarDayProps = {
   calendarDayData: CalendarDayData;
@@ -29,6 +32,14 @@ const CalendarDay: FC<CalendarDayProps> = ({
   completable,
 }) => {
   const dispatch = useAppDispatch();
+  const quickInfo = useAppSelector(
+    (state) => state.exercisesInfoDialog.quickInfo
+  );
+
+  const handleInfoClick = (exerciseName: string) => {
+    dispatch(setQuickInfo(exerciseName));
+    dispatch(changePage("exercises"));
+  };
 
   return (
     <>
@@ -62,7 +73,11 @@ const CalendarDay: FC<CalendarDayProps> = ({
                       <ListItemContent>
                         <Stack direction="row" justifyContent="space-between">
                           <Typography>{exercise.exerciseName}</Typography>
-                          <IconButton>
+                          <IconButton
+                            onClick={() =>
+                              handleInfoClick(exercise.exerciseName)
+                            }
+                          >
                             <InfoOutlinedIcon />
                           </IconButton>
                         </Stack>
