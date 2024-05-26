@@ -50,15 +50,16 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
     return check_if_data_exists(formatted_data, "trainings_id")
 
 
-def get_exercise_formatted(d):
+def get_exercise_formatted(d, additional_data={}):
     return {
         "exercise_id": d.exercise_id,
         "exercise_name": d.exercise_name,
-        "exercise": {"minutes": d.minutes}
+        "exercise": {"minutes": d.minutes, **additional_data}
         if d.constant_unit_of_measure == "Min"
         else {
             "repetition_amount": d.number_of_repetition,
             "set_amount": d.number_of_sets,
+            **additional_data,
         },
     }
 
@@ -137,11 +138,17 @@ def parse_past_or_future_trainings(
             None,
         )
         exercise_obj = {
-            **get_exercise_formatted(d),
+            **get_exercise_formatted(
+                d,
+                {
+                    "trackable_unit_of_measure": d["trackable_unit_of_measure"],
+                    "value_trackable_unit_of_measure": d[
+                        "value_trackable_unit_of_measure"
+                    ],
+                },
+            ),
             "exercise_type": d["constant_unit_of_measure"],
             "completed": d["completed"],
-            "trackable_unit_of_measure": d["trackable_unit_of_measure"],
-            "value_trackable_unit_of_measure": d["value_trackable_unit_of_measure"],
         }
         trainings_obj = {
             "trainings_name": d["trainings_name"],

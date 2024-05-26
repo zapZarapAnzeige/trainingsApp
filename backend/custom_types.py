@@ -145,7 +145,7 @@ class unformatted_past_or_future_trainings_data(BaseModel):
 
 class exercise_history(BaseModel):
     exercise_name: str
-    exercises_id: int
+    exercise_id: int
     exercise_type: str
     completed: bool
     exercise: Union[

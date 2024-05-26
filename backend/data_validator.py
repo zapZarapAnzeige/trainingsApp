@@ -12,9 +12,9 @@ def INVALID_PRECONDITION(content: str):
     raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail=content)
 
 
-def validate_date(date: str = Query(...)):
+def validate_date(start_date: str = Query(...)):
     try:
-        start_date = datetime.strptime(date, "%Y-%m-%d")
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
     except ValueError:
         INVALID_PRECONDITION("Invalid Date Format for parametere start_date")
     return start_date

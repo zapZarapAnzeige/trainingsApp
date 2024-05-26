@@ -362,7 +362,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             .select_from(Trainings_plan_history)
             .where(
                 and_(
-                    Trainings_plan.c.user_id == user_id,
+                    Trainings_plan_history.c.user_id == user_id,
                     Trainings_plan_history.c.day.between(start_date, end_date),
                 )
             )
@@ -374,7 +374,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             )
             .join(
                 Exercises,
-                Exercises_history.c.exercise_id == Exercises_history.c.exercise_id,
+                Exercises.c.exercise_id == Exercises_history.c.exercise_id,
             )
         )
         .mappings()
@@ -382,13 +382,16 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
     )
 
 
-def get_weekdays():
+def get_weekdays(date_diff: bool):
+    if date_diff:
+        return WEEKDAY_MAP.keys()
     days_start_ind = 6 - datetime.now().weekday()
 
     return [WEEKDAY_MAP.keys()[i * -1] for i in range(days_start_ind, 0, -1)]
 
 
-def get_future_trainings_from_cur_date(user_id: int):
+def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
+    print(get_weekdays(date_diff))
     return parse_past_or_future_trainings(
         session.execute(
             select(
@@ -406,7 +409,9 @@ def get_future_trainings_from_cur_date(user_id: int):
                 User_current_performance.c.trackable_unit_of_measure,
             )
             .select_from(Days)
-            .where(Days.c.user_id == user_id, Days.c.weekday.in_(get_weekdays()))
+            .where(
+                Days.c.user_id == user_id, Days.c.weekday.in_(get_weekdays(date_diff))
+            )
             .join(Trainings_plan, Trainings_plan.c.trainings_id == Days.c.trainings_id)
             .join(
                 Exercises2Trainings_plans,

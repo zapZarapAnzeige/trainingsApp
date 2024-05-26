@@ -268,7 +268,7 @@ async def get_exercises(current_user=Depends(get_current_active_user)):
     return get_base_exercises(current_user.get("user_id"))
 
 
-@app.get("/pastTrainings", response_model=formatted_history_trainings_data)
+@app.get("/pastTrainings", response_model=List[formatted_history_trainings_data])
 async def get_past_trainings(
     start_date: datetime = Depends(validate_date),
     current_user=Depends(get_current_active_user),
@@ -276,14 +276,21 @@ async def get_past_trainings(
     return get_past_trainings_from_start_date(start_date, current_user.get("user_id"))
 
 
-@app.get("/futureTrainings", response_model=formatted_history_trainings_data)
+@app.get("/futureTrainings", response_model=List[formatted_history_trainings_data])
 async def get_future_trainings(
     start_date: datetime = Depends(validate_date),
     current_user=Depends(get_current_active_user),
 ):
-    if (datetime.now() - start_date) > timedelta(days=7):
+    cur_datetime = datetime.now()
+    cur_date = datetime.strptime(
+        f"{cur_datetime.year}-{cur_datetime.month}-{cur_datetime.day}", "%Y-%m-%d"
+    )
+    if (cur_date - start_date) > timedelta(days=7):
         return []
-    return get_future_trainings_from_cur_date(current_user.get("user_id"))
+
+    return get_future_trainings_from_cur_date(
+        current_user.get("user_id"), cur_date - start_date < timedelta(days=0)
+    )
 
 
 @app.post("/trainingSchedule")
