@@ -7,6 +7,7 @@ from custom_types import (
     Base_exercise,
     unformatted_past_or_future_trainings_data,
     formatted_history_trainings_data,
+    WEEKDAY_MAP,
 )
 from datetime import datetime, timedelta, date
 
@@ -114,8 +115,8 @@ def get_exteded_user_data(d, is_base_user_data):
     if is_base_user_data:
         return {}
     ret = {
-        "rating": d["rating"],
-        "reviews": d["total_exercise_ratings"],
+        "rating": d["rating"] if d["rating"] else 0,
+        "reviews": d["total_exercise_ratings"] if d["total_exercise_ratings"] else 0,
     }
     if not d["tag_name"]:
         return {"secondary_tags": [], "primary_tags": [], **ret}
@@ -180,15 +181,6 @@ def parse_past_or_future_trainings(
 
 
 def get_date_from_weekday(day: Union[datetime, str]):
-    WEEKDAY_MAP = {
-        "Monday": 0,
-        "Tuesday": 1,
-        "Wednesday": 2,
-        "Thursday": 3,
-        "Friday": 4,
-        "Saturday": 5,
-        "Sunday": 6,
-    }
     if not isinstance(day, str):
         return day
     dif_from_curdate = WEEKDAY_MAP.get(day) - datetime.today().weekday()
