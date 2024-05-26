@@ -18,6 +18,7 @@ from sql import (
     get_past_trainings_from_start_date,
     save_trainings_data,
     save_calendar_data,
+    get_exercise_name_by_id,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -39,7 +40,7 @@ from custom_types import (
     response_model_get_chats,
     response_model_post_chat,
     post_trainingSchedule,
-    post_Exercise_trainings_converted,
+    post_Calendar,
 )
 from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
@@ -61,7 +62,6 @@ from data_validator import (
     validate_required_plz,
     validate_rating,
     validate_TrainingsData,
-    validate_post_Calendar,
 )
 
 app = FastAPI()
@@ -209,11 +209,11 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @app.post("/ExerciseRating", response_model=bool)
 async def post_exercise_rating(
-    exercise: str,
+    exercise_id: int,
     rating: int = Depends(validate_rating),
     current_user=Depends(get_current_active_user),
 ):
-    return await save_exercise_rating(rating, exercise, current_user.get("user_id"))
+    return await save_exercise_rating(rating, exercise_id, current_user.get("user_id"))
 
 
 @app.get("/users/me", response_model=response_model_users_me)
@@ -232,18 +232,19 @@ async def get_user_data(current_user=Depends(get_current_active_user)):
 
 @app.get("/exercisesAdd")
 async def get_exercise_add(
-    exercise: str, current_user=Depends(get_current_active_user)
+    exercise_id: int, current_user=Depends(get_current_active_user)
 ):
-    return get_exercise_for_dialog(exercise, current_user.get("user_id"))
+    return get_exercise_for_dialog(exercise_id, current_user.get("user_id"))
 
 
 @app.get("/exercisesInfo", response_model=response_model_exercisesInfo)
 async def get_exercise_info(
-    exercise: str, current_user=Depends(get_current_active_user)
+    exercise_id: int, current_user=Depends(get_current_active_user)
 ):
+    exercise_name = get_exercise_name_by_id(exercise_id)
     return {
-        "video": await get_video_by_name(exercise),
-        **get_general_exercise_info(exercise, current_user.get("user_id")),
+        "video": await get_video_by_name(exercise_name),
+        **get_general_exercise_info(exercise_id, current_user.get("user_id")),
     }
 
 
@@ -264,9 +265,7 @@ async def get_tags(current_user=Depends(get_current_active_user)):
 
 @app.get("/exercises", response_model=List[Base_exercise])
 async def get_exercises(current_user=Depends(get_current_active_user)):
-    a = get_base_exercises(current_user.get("user_id"))
-    print(a)
-    return a
+    return get_base_exercises(current_user.get("user_id"))
 
 
 @app.get("/pastTrainings", response_model=formatted_history_trainings_data)
@@ -297,9 +296,7 @@ async def post_trainings_schedule(
 
 @app.post("/Calendar")
 async def save_Calendar(
-    trainings: List[post_Exercise_trainings_converted] = Depends(
-        validate_post_Calendar
-    ),
+    trainings: List[post_Calendar],
     current_user=Depends(get_current_active_user),
 ):
     return save_calendar_data(trainings, current_user.get("user_id"))

@@ -232,8 +232,6 @@ export const postCalendar = async (
             weight: exercise.exercise,
             exerciseId: exercise.exerciseId,
             completed: exercise.completed,
-            date: day.date,
-            trainingId: training.trainingId,
           }))
         )
       ),

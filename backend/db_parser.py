@@ -4,11 +4,11 @@ from custom_types import (
     formatted_trainingsdata,
     Unformatted_exercises,
     Formatted_exercises,
-    Base_exercise,
     unformatted_past_or_future_trainings_data,
     formatted_history_trainings_data,
     WEEKDAY_MAP,
 )
+import base64
 from datetime import datetime, timedelta, date
 
 
@@ -63,21 +63,17 @@ def get_exercise_formatted(d):
     }
 
 
-def parse_exercises(data: List, is_base_user_data: bool = False):
-    # TODO TRue not implemented anymore
-    formatted_data: List[Union[Formatted_exercises, Base_exercise]] = []
+def parse_exercises(data: List[Unformatted_exercises]):
+    formatted_data: List[Formatted_exercises] = []
     for d in data:
-        if is_base_user_data:
-            obj = None
-        else:
-            obj = next(
-                (
-                    element
-                    for element in formatted_data
-                    if element["exercise_id"] == d["exercise_id"]
-                ),
-                None,
-            )
+        obj = next(
+            (
+                element
+                for element in formatted_data
+                if element["exercise_id"] == d["exercise_id"]
+            ),
+            None,
+        )
         if obj:
             if d["is_primary_tag"]:
                 add_tag(obj, "primary_tags", d["tag_name"])
@@ -86,6 +82,11 @@ def parse_exercises(data: List, is_base_user_data: bool = False):
         else:
             formatted_data.append(
                 {
+                    "preview_image": base64.b64encode(d.get("preview_image")).decode(
+                        "utf-8"
+                    )
+                    if d.get("preview_image")
+                    else None,
                     "exercise_type": d["constant_unit_of_measure"],
                     "exercise_name": d["exercise_name"],
                     "exercise_id": d["exercise_id"],
@@ -97,16 +98,14 @@ def parse_exercises(data: List, is_base_user_data: bool = False):
                         "repetition_amount": 0,
                         "set_amount": 0,
                     },
-                    **get_exteded_user_data(d, is_base_user_data),
+                    **get_exteded_user_data(d),
                 }
             )
 
     return formatted_data
 
 
-def get_exteded_user_data(d, is_base_user_data):
-    if is_base_user_data:
-        return {}
+def get_exteded_user_data(d):
     ret = {
         "rating": d["rating"] if d["rating"] else 0,
         "reviews": d["total_exercise_ratings"] if d["total_exercise_ratings"] else 0,

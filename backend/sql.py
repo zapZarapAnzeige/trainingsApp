@@ -14,6 +14,7 @@ from db_models import (
     Tags,
     Exercises_history,
 )
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_, distinct, literal, delete, update
@@ -24,7 +25,7 @@ from custom_types import (
     WEEKDAY_MAP,
     post_trainingSchedule,
     post_trainingSchedule_Exercises,
-    post_Exercise_trainings_converted,
+    post_Calendar,
 )
 
 
@@ -114,16 +115,18 @@ def get_all_usernames():
     return session.execute(select(Users.c.user_name).select_from(Users)).scalars().all()
 
 
-async def save_exercise_rating(rating: int, exercise: str, user_id: int):
-    exercise_id = session.execute(
-        select(Exercises.c.exercise_id).where(Exercises.c.exercise_name == exercise)
-    ).scalar_one()
+async def save_exercise_rating(rating: int, exercise_id: int, user_id: int):
     if exercise_id:
-        session.execute(
-            insert(Individual_Exercise_Ratings)
-            .values(exercise_id=exercise_id, user_id=user_id, rating=rating)
-            .on_duplicate_key_update(rating=rating)
-        )
+        try:
+            session.execute(
+                insert(Individual_Exercise_Ratings)
+                .values(exercise_id=exercise_id, user_id=user_id, rating=rating)
+                .on_duplicate_key_update(rating=rating)
+            )
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found"
+            )
         session.commit()
         return True
     raise HTTPException(
@@ -131,13 +134,14 @@ async def save_exercise_rating(rating: int, exercise: str, user_id: int):
     )
 
 
-def get_exercise_for_dialog(exercise_name: str, user_id: int):
+def get_exercise_for_dialog(exercise_id: int, user_id: int):
     result = (
         session.execute(
             select(
                 Trainings_plan.c.trainings_id,
                 Trainings_plan.c.trainings_name,
                 Exercises.c.exercise_name,
+                Exercises.c.exercise_id,
             )
             .select_from(Trainings_plan)
             .where(and_(Trainings_plan.c.user_id == user_id))
@@ -159,7 +163,7 @@ def get_exercise_for_dialog(exercise_name: str, user_id: int):
     in_training = {}
     not_in_training = {}
     for val in result:
-        if val["exercise_name"] == exercise_name:
+        if val["exercise_id"] == exercise_id:
             in_training[val["trainings_id"]] = val
         else:
             not_in_training[val["trainings_id"]] = val
@@ -171,10 +175,6 @@ def get_exercise_for_dialog(exercise_name: str, user_id: int):
         "in_training": list(in_training.values()),
         "not_in_training": list(not_in_training.values()),
     }
-
-
-def get_exercise_not_in_training(exercise_name: str, user_id: int):
-    pass
 
 
 async def find_trainingspartner(plz: str, matched_people: List[int]):
@@ -194,7 +194,6 @@ async def find_trainingspartner(plz: str, matched_people: List[int]):
                 )
             )
         ).first()
-        print(partner)
         if partner:
             return partner._asdict()
         else:
@@ -203,7 +202,7 @@ async def find_trainingspartner(plz: str, matched_people: List[int]):
         return None
 
 
-def get_general_exercise_info(exercise: str, user_id: int):
+def get_general_exercise_info(exercise_id: int, user_id: int):
     info = session.execute(
         select(
             Exercises.c.exercise_id,
@@ -220,7 +219,7 @@ def get_general_exercise_info(exercise: str, user_id: int):
             ),
             isouter=True,
         )
-        .where(Exercises.c.exercise_name == exercise)
+        .where(Exercises.c.exercise_id == exercise_id)
     ).first()
     if info:
         return info._asdict()
@@ -293,6 +292,7 @@ def get_all_exercises_for_user(user_id: int):
                 Exercises.c.exercise_id,
                 Exercises.c.constant_unit_of_measure,
                 Overall_Exercise_Ratings.c.rating,
+                Exercises.c.preview_image,
                 Overall_Exercise_Ratings.c.total_exercise_ratings,
                 Tags.c.tag_name,
                 Tags.c.is_primary_tag,
@@ -460,6 +460,10 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 insert_training.inserted_primary_key[0], trainings_data.exercises
             )
 
+            update_user_performance(
+                trainings_data.exercises, user_id, trainings_data.trainingsId
+            )
+
             session.commit()
             return Response(status_code=status.HTTP_201_CREATED)
         else:
@@ -576,11 +580,23 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 def update_user_performance(
     exercises: List[post_trainingSchedule_Exercises], user_id: int, trainings_id
 ):
+    performances = [
+        {
+            "user_id": user_id,
+            "exercise_id": exercise.exerciseId,
+            "trainings_id": trainings_id,
+            "minutes": exercises.minutes,
+            "number_of_repetition": exercises.repetitionAmount,
+            "number_of_sets": exercises.setAmount,
+        }
+        for exercise in exercises
+    ]
     for exercise in exercises:
-        session.execute(insert(User_current_performance).values())
-
-
-# .on_duplicate_key_update(rating=rating)
+        session.execute(
+            insert(User_current_performance)
+            .values(performances)
+            .on_duplicate_key_update(performances)
+        )
 
 
 def insert_days(days: List[str], user_id: int, trainings_id: int):
@@ -614,9 +630,7 @@ def insert_Exercises2Trainings_plans(
     )
 
 
-def save_calendar_data(
-    trainings: List[post_Exercise_trainings_converted], user_id: int
-):
+def save_calendar_data(trainings: List[post_Calendar], user_id: int):
     for exercise in trainings:
         session.execute(
             update(Exercises_history)
@@ -631,3 +645,9 @@ def save_calendar_data(
                 )
             )
         )
+
+
+def get_exercise_name_by_id(exercise_id: int):
+    return session.execute(
+        select(Exercises.c.exercise_name).where(Exercises.c.exercise_id == exercise_id)
+    ).scalar_one()

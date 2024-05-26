@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE IF NOT EXISTS Exercises (
     exercise_id INT AUTO_INCREMENT,
     exercise_name VARCHAR(255) UNIQUE NOT NULL,
+    preview_image MEDIUMBLOB,
     description TEXT,
     constant_unit_of_measure ENUM("SxWdh", "Min") NOT NULL,
     PRIMARY KEY (exercise_id)
