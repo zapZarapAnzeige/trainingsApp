@@ -32,9 +32,9 @@ const DismissDialog: FC<DismissDialogProps> = ({
       case DismissDialogType.INFO:
         return <InfoRoundedIcon />;
       case DismissDialogType.WARNING:
-        return <WarningRoundedIcon />;
+        return <WarningRoundedIcon color="warning" />;
       case DismissDialogType.ERROR:
-        return <CancelRoundedIcon />;
+        return <CancelRoundedIcon color="error" />;
       default:
         return <CancelRoundedIcon />;
     }
@@ -58,13 +58,12 @@ const DismissDialog: FC<DismissDialogProps> = ({
       <ModalDialog variant="outlined" role="alertdialog">
         <DialogTitle>
           {getDialogTitleIcon(dismissDialogType)}
-          <WarningRoundedIcon />
           {getDialogTitle(dismissDialogType)}
         </DialogTitle>
         <Divider />
         <DialogContent>{dialogContent}</DialogContent>
         <DialogActions>
-          <Button onClick={closeDismissDialog} variant="solid" color="danger">
+          <Button onClick={closeDismissDialog} variant="solid" color="neutral">
             {intl.formatMessage({ id: "DismissDialog.close" })}
           </Button>
         </DialogActions>
