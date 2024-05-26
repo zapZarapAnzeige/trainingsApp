@@ -16,7 +16,7 @@ from db_models import (
 )
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct, literal, delete
+from sqlalchemy import select, and_, distinct, literal, delete, update
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 from db_parser import parse_trainings, parse_exercises, parse_past_or_future_trainings
@@ -24,7 +24,7 @@ from custom_types import (
     WEEKDAY_MAP,
     post_trainingSchedule,
     post_trainingSchedule_Exercises,
-    post_Calendar_CalendarDayData,
+    post_Exercise_trainings_converted,
 )
 
 
@@ -615,5 +615,20 @@ def insert_Exercises2Trainings_plans(
     )
 
 
-def save_calendar_data(trainings: List[post_Calendar_CalendarDayData], user_id: int):
-    pass
+def save_calendar_data(
+    trainings: List[post_Exercise_trainings_converted], user_id: int
+):
+    for exercise in trainings:
+        session.execute(
+            update(Exercises_history)
+            .values(
+                completed=exercise.completed,
+                value_trackable_unit_of_measure=exercise.weight,
+            )
+            .where(
+                and_(
+                    Exercises_history.c.exercises_history_id == exercise.exerciseId,
+                    Exercises_history.c.user_id == user_id,
+                )
+            )
+        )

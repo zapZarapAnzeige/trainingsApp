@@ -1,8 +1,12 @@
 from fastapi import Query
 from datetime import datetime
 from fastapi import HTTPException, status
-from typing import Optional
-from custom_types import post_trainingSchedule, WEEKDAY_MAP
+from typing import Optional, List
+from custom_types import (
+    post_trainingSchedule,
+    WEEKDAY_MAP,
+    post_Exercise_trainings,
+)
 
 
 def INVALID_PRECONDITION(content: str):
@@ -45,3 +49,9 @@ def validate_TrainingsData(trainingsData: post_trainingSchedule):
         INVALID_PRECONDITION("Wrong exercise type")
 
     return trainingsData
+
+
+def validate_post_Calendar(trainings: List[post_Exercise_trainings]):
+    for training in trainings:
+        training.date = validate_date(training.date)
+    return trainings

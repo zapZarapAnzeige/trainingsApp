@@ -39,7 +39,7 @@ from custom_types import (
     response_model_get_chats,
     response_model_post_chat,
     post_trainingSchedule,
-    post_Calendar_CalendarDayData,
+    post_Exercise_trainings_converted,
 )
 from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
@@ -61,6 +61,7 @@ from data_validator import (
     validate_required_plz,
     validate_rating,
     validate_TrainingsData,
+    validate_post_Calendar,
 )
 
 app = FastAPI()
@@ -294,7 +295,9 @@ async def post_trainings_schedule(
 
 @app.post("/Calendar")
 async def save_Calendar(
-    trainings: List[post_Calendar_CalendarDayData],
+    trainings: List[post_Exercise_trainings_converted] = Depends(
+        validate_post_Calendar
+    ),
     current_user=Depends(get_current_active_user),
 ):
     return save_calendar_data(trainings, current_user.get("user_id"))

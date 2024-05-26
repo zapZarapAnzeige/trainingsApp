@@ -234,34 +234,20 @@ class post_trainingSchedule(BaseModel):
     exercises: List[post_trainingSchedule_Exercises]
 
 
-class post_Calendar_ExerciseCardio(BaseModel):
-    minutes: int
-
-
-class post_Calendar_ExerciseWeighted(BaseModel):
-    repetitionAmount: int
-    setAmount: int
-
-
-class post_Calendar_CalendarExercise(BaseModel):
-    exerciseName: str
+class post_Exercise_trainings(BaseModel):
+    exercise: float
     exerciseId: int
-    exerciseType: str
-    exercise: Union[post_Calendar_ExerciseCardio, post_Calendar_ExerciseWeighted]
     completed: bool
-    weight: float = None
-
-
-class post_Calendar_CalendarTraining(BaseModel):
-    name: str
-    trainingId: int
-    onDays: List[str]
-    exercises: List[post_Calendar_CalendarExercise]
-
-
-class post_Calendar_CalendarDayData(BaseModel):
     date: str
-    trainings: List[post_Calendar_CalendarTraining]
+    trainingId: int
+
+
+class post_Exercise_trainings_converted(BaseModel):
+    exercise: float
+    exerciseId: int
+    completed: bool
+    date: datetime
+    trainingId: int
 
 
 WEEKDAY_MAP = {

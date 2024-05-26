@@ -223,6 +223,19 @@ export const postCalendar = async (
 ) => {
   axiosInstance.post("/Calendar", undefined, {
     ...addAuth(token),
-    params: { trainings: pastTrainings },
+    params: {
+      // I think exerciseId weight and completed should be sufficient
+      trainings: pastTrainings.map((day) =>
+        day.trainings.map((training) =>
+          training.exercises.map((exercise) => ({
+            weight: exercise.exercise,
+            exerciseId: exercise.exerciseId,
+            completed: exercise.completed,
+            date: day.date,
+            trainingId: training.trainingId,
+          }))
+        )
+      ),
+    },
   });
 };
