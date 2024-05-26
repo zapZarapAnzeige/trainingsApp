@@ -218,3 +218,58 @@ class response_model_post_chat(BaseModel):
     profile_picture: Optional[str]
     nickname: Optional[str]
     bio: Optional[str]
+
+
+class post_trainingSchedule_Exercises(BaseModel):
+    exerciseName: str
+    exerciseId: int
+    exerciseType: str
+    exercise: Union[Exercise_cardio, Exercise_weighted]
+
+
+class post_trainingSchedule(BaseModel):
+    name: str
+    trainingsId: int
+    onDays: List[str]
+    exercises: List[post_trainingSchedule_Exercises]
+
+
+class post_Calendar_ExerciseCardio(BaseModel):
+    minutes: int
+
+
+class post_Calendar_ExerciseWeighted(BaseModel):
+    repetitionAmount: int
+    setAmount: int
+
+
+class post_Calendar_CalendarExercise(BaseModel):
+    exerciseName: str
+    exerciseId: int
+    exerciseType: str
+    exercise: Union[post_Calendar_ExerciseCardio, post_Calendar_ExerciseWeighted]
+    completed: bool
+    weight: float = None
+
+
+class post_Calendar_CalendarTraining(BaseModel):
+    name: str
+    trainingId: int
+    onDays: List[str]
+    exercises: List[post_Calendar_CalendarExercise]
+
+
+class post_Calendar_CalendarDayData(BaseModel):
+    date: str
+    trainings: List[post_Calendar_CalendarTraining]
+
+
+WEEKDAY_MAP = {
+    "Monday": 0,
+    "Tuesday": 1,
+    "Wednesday": 2,
+    "Thursday": 3,
+    "Friday": 4,
+    "Saturday": 5,
+    "Sunday": 6,
+}

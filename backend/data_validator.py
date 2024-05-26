@@ -2,6 +2,7 @@ from fastapi import Query
 from datetime import datetime
 from fastapi import HTTPException, status
 from typing import Optional
+from custom_types import post_trainingSchedule, WEEKDAY_MAP
 
 
 def INVALID_PRECONDITION(content: str):
@@ -33,3 +34,14 @@ def validate_rating(rating: int = Query(...)):
     if rating > 5 or rating < 1:
         INVALID_PRECONDITION("invalid rating")
     return rating
+
+
+def validate_TrainingsData(trainingsData: post_trainingSchedule):
+    if not {day for day in trainingsData.onDays}.issubset(WEEKDAY_MAP.keys()):
+        INVALID_PRECONDITION("Weekday does not exist")
+    if not {ex.exerciseType for ex in trainingsData.exercises}.issubset(
+        ["SxWdh", "Min"]
+    ):
+        INVALID_PRECONDITION("Wrong exercise type")
+
+    return trainingsData

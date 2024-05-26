@@ -149,11 +149,7 @@ export default function Calendar() {
                 disabled={!isDataDirty}
                 onClick={() => {
                   dispatch(setIsDataDirty(false));
-                  postCalendar(
-                    auth(),
-                    calendarData,
-                    getMondayOfWeek(currentCW, new Date().getFullYear())
-                  );
+                  postCalendar(auth(), calendarData.pastTrainings);
                 }}
               >
                 <CheckIcon />

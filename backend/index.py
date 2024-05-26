@@ -16,6 +16,8 @@ from sql import (
     get_base_exercises,
     get_future_trainings_from_cur_date,
     get_past_trainings_from_start_date,
+    save_trainings_data,
+    save_calendar_data,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -36,6 +38,8 @@ from custom_types import (
     response_model_chat_content,
     response_model_get_chats,
     response_model_post_chat,
+    post_trainingSchedule,
+    post_Calendar_CalendarDayData,
 )
 from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
@@ -56,6 +60,7 @@ from data_validator import (
     validate_plz,
     validate_required_plz,
     validate_rating,
+    validate_TrainingsData,
 )
 
 app = FastAPI()
@@ -280,5 +285,16 @@ async def get_future_trainings(
 
 
 @app.post("/trainingSchedule")
-async def post_trainings_schedule(current_user=Depends(get_current_active_user)):
-    pass
+async def post_trainings_schedule(
+    trainingsData: post_trainingSchedule = Depends(validate_TrainingsData),
+    current_user=Depends(get_current_active_user),
+):
+    return save_trainings_data(trainingsData, current_user.get("user_id"))
+
+
+@app.post("/Calendar")
+async def save_Calendar(
+    trainings: List[post_Calendar_CalendarDayData],
+    current_user=Depends(get_current_active_user),
+):
+    return save_calendar_data(trainings, current_user.get("user_id"))

@@ -117,6 +117,7 @@ export const changeBlockStatus = (
 };
 
 // Gets
+//done
 export const getPastTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/pastTrainings", {
     ...addAuth(token),
@@ -125,7 +126,7 @@ export const getPastTrainings = async (token: string, week: string) => {
 
   return keysToCamelCase(response.data) as CalendarDayData[];
 };
-
+//done
 export const getFutureTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/futureTrainings", {
     ...addAuth(token),
@@ -184,6 +185,7 @@ export const getExercisesInfo = async (token: string, exercise: string) => {
 };
 
 // Posts
+//done
 export const postTrainingData = async (
   token: string,
   trainingData: Training
@@ -203,7 +205,7 @@ export const postExercisesAdd = async (
     params: { exercisesAdd: exercisesAdd },
   });
 };
-
+//done
 export const postExerciseNewUserRating = async (
   token: string,
   userRating: number,
@@ -211,17 +213,16 @@ export const postExerciseNewUserRating = async (
 ) => {
   axiosInstance.post("/ExerciseRating", undefined, {
     ...addAuth(token),
-    params: { userRating: userRating, exercise: exercise },
+    data: { userRating: userRating, exercise: exercise },
   });
 };
 
 export const postCalendar = async (
   token: string,
-  calendarData: CalendarData,
-  week: string
+  pastTrainings: CalendarDayData[]
 ) => {
   axiosInstance.post("/Calendar", undefined, {
     ...addAuth(token),
-    params: { calendarData: calendarData, week: week },
+    params: { trainings: pastTrainings },
   });
 };

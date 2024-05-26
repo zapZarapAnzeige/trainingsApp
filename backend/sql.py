@@ -16,10 +16,16 @@ from db_models import (
 )
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct, literal
+from sqlalchemy import select, and_, distinct, literal, delete
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 from db_parser import parse_trainings, parse_exercises, parse_past_or_future_trainings
+from custom_types import (
+    WEEKDAY_MAP,
+    post_trainingSchedule,
+    post_trainingSchedule_Exercises,
+    post_Calendar_CalendarDayData,
+)
 
 
 async def get_overview(partners: Dict):
@@ -397,19 +403,9 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
 
 
 def get_weekdays():
-    WEEKDAYS = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-    ]
-
     days_start_ind = 6 - datetime.now().weekday()
 
-    return [WEEKDAYS[i * -1] for i in range(days_start_ind, 0, -1)]
+    return [WEEKDAY_MAP.keys()[i * -1] for i in range(days_start_ind, 0, -1)]
 
 
 def get_future_trainings_from_cur_date(user_id: int):
@@ -454,3 +450,170 @@ def get_future_trainings_from_cur_date(user_id: int):
         .mappings()
         .fetchall()
     )
+
+
+def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
+    exercise_ids = (
+        session.execute(select(Exercises.c.exercise_id).select_from(Exercises))
+        .scalars()
+        .all()
+    )
+
+    if not {ex.exerciseId for ex in trainings_data.exercises}.issubset(exercise_ids):
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="ExerciseId not found"
+        )
+    try:
+        if trainings_data.trainingsId < 0:
+            insert_training = session.execute(
+                insert(Trainings_plan).values(
+                    trainings_name=trainings_data.name, user_id=user_id
+                )
+            )
+
+            insert_days(
+                trainings_data.onDays, user_id, insert_training.inserted_primary_key[0]
+            )
+
+            insert_Exercises2Trainings_plans(
+                insert_training.inserted_primary_key[0], trainings_data.exercises
+            )
+
+            session.commit()
+            return Response(status_code=status.HTTP_201_CREATED)
+        else:
+            if (
+                not session.execute(
+                    select(Trainings_plan.c.user_id).where(
+                        Trainings_plan.c.trainings_id == trainings_data.trainingsId
+                    )
+                ).scalar_one()
+                == user_id
+            ):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="No permission to edit training",
+                )
+            # TODO need day_id
+            current_days = (
+                session.execute(
+                    select(Days.c.weekday).where(
+                        and_(
+                            Days.c.trainings_id == trainings_data.trainingsId,
+                            Days.c.user_id == user_id,
+                        )
+                    )
+                )
+                .scalars()
+                .all()
+            )
+
+            session.execute(
+                delete(Days).where(
+                    and_(
+                        Days.c.user_id == user_id,
+                        Days.c.trainings_id == trainings_data.trainingsId,
+                        Days.c.weekday.in_(
+                            day
+                            for day in current_days
+                            if day not in trainings_data.onDays
+                        ),
+                    )
+                )
+            )
+
+            days_to_insert = [
+                {
+                    "weekday": day,
+                    "user_id": user_id,
+                    "trainings_id": trainings_data.trainingsId,
+                }
+                for day in trainings_data.onDays
+                if day not in current_days
+            ]
+            if len(days_to_insert) > 0:
+                session.execute(insert(Days).values(days_to_insert))
+
+            current_exercises2trainings = (
+                session.execute(
+                    select(Exercises2Trainings_plans.c.exercise_id).where(
+                        Exercises2Trainings_plans.c.trainings_id
+                        == trainings_data.trainingsId,
+                    )
+                )
+                .scalars()
+                .all()
+            )
+
+            new_exercises = [ex.exerciseId for ex in trainings_data.exercises]
+
+            session.execute(
+                delete(Exercises2Trainings_plans).where(
+                    Exercises2Trainings_plans.c.exercise_id.in_(
+                        [
+                            ex_id
+                            for ex_id in current_exercises2trainings
+                            if ex_id not in new_exercises
+                        ]
+                    )
+                )
+            )
+
+            exercises_to_insert = [
+                {
+                    "trainings_id": trainings_data.trainingsId,
+                    "exercise_id": ex_id,
+                }
+                for ex_id in new_exercises
+                if ex_id not in current_exercises2trainings
+            ]
+            if len(exercises_to_insert) > 0:
+                session.execute(
+                    insert(Exercises2Trainings_plans).values(exercises_to_insert)
+                )
+            session.commit()
+
+            return Response(status_code=status.HTTP_202_ACCEPTED)
+
+    except HTTPException as e:
+        session.rollback()
+        raise e
+    except Exception as e:
+        print(e)
+        session.rollback()
+        return False
+
+
+def insert_days(days: List[str], user_id: int, trainings_id: int):
+    session.execute(
+        insert(Days).values(
+            [
+                {
+                    "weekday": day,
+                    "user_id": user_id,
+                    "trainings_id": trainings_id,
+                }
+                for day in days
+            ]
+        )
+    )
+
+
+def insert_Exercises2Trainings_plans(
+    trainings_id: int, exercises: List[post_trainingSchedule_Exercises]
+):
+    session.execute(
+        insert(Exercises2Trainings_plans).values(
+            [
+                {
+                    "trainings_id": trainings_id,
+                    "exercise_id": ex.exerciseId,
+                }
+                for ex in exercises
+            ]
+        )
+    )
+
+
+def save_calendar_data(trainings: List[post_Calendar_CalendarDayData], user_id: int):
+    pass
