@@ -8,6 +8,7 @@ import {
   ExercisesAddDialog,
   ExercisesEntryData,
   Training,
+  TrainingExercise,
 } from "./types";
 import { keysToCamelCase } from "./utils";
 
@@ -147,7 +148,7 @@ export const getTrainingData = async (token: string) => {
 //done
 export const getExercises = async (token: string) => {
   const response = await axiosInstance.get("/exercises", addAuth(token));
-  return keysToCamelCase(response.data) as Exercise[];
+  return keysToCamelCase(response.data) as TrainingExercise[];
 };
 
 // I dont know if keysToCamelCase will break on String[] so dont even use it

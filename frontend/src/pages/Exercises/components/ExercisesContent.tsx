@@ -17,6 +17,10 @@ export default function ExercisesContent() {
     useState<ExercisesEntryData[]>();
 
   useEffect(() => {
+    console.log(exercisesEntryData);
+  }, [exercisesEntryData]);
+
+  useEffect(() => {
     getExercisesData(auth())
       .then((data: ExercisesEntryData[]) => {
         setExercisesEntryData(data);
