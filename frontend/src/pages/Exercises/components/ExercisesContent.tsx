@@ -60,7 +60,7 @@ export default function ExercisesContent() {
     if (exercisesEntryData) {
       setSortedEntries([...sortExerciseEntriesByTags(exercisesEntryData)]);
     }
-  }, [currentTags]);
+  }, [currentTags, exercisesEntryData]);
 
   return (
     <Sheet
