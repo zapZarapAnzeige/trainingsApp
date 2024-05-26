@@ -173,8 +173,8 @@ class response_model_exercisesInfo(BaseModel):
     video: Optional[str]
     exercise_id: int
     exercise_name: str
-    description: Optional[str]
-    rating: Optional[int]
+    exercise_text: Optional[str]
+    user_rating: Optional[int]
 
 
 class response_model_users_me(BaseModel):

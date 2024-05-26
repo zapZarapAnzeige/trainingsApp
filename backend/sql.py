@@ -207,8 +207,8 @@ def get_general_exercise_info(exercise_id: int, user_id: int):
         select(
             Exercises.c.exercise_id,
             Exercises.c.exercise_name,
-            Exercises.c.description,
-            Individual_Exercise_Ratings.c.rating,
+            Exercises.c.description.label("exercise_text"),
+            Individual_Exercise_Ratings.c.rating.label("user_rating"),
         )
         .select_from(Exercises)
         .join(
