@@ -200,9 +200,8 @@ export const postExercisesAdd = async (
   token: string,
   exercisesAdd: ExercisesAddDialog
 ) => {
-  axiosInstance.put("/ExercisesAdd", undefined, {
-    ...addAuth(token),
-    params: { exercisesAdd: exercisesAdd },
+  axiosInstance.put("/ExercisesAdd", exercisesAdd, {
+    headers: { Authorization: token, "Content-Type": "application/json" },
   });
 };
 //done
@@ -225,19 +224,19 @@ export const postCalendar = async (
   token: string,
   pastTrainings: CalendarDayData[]
 ) => {
-  axiosInstance.post("/Calendar", undefined, {
-    ...addAuth(token),
-    params: {
-      // I think exerciseId weight and completed should be sufficient
-      trainings: pastTrainings.map((day) =>
-        day.trainings.map((training) =>
-          training.exercises.map((exercise) => ({
-            weight: exercise.exercise,
-            exerciseId: exercise.exerciseId,
-            completed: exercise.completed,
-          }))
-        )
-      ),
-    },
-  });
+  axiosInstance.post(
+    "/Calendar",
+    pastTrainings.map((day) =>
+      day.trainings.map((training) =>
+        training.exercises.map((exercise) => ({
+          weight: exercise.exercise,
+          exerciseId: exercise.exerciseId,
+          completed: exercise.completed,
+        }))
+      )
+    ),
+    {
+      headers: { Authorization: token, "Content-Type": "application/json" },
+    }
+  );
 };
