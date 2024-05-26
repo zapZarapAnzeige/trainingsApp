@@ -445,7 +445,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             status_code=status.HTTP_406_NOT_ACCEPTABLE, detail="ExerciseId not found"
         )
     try:
-        if trainings_data.trainingsId < 0:
+        if trainings_data.trainingId < 0:
             insert_training = session.execute(
                 insert(Trainings_plan).values(
                     trainings_name=trainings_data.name, user_id=user_id
@@ -461,7 +461,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             )
 
             update_user_performance(
-                trainings_data.exercises, user_id, trainings_data.trainingsId
+                trainings_data.exercises, user_id, trainings_data.trainingId
             )
 
             session.commit()
@@ -470,7 +470,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             if (
                 not session.execute(
                     select(Trainings_plan.c.user_id).where(
-                        Trainings_plan.c.trainings_id == trainings_data.trainingsId
+                        Trainings_plan.c.trainings_id == trainings_data.trainingId
                     )
                 ).scalar_one()
                 == user_id
@@ -481,14 +481,14 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 )
             session.execute(
                 update(Trainings_plan)
-                .where(Trainings_plan.c.trainings_id == trainings_data.trainingsId)
+                .where(Trainings_plan.c.trainings_id == trainings_data.trainingId)
                 .values(trainings_name=trainings_data.name)
             )
             current_days = (
                 session.execute(
                     select(Days.c.weekday).where(
                         and_(
-                            Days.c.trainings_id == trainings_data.trainingsId,
+                            Days.c.trainings_id == trainings_data.trainingId,
                             Days.c.user_id == user_id,
                         )
                     )
@@ -501,7 +501,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 delete(Days).where(
                     and_(
                         Days.c.user_id == user_id,
-                        Days.c.trainings_id == trainings_data.trainingsId,
+                        Days.c.trainings_id == trainings_data.trainingId,
                         Days.c.weekday.in_(
                             day
                             for day in current_days
@@ -515,7 +515,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 {
                     "weekday": day,
                     "user_id": user_id,
-                    "trainings_id": trainings_data.trainingsId,
+                    "trainings_id": trainings_data.trainingId,
                 }
                 for day in trainings_data.onDays
                 if day not in current_days
@@ -527,7 +527,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 session.execute(
                     select(Exercises2Trainings_plans.c.exercise_id).where(
                         Exercises2Trainings_plans.c.trainings_id
-                        == trainings_data.trainingsId,
+                        == trainings_data.trainingId,
                     )
                 )
                 .scalars()
@@ -550,7 +550,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 
             exercises_to_insert = [
                 {
-                    "trainings_id": trainings_data.trainingsId,
+                    "trainings_id": trainings_data.trainingId,
                     "exercise_id": ex_id,
                 }
                 for ex_id in new_exercises
@@ -563,7 +563,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             session.commit()
 
             update_user_performance(
-                trainings_data.exercises, user_id, trainings_data.trainingsId
+                trainings_data.exercises, user_id, trainings_data.trainingId
             )
 
             return Response(status_code=status.HTTP_202_ACCEPTED)

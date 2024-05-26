@@ -232,7 +232,7 @@ class post_trainingSchedule_Exercises(BaseModel):
 
 class post_trainingSchedule(BaseModel):
     name: str
-    trainingsId: int
+    trainingId: int
     onDays: List[str]
     exercises: List[post_trainingSchedule_Exercises]
 
