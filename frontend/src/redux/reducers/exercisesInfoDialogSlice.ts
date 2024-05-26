@@ -3,6 +3,7 @@ import { ExercisesInfoDialog } from "../../types";
 
 export type ExercisesInfoDialogState = {
   value: ExercisesInfoDialog;
+  quickInfo: string;
 };
 
 const initialState: ExercisesInfoDialogState = {
@@ -14,6 +15,7 @@ const initialState: ExercisesInfoDialogState = {
     primaryTags: [],
     secondaryTags: [],
   },
+  quickInfo: "",
 };
 
 const exercisesInfoDialogSlice = createSlice({
@@ -25,6 +27,9 @@ const exercisesInfoDialogSlice = createSlice({
       action: PayloadAction<ExercisesInfoDialog>
     ) => {
       state.value = action.payload;
+    },
+    setQuickInfo: (state, action: PayloadAction<string>) => {
+      state.quickInfo = action.payload;
     },
     clearAll: (state) => {
       state.value = {
@@ -39,6 +44,6 @@ const exercisesInfoDialogSlice = createSlice({
   },
 });
 
-export const { setExercisesInfoDialog, clearAll } =
+export const { setExercisesInfoDialog, setQuickInfo, clearAll } =
   exercisesInfoDialogSlice.actions;
 export default exercisesInfoDialogSlice.reducer;

@@ -8,8 +8,8 @@
         "onDays": ["2024-05-13"],
         "exercises": [
           {
-            "exerciseName": "Running",
-            "exerciseId": 101,
+            "exerciseName": "test",
+            "exerciseId": 1,
             "exerciseType": "Cardio",
             "exercise": {
               "minutes": 30
@@ -24,7 +24,7 @@
         "onDays": ["2024-05-15"],
         "exercises": [
           {
-            "exerciseName": "Burpees",
+            "exerciseName": "c",
             "exerciseId": 301,
             "exerciseType": "Cardio",
             "exercise": {
@@ -49,7 +49,7 @@
         "onDays": ["2024-05-15"],
         "exercises": [
           {
-            "exerciseName": "Burpees",
+            "exerciseName": "qew",
             "exerciseId": 301,
             "exerciseType": "Cardio",
             "exercise": {

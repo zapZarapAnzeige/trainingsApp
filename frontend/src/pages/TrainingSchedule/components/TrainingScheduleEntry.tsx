@@ -29,8 +29,6 @@ type TrainingScheduleEntryProps = {
 const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
   training,
 }) => {
-  console.log("HERE");
-  console.log(training.onDays);
   const [open, setOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
