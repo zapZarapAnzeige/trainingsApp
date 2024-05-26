@@ -33,6 +33,7 @@ import {
   addExercise,
   removeExercise,
   clearAll,
+  setId,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
 import { getExercises, postTrainingData } from "../../../api";
@@ -75,9 +76,16 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   };
 
   useEffect(() => {
+    if (editTraining) {
+      setId(trainingScheduleDialog.trainingId);
+    }
+  });
+
+  useEffect(() => {
     if (open) {
       getExercises(auth())
         .then((exercises: Exercise[]) => {
+          console.log(exercises);
           setExercises(exercises);
         })
         .catch((error) => {
@@ -199,6 +207,9 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                     value={minutes}
                     autoFocus
                     required
+                    disabled={
+                      !isNaN(minutes) || !isNaN(repetitions) || !isNaN(sets)
+                    }
                     type="number"
                     onChange={(e) => {
                       setMinutes(parseInt(e.target.value));
@@ -207,32 +218,33 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                 </FormControl>
               )}
 
-              {selectedExercise && "weight" in selectedExercise.exercise && (
-                <>
-                  <FormControl>
-                    <FormLabel>Wiederholungen</FormLabel>
-                    <Input
-                      value={repetitions}
-                      required
-                      type="number"
-                      onChange={(e) => {
-                        setRepetitions(parseInt(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Sets</FormLabel>
-                    <Input
-                      value={sets}
-                      required
-                      type="number"
-                      onChange={(e) => {
-                        setSets(parseInt(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                </>
-              )}
+              {selectedExercise &&
+                "repetitionAmount" in selectedExercise.exercise && (
+                  <>
+                    <FormControl>
+                      <FormLabel>Wiederholungen</FormLabel>
+                      <Input
+                        value={repetitions}
+                        required
+                        type="number"
+                        onChange={(e) => {
+                          setRepetitions(parseInt(e.target.value));
+                        }}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Sets</FormLabel>
+                      <Input
+                        value={sets}
+                        required
+                        type="number"
+                        onChange={(e) => {
+                          setSets(parseInt(e.target.value));
+                        }}
+                      />
+                    </FormControl>
+                  </>
+                )}
             </FormControl>
           </Stack>
           <Divider />
@@ -293,6 +305,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                     <ListItemContent>
                       <IconButton
                         onClick={() => {
+                          setIsDataDirty(true);
                           dispatch(removeExercise(exercise.exerciseName));
                         }}
                       >

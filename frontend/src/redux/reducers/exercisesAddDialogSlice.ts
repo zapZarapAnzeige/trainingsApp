@@ -10,7 +10,7 @@ const initialState: ExercisesAddDialogState = {
   value: {
     exerciseName: "",
     exerciseId: 0,
-    exerciseType: "cardio",
+    exerciseType: "Min",
     exercise: { minutes: 0 },
     inTraining: [],
     notInTraining: [],
@@ -60,7 +60,7 @@ const exercisesAddDialogSlice = createSlice({
       state.value = {
         exerciseName: "",
         exerciseId: 0,
-        exerciseType: "cardio",
+        exerciseType: "Min",
         exercise: { minutes: 0 },
         inTraining: [],
         notInTraining: [],
