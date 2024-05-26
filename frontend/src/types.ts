@@ -13,6 +13,12 @@ export type Exercise = {
   exercise: ExerciseCardio | ExerciseWeighted;
 };
 
+export type TrainingExercise = {
+  exerciseName: string;
+  exerciseId: number;
+  exerciseType: string;
+};
+
 export type ExerciseCardio = {
   minutes: number;
 };

@@ -85,7 +85,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
     if (open) {
       getExercises(auth())
         .then((exercises: Exercise[]) => {
-          console.log(exercises);
           setExercises(exercises);
         })
         .catch((error) => {
