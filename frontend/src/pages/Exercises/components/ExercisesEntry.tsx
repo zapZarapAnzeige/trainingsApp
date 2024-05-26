@@ -107,7 +107,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                       postExerciseNewUserRating(
                         auth(),
                         newValue ?? 0,
-                        exercisesEntryData.exerciseName
+                        exercisesEntryData.exerciseId
                       );
                     }}
                   />

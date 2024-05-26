@@ -210,12 +210,16 @@ export const postExercisesAdd = async (
 export const postExerciseNewUserRating = async (
   token: string,
   userRating: number,
-  exercise: string
+  exerciseId: number
 ) => {
-  axiosInstance.post("/ExerciseRating", undefined, {
-    ...addAuth(token),
-    data: { userRating: userRating, exercise: exercise },
-  });
+  axiosInstance.post(
+    "/ExerciseRating",
+    {},
+    {
+      ...addAuth(token),
+      params: { rating: userRating, exercise_id: exerciseId },
+    }
+  );
 };
 
 export const postCalendar = async (
