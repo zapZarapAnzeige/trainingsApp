@@ -268,8 +268,9 @@ def get_trainings(user_id: int):
                 User_current_performance,
                 and_(
                     Exercises.c.exercise_id == User_current_performance.c.exercise_id,
-                    Exercises.c.trainings_id == Trainings_plan.c.trainings_id,
-                    Exercises.c.user_id == Trainings_plan.c.user_id,
+                    User_current_performance.c.trainings_id
+                    == Trainings_plan.c.trainings_id,
+                    User_current_performance.c.user_id == Trainings_plan.c.user_id,
                 ),
                 isouter=True,
             )
@@ -323,11 +324,11 @@ def get_base_exercises(user_id: int):
             select(
                 Exercises.c.exercise_id,
                 Exercises.c.exercise_name,
-                Exercises.c.constant_unit_of_measure,
+                Exercises.c.constant_unit_of_measure.label("exercise_type"),
             ).select_from(Exercises)
         )
         .mappings()
-        .fetchall(),
+        .fetchall()
     )
 
 
