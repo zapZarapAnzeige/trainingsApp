@@ -191,9 +191,8 @@ export const postTrainingData = async (
   token: string,
   trainingData: Training
 ) => {
-  axiosInstance.post("/trainingSchedule", undefined, {
-    ...addAuth(token),
-    params: { trainingData: trainingData },
+  axiosInstance.post("/trainingSchedule", trainingData, {
+    headers: { Authorization: token, "Content-Type": "application/json" },
   });
 };
 
