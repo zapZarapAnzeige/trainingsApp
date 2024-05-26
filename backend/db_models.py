@@ -46,6 +46,7 @@ Exercises = Table(
     Column("exercise_id", Integer, primary_key=True, autoincrement=True),
     Column("exercise_name", String(255), nullable=False, unique=True),
     Column("description", Text, nullable=True),
+    Column("preview_image", BLOB, nullable=True),
     Column("constant_unit_of_measure", Enum("SxWdh", "Min"), nullable=False),
 )
 

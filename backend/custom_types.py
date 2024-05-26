@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Any
 from fastapi.types import Union
 from typing_extensions import TypedDict
 from datetime import datetime
@@ -47,6 +47,7 @@ class Unformatted_trainingsdata(TypedDict):
 
 
 class Unformatted_exercises(BaseModel):
+    preview_image: Any
     exercise_name: str
     exercise_id: int
     constant_unit_of_measure: Optional[str]
@@ -104,6 +105,7 @@ class Tags(TypedDict):
 class Formatted_exercises(Base_exercise, Tags):
     rating: Optional[float]
     reviews: Optional[int]
+    preview_image: Optional[str]
 
 
 class ExerciseDetail(BaseModel):

@@ -292,6 +292,7 @@ def get_all_exercises_for_user(user_id: int):
                 Exercises.c.exercise_id,
                 Exercises.c.constant_unit_of_measure,
                 Overall_Exercise_Ratings.c.rating,
+                Exercises.c.preview_image,
                 Overall_Exercise_Ratings.c.total_exercise_ratings,
                 Tags.c.tag_name,
                 Tags.c.is_primary_tag,
