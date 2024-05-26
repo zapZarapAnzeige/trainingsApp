@@ -264,7 +264,9 @@ async def get_tags(current_user=Depends(get_current_active_user)):
 
 @app.get("/exercises", response_model=List[Base_exercise])
 async def get_exercises(current_user=Depends(get_current_active_user)):
-    return get_base_exercises(current_user.get("user_id"))
+    a = get_base_exercises(current_user.get("user_id"))
+    print(a)
+    return a
 
 
 @app.get("/pastTrainings", response_model=formatted_history_trainings_data)

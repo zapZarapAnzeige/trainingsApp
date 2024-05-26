@@ -94,14 +94,6 @@ class Base_exercise(TypedDict):
     exercise_name: str
     exercise_id: int
     exercise_type: str
-    exercise: Union[
-        Exercise_cardio,
-        Exercise_weighted_formatted,
-        Exercise_weighted,
-        Exercise_cardio_trackable_measurement,
-        Exercise_weighted_formatted_trackable_measurement,
-        Exercise_weighted_trackable_measurement,
-    ]
 
 
 class Tags(TypedDict):

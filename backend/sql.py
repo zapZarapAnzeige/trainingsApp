@@ -324,11 +324,11 @@ def get_base_exercises(user_id: int):
             select(
                 Exercises.c.exercise_id,
                 Exercises.c.exercise_name,
-                Exercises.c.constant_unit_of_measure,
+                Exercises.c.constant_unit_of_measure.label("exercise_type"),
             ).select_from(Exercises)
         )
         .mappings()
-        .fetchall(),
+        .fetchall()
     )
 
 
