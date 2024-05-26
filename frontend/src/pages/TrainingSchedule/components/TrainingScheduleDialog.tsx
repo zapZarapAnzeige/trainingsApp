@@ -33,6 +33,7 @@ import {
   addExercise,
   removeExercise,
   clearAll,
+  setId,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
 import { getExercises, postTrainingData } from "../../../api";
@@ -73,6 +74,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
     dispatch(check ? addDay(checkboxDay) : dispatch(removeDay(checkboxDay)));
     setIsDataDirty(true);
   };
+
+  useEffect(() => {
+    if (editTraining) {
+      setId(trainingScheduleDialog.trainingId);
+    }
+  });
 
   useEffect(() => {
     if (open) {
