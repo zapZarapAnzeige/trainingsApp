@@ -21,8 +21,8 @@ import {
 } from "../../utils";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
-import pastCalendar from "../../example/examplePastCalendar.json";
-import futureCalendar from "../../example/exampleFutureCalendar.json";
+//import pastCalendar from "../../example/examplePastCalendar.json";
+//import futureCalendar from "../../example/exampleFutureCalendar.json";
 import { useAppSelector } from "../../hooks";
 import { useDispatch } from "react-redux";
 import {
@@ -39,7 +39,7 @@ export default function Calendar() {
   const currentCW = useAppSelector((state) => state.calendar.currentCW);
   const calendarData = useAppSelector((state) => state.calendar.calendarData);
 
-  /*useEffect(() => {
+  useEffect(() => {
     getPastTrainings(
       auth(),
       getMondayOfWeek(currentCW, new Date().getFullYear())
@@ -70,7 +70,7 @@ export default function Calendar() {
       .catch((error) => {
         console.error("Error fetching data", error);
       });
-  }, [currentCW]);*/
+  }, [currentCW]);
 
   return (
     <>
@@ -82,26 +82,30 @@ export default function Calendar() {
         sx={{ width: "100%", height: "100%", p: 2, overflow: "auto" }}
       >
         <Grid container spacing={1} sx={{ flexGrow: 1 }}>
-          {pastCalendar.map((calendarDayData: CalendarDayData) => {
-            return (
-              <Grid xs={12 / 7}>
-                <CalendarDay
-                  calendarDayData={calendarDayData}
-                  completable={true}
-                />
-              </Grid>
-            );
-          })}
-          {futureCalendar.map((calendarDayData: CalendarDayData) => {
-            return (
-              <Grid xs={12 / 7}>
-                <CalendarDay
-                  calendarDayData={calendarDayData}
-                  completable={false}
-                />
-              </Grid>
-            );
-          })}
+          {calendarData.pastTrainings.map(
+            (calendarDayData: CalendarDayData) => {
+              return (
+                <Grid xs={12 / 7}>
+                  <CalendarDay
+                    calendarDayData={calendarDayData}
+                    completable={true}
+                  />
+                </Grid>
+              );
+            }
+          )}
+          {calendarData.futureTrainings.map(
+            (calendarDayData: CalendarDayData) => {
+              return (
+                <Grid xs={12 / 7}>
+                  <CalendarDay
+                    calendarDayData={calendarDayData}
+                    completable={false}
+                  />
+                </Grid>
+              );
+            }
+          )}
           <Box
             sx={{
               width: "100%",
@@ -117,7 +121,10 @@ export default function Calendar() {
               >
                 {"Tagesziel: " +
                   calculateDayGoal(
-                    [...pastCalendar, ...futureCalendar],
+                    [
+                      ...calendarData.pastTrainings,
+                      ...calendarData.futureTrainings,
+                    ],
                     new Date().toISOString().split("T")[0]
                   ) +
                   "%"}
@@ -125,21 +132,27 @@ export default function Calendar() {
                   color="success"
                   determinate
                   value={calculateDayGoal(
-                    [...pastCalendar, ...futureCalendar],
+                    [
+                      ...calendarData.pastTrainings,
+                      ...calendarData.futureTrainings,
+                    ],
                     new Date().toISOString().split("T")[0]
                   )}
                 />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
                 {"Wochenziel: " +
-                  calculateWeekGoal([...pastCalendar, ...futureCalendar]) +
+                  calculateWeekGoal([
+                    ...calendarData.pastTrainings,
+                    ...calendarData.futureTrainings,
+                  ]) +
                   "%"}
                 <LinearProgress
                   color="success"
                   determinate
                   value={calculateWeekGoal([
-                    ...pastCalendar,
-                    ...futureCalendar,
+                    ...calendarData.pastTrainings,
+                    ...calendarData.futureTrainings,
                   ])}
                 />
               </Sheet>
