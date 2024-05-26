@@ -68,13 +68,15 @@ CREATE TABLE IF NOT EXISTS Exercises2Trainings_plans(
 CREATE TABLE IF NOT EXISTS User_current_performance (
     exercise_id INT NOT NULL,
     user_id INT NOT NULL,
+    trainings_id INT NOT NULL,
     minutes INT,
     number_of_repetition INT,
     number_of_sets INT,
     trackable_unit_of_measure VARCHAR(255),
     value_trackable_unit_of_measure DECIMAL(20, 3),
-    PRIMARY KEY ( exercise_id, user_id),
+    PRIMARY KEY ( exercise_id, user_id, trainings_id),
     FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE,
+    FOREIGN KEY (trainings_id) REFERENCES Trainings_plan (trainings_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS Trainings_plan_history (

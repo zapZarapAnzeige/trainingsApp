@@ -266,7 +266,11 @@ def get_trainings(user_id: int):
             )
             .join(
                 User_current_performance,
-                Exercises.c.exercise_id == User_current_performance.c.exercise_id,
+                and_(
+                    Exercises.c.exercise_id == User_current_performance.c.exercise_id,
+                    Exercises.c.trainings_id == Trainings_plan.c.trainings_id,
+                    Exercises.c.user_id == Trainings_plan.c.user_id,
+                ),
                 isouter=True,
             )
             .where(
@@ -289,11 +293,6 @@ def get_all_exercises_for_user(user_id: int):
                 Exercises.c.constant_unit_of_measure,
                 Overall_Exercise_Ratings.c.rating,
                 Overall_Exercise_Ratings.c.total_exercise_ratings,
-                User_current_performance.c.minutes,
-                User_current_performance.c.number_of_repetition,
-                User_current_performance.c.number_of_sets,
-                User_current_performance.c.value_trackable_unit_of_measure,
-                User_current_performance.c.trackable_unit_of_measure,
                 Tags.c.tag_name,
                 Tags.c.is_primary_tag,
             )
@@ -302,14 +301,6 @@ def get_all_exercises_for_user(user_id: int):
             .join(
                 Overall_Exercise_Ratings,
                 Overall_Exercise_Ratings.c.exercise_id == Exercises.c.exercise_id,
-                isouter=True,
-            )
-            .join(
-                User_current_performance,
-                and_(
-                    User_current_performance.c.exercise_id == Exercises.c.exercise_id,
-                    User_current_performance.c.user_id == user_id,
-                ),
                 isouter=True,
             )
         )
@@ -327,32 +318,20 @@ def get_all_unique_tags():
 
 
 def get_base_exercises(user_id: int):
-    return parse_exercises(
+    return (
         session.execute(
             select(
                 Exercises.c.exercise_id,
                 Exercises.c.exercise_name,
                 Exercises.c.constant_unit_of_measure,
-                User_current_performance.c.minutes,
-                User_current_performance.c.number_of_repetition,
-                User_current_performance.c.number_of_sets,
-                User_current_performance.c.value_trackable_unit_of_measure,
-                User_current_performance.c.trackable_unit_of_measure,
-            )
-            .select_from(Exercises)
-            .join(
-                User_current_performance,
-                and_(
-                    User_current_performance.c.exercise_id == Exercises.c.exercise_id,
-                    User_current_performance.c.user_id == user_id,
-                ),
-                isouter=True,
-            )
+            ).select_from(Exercises)
         )
         .mappings()
         .fetchall(),
-        True,
     )
+
+
+# here todo
 
 
 def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
@@ -443,6 +422,7 @@ def get_future_trainings_from_cur_date(user_id: int):
                 and_(
                     User_current_performance.c.exercise_id == Exercises.c.exercise_id,
                     User_current_performance.c.user_id == user_id,
+                    User_current_performance.c.trainings_id == Days.c.trainings_id,
                 ),
                 isouter=True,
             )
@@ -494,7 +474,11 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="No permission to edit training",
                 )
-            # TODO need day_id
+            session.execute(
+                update(Trainings_plan)
+                .where(Trainings_plan.c.trainings_id == trainings_data.trainingsId)
+                .values(trainings_name=trainings_data.name)
+            )
             current_days = (
                 session.execute(
                     select(Days.c.weekday).where(

@@ -54,6 +54,7 @@ User_current_performance = Table(
     metaData,
     Column("user_id", Integer, nullable=False),
     Column("exercise_id", Integer, nullable=False),
+    Column("trainings_id", Integer, nullable=False),
     Column("minutes", Integer, nullable=True),
     Column("number_of_repetition", Integer, nullable=True),
     Column("number_of_sets", Integer, nullable=True),
@@ -61,9 +62,12 @@ User_current_performance = Table(
     Column("trackable_unit_of_measure", String(255), nullable=True),
     ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
     ForeignKeyConstraint(
+        ["trainings_id"], ["Trainings_plan.trainings_id"], ondelete="CASCADE"
+    ),
+    ForeignKeyConstraint(
         ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
     ),
-    PrimaryKeyConstraint("user_id", "exercise_id"),
+    PrimaryKeyConstraint("user_id", "exercise_id", "trainings_id"),
 )
 
 Exercises2Trainings_plans = Table(

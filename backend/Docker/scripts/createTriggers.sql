@@ -35,7 +35,7 @@ BEGIN
         (SELECT LAST_INSERT_ID(), tp.user_id, FALSE, ex.exercise_id, minutes, ucp.number_of_repetition, ucp.number_of_sets,  ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure FROM Trainings_plan tp 
 		INNER JOIN Exercises2Trainings_plans e2t ON e2t.trainings_id = tp.trainings_id 
 		INNER JOIN Exercises ex ON e2t.exercise_id=ex.exercise_id 
-		LEFT OUTER JOIN User_current_performance ucp ON ucp.exercise_id=ex.exercise_id AND ucp.user_id = NEW.user_id 
+		LEFT OUTER JOIN User_current_performance ucp ON ucp.exercise_id=ex.exercise_id AND ucp.user_id = NEW.user_id  AND ucp.trainings_id=tp.trainings_id 
 		WHERE tp.trainings_id=NEW.trainings_id);
     END IF;
 END //
@@ -85,7 +85,7 @@ BEGIN
         END IF;
 
         INSERT INTO Exercises_history(trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure)
-         SELECT trainings_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id;
+         SELECT trainings_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id AND trainings_id=NEW.trainings_id;
     END LOOP;
 
     CLOSE history_cursor;
