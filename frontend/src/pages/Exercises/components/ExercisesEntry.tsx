@@ -22,6 +22,7 @@ import {
   setQuickInfo,
 } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
+import { changePage } from "../../../redux/reducers/currentPageSlice";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 //import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";

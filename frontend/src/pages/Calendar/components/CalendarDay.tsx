@@ -32,9 +32,6 @@ const CalendarDay: FC<CalendarDayProps> = ({
   completable,
 }) => {
   const dispatch = useAppDispatch();
-  const quickInfo = useAppSelector(
-    (state) => state.exercisesInfoDialog.quickInfo
-  );
 
   const handleInfoClick = (exerciseName: string) => {
     dispatch(setQuickInfo(exerciseName));
