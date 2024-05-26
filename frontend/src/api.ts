@@ -166,10 +166,10 @@ export const getExercisesData = async (token: string) => {
 
 // Add Dialog
 // done
-export const getExercisesAdd = async (token: string, exercise: string) => {
+export const getExercisesAdd = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesAdd", {
     ...addAuth(token),
-    params: { exercise: exercise },
+    params: { exercise_id: exerciseId },
   });
 
   return keysToCamelCase(response.data) as ExerciseAdd;
@@ -177,10 +177,10 @@ export const getExercisesAdd = async (token: string, exercise: string) => {
 
 // Info Dialog
 // done
-export const getExercisesInfo = async (token: string, exercise: string) => {
+export const getExercisesInfo = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesInfo", {
     ...addAuth(token),
-    params: { exercise: exercise },
+    params: { exercise_id: exerciseId },
   });
   return keysToCamelCase(response.data) as ExerciseInfo;
 };

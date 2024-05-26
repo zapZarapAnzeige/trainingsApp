@@ -44,7 +44,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   useEffect(() => {
     if (openAddDialog) {
-      getExercisesAdd(auth(), exercisesEntryData.exerciseName)
+      getExercisesAdd(auth(), exercisesEntryData.exerciseId)
         .then((exercisesAddDialogData: ExerciseAdd) => {
           dispatch(
             setExercisesAddDialog({
@@ -64,7 +64,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   useEffect(() => {
     if (openInfoDialog) {
-      getExercisesInfo(auth(), exercisesEntryData.exerciseName)
+      getExercisesInfo(auth(), exercisesEntryData.exerciseId)
         .then((exercisesInfoDialogData: ExerciseInfo) => {
           dispatch(
             setExercisesInfoDialog({
