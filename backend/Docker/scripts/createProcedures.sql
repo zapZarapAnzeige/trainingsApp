@@ -71,7 +71,7 @@ BEGIN
 		INNER JOIN Days d ON d.trainings_id = tp.trainings_id AND d.user_id = tp.user_id
 		INNER JOIN Exercises2Trainings_plans e2t ON tp.trainings_id = e2t.trainings_id
 		INNER JOIN Exercises ex ON e2t.exercise_id = ex.exercise_id
-        LEFT OUTER JOIN User_current_performance ucp ON ex.exercise_id = ucp.exercise_id AND ucp.user_id = @user_id_var
+        LEFT OUTER JOIN User_current_performance ucp ON ex.exercise_id = ucp.exercise_id AND ucp.user_id = @user_id_var AND tp.trainings_id=ucp.trainings_id
         WHERE tp.user_id = user_id_var AND d.weekday = DAYNAME(CURDATE());
     END LOOP;
 
