@@ -235,20 +235,10 @@ class post_trainingSchedule(BaseModel):
     exercises: List[post_trainingSchedule_Exercises]
 
 
-class post_Exercise_trainings(BaseModel):
-    exercise: float
+class post_Calendar(BaseModel):
     exerciseId: int
     completed: bool
-    date: str
-    trainingId: int
-
-
-class post_Exercise_trainings_converted(BaseModel):
-    exercise: float
-    exerciseId: int
-    completed: bool
-    date: datetime
-    trainingId: int
+    weight: int
 
 
 WEEKDAY_MAP = {
