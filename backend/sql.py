@@ -558,6 +558,10 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 )
             session.commit()
 
+            update_user_performance(
+                trainings_data.exercises, user_id, trainings_data.trainingsId
+            )
+
             return Response(status_code=status.HTTP_202_ACCEPTED)
 
     except HTTPException as e:
@@ -567,6 +571,16 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
         print(e)
         session.rollback()
         return False
+
+
+def update_user_performance(
+    exercises: List[post_trainingSchedule_Exercises], user_id: int, trainings_id
+):
+    for exercise in exercises:
+        session.execute(insert(User_current_performance).values())
+
+
+# .on_duplicate_key_update(rating=rating)
 
 
 def insert_days(days: List[str], user_id: int, trainings_id: int):

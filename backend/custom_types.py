@@ -212,11 +212,20 @@ class response_model_post_chat(BaseModel):
     bio: Optional[str]
 
 
+class Exercise_cardio_frontend(BaseModel):
+    repetitionAmount: int
+    setAmount: int
+
+
+class Exercise_weighted_frontend(BaseModel):
+    minutes: int
+
+
 class post_trainingSchedule_Exercises(BaseModel):
     exerciseName: str
     exerciseId: int
     exerciseType: str
-    exercise: Union[Exercise_cardio, Exercise_weighted]
+    exercise: Union[Exercise_cardio_frontend, Exercise_weighted_frontend]
 
 
 class post_trainingSchedule(BaseModel):
