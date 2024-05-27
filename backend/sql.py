@@ -444,17 +444,14 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     trainings_name=trainings_data.name, user_id=user_id
                 )
             )
-            session.commit()
-
-            insert_days(
-                trainings_data.onDays, user_id, insert_training.inserted_primary_key[0]
-            )
-            session.commit()
 
             insert_Exercises2Trainings_plans(
                 insert_training.inserted_primary_key[0], trainings_data.exercises
             )
-            session.commit()
+
+            insert_days(
+                trainings_data.onDays, user_id, insert_training.inserted_primary_key[0]
+            )
 
             update_user_performance(
                 trainings_data.exercises,
@@ -482,7 +479,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 .where(Trainings_plan.c.training_id == trainings_data.trainingId)
                 .values(trainings_name=trainings_data.name)
             )
-            session.commit()
+
             current_days = (
                 session.execute(
                     select(Days.c.weekday).where(
@@ -495,8 +492,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 .scalars()
                 .all()
             )
-
-            session.commit()
 
             session.execute(
                 delete(Days).where(
@@ -511,7 +506,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     )
                 )
             )
-            session.commit()
 
             days_to_insert = [
                 {
@@ -524,7 +518,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             ]
             if len(days_to_insert) > 0:
                 session.execute(insert(Days).values(days_to_insert))
-            session.commit()
 
             current_exercises2trainings = (
                 session.execute(
@@ -619,19 +612,16 @@ def get_user_performance_exercise(
 
 
 def insert_days(days: List[str], user_id: int, training_id: int):
+    day_values = [
+        {
+            "weekday": day,
+            "user_id": user_id,
+            "training_id": training_id,
+        }
+        for day in days
+    ]
     if len(days) > 0:
-        session.execute(
-            insert(Days).values(
-                [
-                    {
-                        "weekday": day,
-                        "user_id": user_id,
-                        "training_id": training_id,
-                    }
-                    for day in days
-                ]
-            )
-        )
+        session.execute(insert(Days).values(day_values))
         session.commit()
 
 
