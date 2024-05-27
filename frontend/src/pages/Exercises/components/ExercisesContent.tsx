@@ -1,9 +1,6 @@
 import { Sheet, Grid } from "@mui/joy";
 import ExercisesEntry from "./ExercisesEntry";
 import { useAppSelector } from "../../../hooks";
-
-// TESTDATEN // Benötigt werden Daten vom Typ Training
-// import exercisesTestData from "../../../example/exampleExerciseEntry.json";
 import { ExercisesEntryData } from "../../../types";
 import { useEffect, useState } from "react";
 import { getExercisesData } from "../../../api";
@@ -15,10 +12,6 @@ export default function ExercisesContent() {
   const [sortedEntries, setSortedEntries] = useState<ExercisesEntryData[]>([]);
   const [exercisesEntryData, setExercisesEntryData] =
     useState<ExercisesEntryData[]>();
-
-  useEffect(() => {
-    console.log(exercisesEntryData);
-  }, [exercisesEntryData]);
 
   useEffect(() => {
     getExercisesData(auth())

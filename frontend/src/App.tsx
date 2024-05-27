@@ -73,7 +73,7 @@ export default function App() {
         );
       case "exercises":
         return <Exercises />;
-      case "help":
+      case "tips":
         return <Help />;
       case "about":
         return <About />;

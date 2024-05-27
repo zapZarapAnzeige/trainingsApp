@@ -171,12 +171,12 @@ export default function Sidebar() {
 
           <ListItem>
             <ListItemButton
-              onClick={() => dispatch(changePage("help"))}
-              selected={isSelected("help")}
+              onClick={() => dispatch(changePage("tips"))}
+              selected={isSelected("tips")}
             >
               <HelpIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("help")}</Typography>
+                <Typography level="title-sm">{getPageName("tips")}</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>

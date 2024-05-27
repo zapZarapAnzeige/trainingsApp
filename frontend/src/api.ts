@@ -225,7 +225,6 @@ export const postCalendar = async (
   token: string,
   pastTrainings: CalendarDayData[]
 ) => {
-  console.log(pastTrainings);
   axiosInstance.post(
     "/Calendar",
     pastTrainings.flatMap((day) =>

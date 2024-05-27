@@ -38,7 +38,7 @@ export default function TrainingScheduleInterface() {
         <Box>
           <IconButton
             aria-label="Info"
-            onClick={() => dispatch(changePage("help"))}
+            onClick={() => dispatch(changePage("tips"))}
           >
             <HelpOutlineIcon />
           </IconButton>

@@ -65,9 +65,16 @@ type Tags = {
   secondaryTags: string[];
 };
 
+export type InTraining = {
+  exerciseId: number;
+  exerciseName: string;
+  trainingsId: number;
+  trainingsName: string;
+};
+
 export type ExerciseAdd = {
-  inTraining: string[];
-  notInTraining: string[];
+  inTraining: InTraining[];
+  notInTraining: InTraining[];
 };
 
 export type ExercisesAddDialog = Exercise & ExerciseAdd;

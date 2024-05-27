@@ -1,6 +1,6 @@
 import { IntlShape } from "react-intl";
 import { weekdays, weekdaysNames } from "./constants";
-import { CalendarData, CalendarDayData } from "./types";
+import { CalendarData, CalendarDayData, InTraining } from "./types";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {
@@ -39,8 +39,8 @@ export function getPageName(page: string) {
       return "Meine Chats";
     case "exercises":
       return "Meine Übungen";
-    case "help":
-      return "Hilfe";
+    case "tips":
+      return "Tipps";
     case "about":
       return "Über uns";
     case "profile":
@@ -202,18 +202,14 @@ export function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
 }
 
 export function moveString(
-  sourceArray: string[],
-  targetArray: string[],
-  searchString: string
+  sourceArray: InTraining[],
+  targetArray: InTraining[],
+  id: number
 ): void {
-  const index = sourceArray.indexOf(searchString);
+  const index = sourceArray.map((source) => source.trainingsId).indexOf(id);
   if (index !== -1) {
     const removedItem = sourceArray.splice(index, 1)[0];
     targetArray.push(removedItem);
-  } else {
-    console.log(
-      `Der String "${searchString}" wurde nicht im Quellarray gefunden.`
-    );
   }
 }
 

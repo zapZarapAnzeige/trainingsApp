@@ -141,12 +141,14 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                           setIsDataDirty(true);
                           dispatch(
                             e.target.checked
-                              ? addToTraining(training)
-                              : removeFromTraining(training)
+                              ? addToTraining(training.trainingsId)
+                              : removeFromTraining(training.trainingsId)
                           );
                         }}
                       />
-                      <Typography fontSize="lg">{training}</Typography>
+                      <Typography fontSize="lg">
+                        {training.trainingsName}
+                      </Typography>
                     </Stack>
                   </ListItemContent>
                 </ListItem>

@@ -105,7 +105,6 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             alt=""
           />
         </AspectRatio>
-        <Stack></Stack>
         <CardContent>
           <Stack direction="row" justifyContent="space-between" spacing={1}>
             <Stack direction="column">

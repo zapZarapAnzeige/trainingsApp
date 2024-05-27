@@ -102,15 +102,23 @@ class Tags(TypedDict):
     secondary_tags: List[str]
 
 
+class ExerciseDetail(BaseModel):
+    exercise_id: int
+    exercise_name: str
+    exercise: Union[
+        Exercise_cardio,
+        Exercise_weighted_formatted,
+        Exercise_weighted,
+        Exercise_cardio_trackable_measurement,
+        Exercise_weighted_formatted_trackable_measurement,
+        Exercise_weighted_trackable_measurement,
+    ]
+
+
 class Formatted_exercises(Base_exercise, Tags):
     rating: Optional[float]
     reviews: Optional[int]
     preview_image: Optional[str]
-
-
-class ExerciseDetail(BaseModel):
-    exercise_id: int
-    exercise_name: str
     exercise: Union[
         Exercise_cardio,
         Exercise_weighted_formatted,
