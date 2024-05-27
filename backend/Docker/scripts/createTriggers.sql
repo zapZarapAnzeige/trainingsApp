@@ -51,7 +51,6 @@ BEGIN
 	IF OLD.weekday =  DAYNAME(CURDATE()) THEN
 		-- needed when trainingsplan is twice on the same day so only one is deleted
 		-- ON DELETE CASCADE deletes Exercises_history
-        INSERT INTO LOGGING(TIMESTAMP, `INFO`) VALUES(CURDATE(), "days_on_delete");
 		DELETE FROM Trainings_plan_history WHERE day = CURDATE() AND user_id=OLD.user_id AND training_id=OLD.training_id LIMIT 1;
     END IF;
 END //

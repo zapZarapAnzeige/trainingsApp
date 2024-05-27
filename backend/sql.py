@@ -543,7 +543,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     )
                 )
             )
-            session.commit()
 
             exercises_to_insert = [
                 {
@@ -557,7 +556,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 session.execute(
                     insert(Exercises2Trainings_plans).values(exercises_to_insert)
                 )
-            session.commit()
 
             update_user_performance(
                 trainings_data.exercises, user_id, trainings_data.trainingId
@@ -578,15 +576,17 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 def update_user_performance(
     exercises: List[post_trainingSchedule_Exercises], user_id: int, training_id
 ):
+    print(type(exercises[0].exercise))
     performances = [
         {
             "user_id": user_id,
             "exercise_id": exercise.exerciseId,
             "training_id": training_id,
-            **get_user_performance_exercise(exercise.exercise),
+            **get_user_performance_exercise(dict(exercise.exercise)),
         }
         for exercise in exercises
     ]
+    print(performances)
     insert_stmt = insert(User_current_performance).values(performances)
     if len(performances) > 0:
         session.execute(
@@ -608,7 +608,6 @@ def get_user_performance_exercise(
         else None,
         "number_of_sets": exercise["setAmount"] if "setAmount" in exercise else None,
     }
-    pass
 
 
 def insert_days(days: List[str], user_id: int, training_id: int):
@@ -730,16 +729,15 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
         session.commit()
 
     if len(training_ids_to_insert) > 0:
-        session.execute(
-            insert(User_current_performance).values(
-                [
-                    {
-                        "user_id": user_id,
-                        "exercise_id": exercise_add.exercise_id,
-                        "training_id": id_,
-                    }
-                    for id_ in training_ids_to_insert
-                ]
-            )
-        )
+        performance_to_insert = [
+            {
+                "user_id": user_id,
+                "exercise_id": exercise_add.exercise_id,
+                "training_id": id_,
+                **get_user_performance_exercise(exercise_add.exercise),
+            }
+            for id_ in training_ids_to_insert
+        ]
+        print(performance_to_insert)
+        session.execute(insert(User_current_performance).values(performance_to_insert))
         session.commit()
