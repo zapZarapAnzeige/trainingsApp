@@ -357,7 +357,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
           <IconButton
             variant="solid"
             color="primary"
-            disabled={!isDataDirty}
+            disabled={!isDataDirty || trainingScheduleDialog.name === ""}
             onClick={handleSave}
           >
             <CheckIcon />
