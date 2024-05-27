@@ -41,6 +41,7 @@ class Unformatted_trainingsdata(TypedDict):
     weekday: str
     exercise_name: Optional[str]
     exercise_id: Optional[int]
+    constant_unit_of_measure: str
     minutes: int
     number_of_repetition: int
     number_of_sets: int
@@ -105,6 +106,7 @@ class Tags(TypedDict):
 class ExerciseDetail(BaseModel):
     exercise_id: int
     exercise_name: str
+    exercise_type: str
     exercise: Union[
         Exercise_cardio,
         Exercise_weighted_formatted,
@@ -223,12 +225,12 @@ class response_model_post_chat(BaseModel):
 
 
 class Exercise_cardio_frontend(BaseModel):
-    repetitionAmount: int
-    setAmount: int
+    repetitionAmount: Optional[int]
+    setAmount: Optional[int]
 
 
 class Exercise_weighted_frontend(BaseModel):
-    minutes: int
+    minutes: Optional[int]
 
 
 class post_trainingSchedule_Exercises(BaseModel):

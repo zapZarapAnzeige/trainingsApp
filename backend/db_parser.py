@@ -37,7 +37,13 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
                     "training_id": d.training_id,
                     "name": d.trainings_name,
                     "on_days": [d.weekday] if d.weekday else [],
-                    "exercises": [get_exercise_formatted(d)]
+                    "exercises": [
+                        get_exercise_formatted(
+                            d, {}, {"exercise_type": d.constant_unit_of_measure}
+                        )
+                    ]
+                    if d.exercise_id
+                    else []
                     if d.exercise_id is not None
                     else [],
                 }
@@ -45,21 +51,30 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
         else:
             if d.weekday not in obj["on_days"] and d.weekday:
                 obj["on_days"].append(d.weekday)
-            if d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]:
-                obj["exercises"].append(get_exercise_formatted(d))
+            if (
+                d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]
+                and d.exercise_id
+            ):
+                obj["exercises"].append(
+                    get_exercise_formatted(
+                        d, {}, {"exercise_type": d.constant_unit_of_measure}
+                    )
+                )
+    print(formatted_data)
     return check_if_data_exists(formatted_data, "training_id")
 
 
-def get_exercise_formatted(d, additional_data={}):
+def get_exercise_formatted(d, additional_exercise_data={}, additional_data={}):
     return {
+        **additional_data,
         "exercise_id": d.exercise_id,
         "exercise_name": d.exercise_name,
-        "exercise": {"minutes": d.minutes, **additional_data}
+        "exercise": {"minutes": d.minutes, **additional_exercise_data}
         if d.constant_unit_of_measure == "Min"
         else {
             "repetition_amount": d.number_of_repetition,
             "set_amount": d.number_of_sets,
-            **additional_data,
+            **additional_exercise_data,
         },
     }
 
