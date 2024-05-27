@@ -17,7 +17,7 @@ from db_models import (
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct, literal, delete, update
+from sqlalchemy import select, and_, distinct, literal, delete, update, case
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
 from db_parser import parse_trainings, parse_exercises, parse_past_or_future_trainings
@@ -387,11 +387,10 @@ def get_weekdays(date_diff: bool):
         return WEEKDAY_MAP.keys()
     days_start_ind = 6 - datetime.now().weekday()
 
-    return [WEEKDAY_MAP.keys()[i * -1] for i in range(days_start_ind, 0, -1)]
+    return [list(WEEKDAY_MAP.keys())[i * -1] for i in range(days_start_ind, 0, -1)]
 
 
 def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
-    print(get_weekdays(date_diff))
     return parse_past_or_future_trainings(
         session.execute(
             select(
@@ -635,21 +634,49 @@ def insert_Exercises2Trainings_plans(
     )
 
 
-def save_calendar_data(trainings: List[post_Calendar], user_id: int):
-    for exercise in trainings:
-        session.execute(
-            update(Exercises_history)
-            .values(
-                completed=exercise.completed,
-                value_trackable_unit_of_measure=exercise.weight,
-            )
-            .where(
-                and_(
-                    Exercises_history.c.exercises_history_id == exercise.exerciseId,
-                    Exercises_history.c.user_id == user_id,
+def save_calendar_data(trainings: List[dict], user_id: int):
+    print(trainings)
+    completed_case = case(
+        *[
+            (
+                (
+                    Exercises_history.c.exercises_history_id == exercise["exerciseId"],
+                    exercise["completed"],
                 )
             )
+            for exercise in trainings
+        ],
+    )
+
+    weight_case = case(
+        *[
+            (
+                Exercises_history.c.exercises_history_id == exercise["exerciseId"],
+                exercise["weight"],
+            )
+            for exercise in trainings
+        ]
+    )
+
+    exercise_ids = [exercise["exerciseId"] for exercise in trainings]
+
+    session.execute(
+        (
+            update(Exercises_history)
+            .where(
+                and_(
+                    Exercises_history.c.exercises_history_id.in_(exercise_ids),
+                    Exercises_history.c.user_id
+                    == user_id,  # prevents that other users can edit trainingsplan if they know the id
+                )
+            )
+            .values(
+                completed=completed_case, value_trackable_unit_of_measure=weight_case
+            )
         )
+    )
+
+    session.commit()
 
 
 def get_exercise_name_by_id(exercise_id: int):

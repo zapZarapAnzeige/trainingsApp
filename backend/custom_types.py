@@ -237,10 +237,10 @@ class post_trainingSchedule(BaseModel):
     exercises: List[post_trainingSchedule_Exercises]
 
 
-class post_Calendar(BaseModel):
+class post_Calendar(TypedDict):
     exerciseId: int
     completed: bool
-    weight: int
+    weight: Optional[int]
 
 
 WEEKDAY_MAP = {

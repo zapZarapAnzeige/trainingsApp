@@ -14,13 +14,21 @@ import {
 } from "@mui/joy";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { FC } from "react";
-import { CalendarDayData, CalendarExercise } from "../../../types";
+import {
+  CalendarDayData,
+  CalendarExercise,
+  isExerciseWeighted,
+} from "../../../types";
 import { getWeekday } from "../../../utils";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { setIsDataDirty } from "../../../redux/reducers/calendarSlice";
+import {
+  setCalendarData,
+  setIsDataDirty,
+} from "../../../redux/reducers/calendarSlice";
 import { changePage } from "../../../redux/reducers/currentPageSlice";
 import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
 import { setQuickInfo } from "../../../redux/reducers/exercisesInfoDialogSlice";
+import { CalendarCheckbox } from "./CalendarCheckbox";
 
 type CalendarDayProps = {
   calendarDayData: CalendarDayData;
@@ -32,6 +40,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
   completable,
 }) => {
   const dispatch = useAppDispatch();
+  const calendarData = useAppSelector((state) => state.calendar.calendarData);
 
   const handleInfoClick = (exerciseName: string) => {
     dispatch(setQuickInfo(exerciseName));
@@ -81,21 +90,18 @@ const CalendarDay: FC<CalendarDayProps> = ({
                       </ListItemContent>
                     </ListItem>
                     <Divider />
-                    {"minutes" in exercise.exercise ? (
+                    {!isExerciseWeighted(exercise.exercise) ? (
                       <ListItem sx={{ flexGrow: 6 }}>
                         <ListItemContent>
                           <Stack direction="row" justifyContent="space-between">
                             <Typography>
                               {exercise.exercise.minutes} Min.
                             </Typography>
-                            <Checkbox
-                              disabled={!completable}
-                              color={completable ? "primary" : "neutral"}
-                              onClick={() => {
-                                if (completable) {
-                                  dispatch(setIsDataDirty(true));
-                                }
-                              }}
+                            <CalendarCheckbox
+                              completable={completable}
+                              calendarData={calendarData}
+                              exercise={exercise}
+                              training={training}
                             />
                           </Stack>
                         </ListItemContent>
@@ -108,18 +114,58 @@ const CalendarDay: FC<CalendarDayProps> = ({
                               {exercise.exercise.setAmount} x{" "}
                               {exercise.exercise.repetitionAmount} Wdh.
                             </Typography>
-                            <Checkbox />
+                            <CalendarCheckbox
+                              completable={completable}
+                              calendarData={calendarData}
+                              exercise={exercise}
+                              training={training}
+                            />
                           </Stack>
                         </ListItemContent>
                       </ListItem>
                     )}
                     <Divider />
-                    {"setAmount" in exercise.exercise && (
+                    {isExerciseWeighted(exercise.exercise) && (
                       <FormControl>
-                        <FormLabel>
-                          {"setAmount" in exercise.exercise && "KG"}
-                        </FormLabel>
-                        <Input required type="number" />
+                        <FormLabel>{"KG"}</FormLabel>
+                        <Input
+                          required
+                          type="number"
+                          value={exercise.exercise.weight}
+                          onChange={(e) => {
+                            dispatch(setIsDataDirty(true));
+                            dispatch(
+                              setCalendarData({
+                                pastTrainings: calendarData.pastTrainings.map(
+                                  (day) => ({
+                                    ...day,
+                                    trainings: day.trainings.map((t) => ({
+                                      ...t,
+                                      exercises:
+                                        t.trainingId === training.trainingId
+                                          ? t.exercises.map((ex) => ({
+                                              ...ex,
+                                              exercise:
+                                                exercise.exerciseId ===
+                                                  ex.exerciseId &&
+                                                isExerciseWeighted(ex.exercise)
+                                                  ? {
+                                                      ...ex.exercise,
+                                                      weight: parseInt(
+                                                        e.target.value
+                                                      ),
+                                                    }
+                                                  : ex.exercise,
+                                            }))
+                                          : t.exercises,
+                                    })),
+                                  })
+                                ),
+                                futureTrainings: calendarData.futureTrainings,
+                              })
+                            );
+                          }}
+                        />
                       </FormControl>
                     )}
                   </>

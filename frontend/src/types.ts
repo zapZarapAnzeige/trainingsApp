@@ -146,6 +146,16 @@ export enum DismissDialogType {
   ERROR = "error",
 }
 
+export const isExerciseWeighted = (
+  value:
+    | ExerciseCardio
+    | (ExerciseWeighted & {
+        weight: number;
+      })
+): value is ExerciseWeighted & { weight: number } => {
+  return "repetitionAmount" in value && "setAmount" in value;
+};
+
 export const isSingleChatHistory = (
   value: SingleChatHistory | WSError
 ): value is SingleChatHistory => {

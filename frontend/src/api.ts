@@ -4,6 +4,7 @@ import {
   CalendarDayData,
   Exercise,
   ExerciseAdd,
+  isExerciseWeighted,
   ExerciseInfo,
   ExercisesAddDialog,
   ExercisesEntryData,
@@ -224,12 +225,15 @@ export const postCalendar = async (
   token: string,
   pastTrainings: CalendarDayData[]
 ) => {
+  console.log(pastTrainings);
   axiosInstance.post(
     "/Calendar",
-    pastTrainings.map((day) =>
-      day.trainings.map((training) =>
+    pastTrainings.flatMap((day) =>
+      day.trainings.flatMap((training) =>
         training.exercises.map((exercise) => ({
-          weight: exercise.exercise,
+          weight: isExerciseWeighted(exercise.exercise)
+            ? exercise.exercise.weight
+            : null,
           exerciseId: exercise.exerciseId,
           completed: exercise.completed,
         }))
