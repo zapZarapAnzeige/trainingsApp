@@ -11,7 +11,7 @@ import {
   Training,
   TrainingExercise,
 } from "./types";
-import { keysToCamelCase } from "./utils";
+import { keysToCamelCase, modifyDateKeys } from "./utils";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -126,7 +126,7 @@ export const getPastTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return keysToCamelCase(response.data) as CalendarDayData[];
+  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
 //done
 export const getFutureTrainings = async (token: string, week: string) => {
@@ -135,7 +135,7 @@ export const getFutureTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return keysToCamelCase(response.data) as CalendarDayData[];
+  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
 
 //done

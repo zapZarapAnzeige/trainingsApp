@@ -18,6 +18,7 @@ import {
   calculateDayGoal,
   calculateWeekGoal,
   getMondayOfWeek,
+  roundToTwoDecimalPlaces,
 } from "../../utils";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
@@ -110,12 +111,14 @@ export default function Calendar() {
                 sx={{ mb: 1, borderRadius: 5, width: "100%", p: 2 }}
               >
                 {"Tagesziel: " +
-                  calculateDayGoal(
-                    [
-                      ...calendarData.pastTrainings,
-                      ...calendarData.futureTrainings,
-                    ],
-                    new Date().toISOString().split("T")[0]
+                  roundToTwoDecimalPlaces(
+                    calculateDayGoal(
+                      [
+                        ...calendarData.pastTrainings,
+                        ...calendarData.futureTrainings,
+                      ],
+                      new Date().toISOString().split("T")[0]
+                    )
                   ) +
                   "%"}
                 <LinearProgress
@@ -132,10 +135,12 @@ export default function Calendar() {
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
                 {"Wochenziel: " +
-                  calculateWeekGoal([
-                    ...calendarData.pastTrainings,
-                    ...calendarData.futureTrainings,
-                  ]) +
+                  roundToTwoDecimalPlaces(
+                    calculateWeekGoal([
+                      ...calendarData.pastTrainings,
+                      ...calendarData.futureTrainings,
+                    ])
+                  ) +
                   "%"}
                 <LinearProgress
                   color="success"
