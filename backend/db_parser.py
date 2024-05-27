@@ -186,3 +186,21 @@ def get_date_from_weekday(day: Union[datetime, str]):
     if dif_from_curdate < 0:
         dif_from_curdate += 7
     return date.today() + timedelta(days=dif_from_curdate)
+
+
+def parse_exercise_for_dialog(data, exercise_id: int):
+    in_training = {}
+    not_in_training = {}
+    for d in data:
+        if d["exercise_id"] == exercise_id:
+            in_training[d["trainings_id"]] = d
+        else:
+            not_in_training[d["trainings_id"]] = {**d, "exercise_id": exercise_id}
+
+    for k in list(not_in_training.keys()):
+        if k in in_training.keys():
+            del not_in_training[k]
+    return {
+        "in_training": list(in_training.values()),
+        "not_in_training": list(not_in_training.values()),
+    }

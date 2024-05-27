@@ -19,6 +19,7 @@ from sql import (
     save_trainings_data,
     save_calendar_data,
     get_exercise_name_by_id,
+    save_exercise_to_trainings,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -41,6 +42,8 @@ from custom_types import (
     response_model_post_chat,
     post_trainingSchedule,
     post_Calendar,
+    Post_ExercisesAdd,
+    Response_model_ExercisesAdd,
 )
 from datetime import timedelta, datetime
 from fastapi.responses import JSONResponse
@@ -230,7 +233,7 @@ async def get_user_data(current_user=Depends(get_current_active_user)):
     return {**current_user, **profile_picture}
 
 
-@app.get("/exercisesAdd")
+@app.get("/exercisesAdd", response_model=Response_model_ExercisesAdd)
 async def get_exercise_add(
     exercise_id: int, current_user=Depends(get_current_active_user)
 ):
@@ -307,3 +310,10 @@ async def save_Calendar(
     current_user=Depends(get_current_active_user),
 ):
     return save_calendar_data(trainings, current_user.get("user_id"))
+
+
+@app.put("/ExercisesAdd")
+async def save_exercise_add(
+    exercise_add: Post_ExercisesAdd, current_user=Depends(get_current_active_user)
+):
+    save_exercise_to_trainings(exercise_add, current_user.get("user_id"))

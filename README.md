@@ -39,9 +39,11 @@ v12.22.9
 
 ## TODOS:
 
-| Aufgabe | frontend | backend | Status |
-| ------- | -------- | ------- | ------ |
-| Example | D        | C       | Offen  |
+| Aufgabe                                                    | frontend | backend | Status |
+| ---------------------------------------------------------- | -------- | ------- | ------ |
+| Nur einmal wenn Kalendar nach vorne springt Daten abfragen | D        |         | Offen  |
+| Datenvalidierung Backend                                   | C        |         |        |
+| Backend Typen verbessern                                   | C        |         |        |
 
 fickma link:
 https://bcwgruppe.sharepoint.com/:u:/s/Anwendungsprojekt-Traningsapp/ETrlmAnwdjFHvX2atQ2fns4Bid7_Z8NWUYg1-pFcPOEo9Q?e=PMCJuX

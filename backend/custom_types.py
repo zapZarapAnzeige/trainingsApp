@@ -245,10 +245,41 @@ class post_trainingSchedule(BaseModel):
     exercises: List[post_trainingSchedule_Exercises]
 
 
-class post_Calendar(TypedDict):
+class post_Calendar(BaseModel):
     exerciseId: int
     completed: bool
     weight: Optional[int]
+
+
+class In_training_camel_case(BaseModel):
+    exerciseId: int
+    trainingsId: int
+    trainingsName: str
+
+
+class In_training(BaseModel):
+    exercise_id: int
+    trainings_id: int
+    trainings_name: str
+
+
+class Post_ExercisesAdd(BaseModel):
+    in_training: List[In_training_camel_case]
+    not_in_training: List[In_training_camel_case]
+    exercise_id: int
+    exercise: Union[
+        Exercise_cardio,
+        Exercise_weighted_formatted,
+        Exercise_weighted,
+        Exercise_cardio_trackable_measurement,
+        Exercise_weighted_formatted_trackable_measurement,
+        Exercise_weighted_trackable_measurement,
+    ]
+
+
+class Response_model_ExercisesAdd(BaseModel):
+    in_training: List[In_training]
+    not_in_training: List[In_training]
 
 
 WEEKDAY_MAP = {
