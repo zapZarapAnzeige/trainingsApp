@@ -201,9 +201,18 @@ export const postExercisesAdd = async (
   token: string,
   exercisesAdd: ExercisesAddDialog
 ) => {
-  axiosInstance.put("/ExercisesAdd", exercisesAdd, {
-    ...addAuth(token, { "Content-Type": "application/json" }),
-  });
+  axiosInstance.put(
+    "/ExercisesAdd",
+    {
+      exercise_id: exercisesAdd.exerciseId,
+      in_training: exercisesAdd.inTraining,
+      not_in_training: exercisesAdd.notInTraining,
+      exercise: exercisesAdd.exercise,
+    },
+    {
+      ...addAuth(token, { "Content-Type": "application/json" }),
+    }
+  );
 };
 //done
 export const postExerciseNewUserRating = async (

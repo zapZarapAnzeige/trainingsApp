@@ -17,15 +17,21 @@ from db_models import (
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct, literal, delete, update, case
+from sqlalchemy import select, and_, distinct, literal, delete, update, case, not_
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional
-from db_parser import parse_trainings, parse_exercises, parse_past_or_future_trainings
+from db_parser import (
+    parse_trainings,
+    parse_exercises,
+    parse_past_or_future_trainings,
+    parse_exercise_for_dialog,
+)
 from custom_types import (
     WEEKDAY_MAP,
     post_trainingSchedule,
     post_trainingSchedule_Exercises,
     post_Calendar,
+    Post_ExercisesAdd,
 )
 
 
@@ -135,16 +141,15 @@ async def save_exercise_rating(rating: int, exercise_id: int, user_id: int):
 
 
 def get_exercise_for_dialog(exercise_id: int, user_id: int):
-    result = (
+    return parse_exercise_for_dialog(
         session.execute(
             select(
                 Trainings_plan.c.trainings_id,
                 Trainings_plan.c.trainings_name,
-                Exercises.c.exercise_name,
                 Exercises.c.exercise_id,
             )
             .select_from(Trainings_plan)
-            .where(and_(Trainings_plan.c.user_id == user_id))
+            .where(Trainings_plan.c.user_id == user_id)
             .join(
                 Exercises2Trainings_plans,
                 Exercises2Trainings_plans.c.trainings_id
@@ -158,23 +163,9 @@ def get_exercise_for_dialog(exercise_id: int, user_id: int):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(),
+        exercise_id,
     )
-    in_training = {}
-    not_in_training = {}
-    for val in result:
-        if val["exercise_id"] == exercise_id:
-            in_training[val["trainings_id"]] = val
-        else:
-            not_in_training[val["trainings_id"]] = val
-
-    for k in list(not_in_training.keys()):
-        if k in in_training.keys():
-            del not_in_training[k]
-    return {
-        "in_training": list(in_training.values()),
-        "not_in_training": list(not_in_training.values()),
-    }
 
 
 async def find_trainingspartner(plz: str, matched_people: List[int]):
@@ -576,7 +567,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
         session.rollback()
         raise e
     except Exception as e:
-        print(e)
+        raise e
         session.rollback()
         return False
 
@@ -595,7 +586,7 @@ def update_user_performance(
         }
         for exercise in exercises
     ]
-    for exercise in exercises:
+    if len(performances) > 0:
         session.execute(
             insert(User_current_performance)
             .values(performances)
@@ -604,44 +595,45 @@ def update_user_performance(
 
 
 def insert_days(days: List[str], user_id: int, trainings_id: int):
-    session.execute(
-        insert(Days).values(
-            [
-                {
-                    "weekday": day,
-                    "user_id": user_id,
-                    "trainings_id": trainings_id,
-                }
-                for day in days
-            ]
+    if len(days) > 0:
+        session.execute(
+            insert(Days).values(
+                [
+                    {
+                        "weekday": day,
+                        "user_id": user_id,
+                        "trainings_id": trainings_id,
+                    }
+                    for day in days
+                ]
+            )
         )
-    )
 
 
 def insert_Exercises2Trainings_plans(
     trainings_id: int, exercises: List[post_trainingSchedule_Exercises]
 ):
-    session.execute(
-        insert(Exercises2Trainings_plans).values(
-            [
-                {
-                    "trainings_id": trainings_id,
-                    "exercise_id": ex.exerciseId,
-                }
-                for ex in exercises
-            ]
+    if len(exercises) > 0:
+        session.execute(
+            insert(Exercises2Trainings_plans).values(
+                [
+                    {
+                        "trainings_id": trainings_id,
+                        "exercise_id": ex.exerciseId,
+                    }
+                    for ex in exercises
+                ]
+            )
         )
-    )
 
 
 def save_calendar_data(trainings: List[dict], user_id: int):
-    print(trainings)
     completed_case = case(
         *[
             (
                 (
-                    Exercises_history.c.exercises_history_id == exercise["exerciseId"],
-                    exercise["completed"],
+                    Exercises_history.c.exercises_history_id == exercise.exerciseId,
+                    exercise.completed,
                 )
             )
             for exercise in trainings
@@ -651,14 +643,14 @@ def save_calendar_data(trainings: List[dict], user_id: int):
     weight_case = case(
         *[
             (
-                Exercises_history.c.exercises_history_id == exercise["exerciseId"],
-                exercise["weight"],
+                Exercises_history.c.exercises_history_id == exercise.exerciseId,
+                exercise.weight,
             )
             for exercise in trainings
         ]
     )
 
-    exercise_ids = [exercise["exerciseId"] for exercise in trainings]
+    exercise_ids = [exercise.exerciseId for exercise in trainings]
 
     session.execute(
         (
@@ -683,3 +675,66 @@ def get_exercise_name_by_id(exercise_id: int):
     return session.execute(
         select(Exercises.c.exercise_name).where(Exercises.c.exercise_id == exercise_id)
     ).scalar_one()
+
+
+def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
+    current_exercises = get_exercise_for_dialog(exercise_add.exercise_id, user_id)
+
+    training_ids_to_delete = [
+        d["trainings_id"]
+        for d in current_exercises["in_training"]
+        if d["trainings_id"] in {ex.trainingsId for ex in exercise_add.not_in_training}
+    ]
+
+    training_ids_to_insert = [
+        d["trainings_id"]
+        for d in current_exercises["not_in_training"]
+        if d["trainings_id"] in {ex.trainingsId for ex in exercise_add.in_training}
+    ]
+
+    # check if user has access to trainingsplan
+    if len(training_ids_to_delete) > 0:
+        session.execute(
+            delete(Exercises2Trainings_plans).where(
+                and_(
+                    Exercises2Trainings_plans.c.trainings_id.in_(
+                        training_ids_to_delete
+                    ),
+                    Exercises2Trainings_plans.c.exercise_id == exercise_add.exercise_id,
+                )
+            )
+        )
+    if len(training_ids_to_insert) > 0:
+        session.execute(
+            insert(Exercises2Trainings_plans).values(
+                [
+                    {"trainings_id": id_, "exercise_id": exercise_add.exercise_id}
+                    for id_ in training_ids_to_insert
+                ]
+            )
+        )
+
+    if len(training_ids_to_insert) > 0:
+        session.execute(
+            insert(User_current_performance).values(
+                [
+                    {
+                        "user_id": user_id,
+                        "exercise_id": exercise_add.exercise_id,
+                        "trainings_id": id_,
+                        "minutes": exercise_add.exercise["minutes"]
+                        if "minutes" in exercise_add.exercise
+                        else None,
+                        "number_of_repetition": exercise_add.exercise[
+                            "repetitionAmount"
+                        ]
+                        if "repetitionAmount" in exercise_add.exercise
+                        else None,
+                        "number_of_sets": exercise_add.exercise["setAmount"]
+                        if "setAmount" in exercise_add.exercise
+                        else None,
+                    }
+                    for id_ in training_ids_to_insert
+                ]
+            )
+        )
