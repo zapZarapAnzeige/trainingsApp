@@ -576,7 +576,6 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 def update_user_performance(
     exercises: List[post_trainingSchedule_Exercises], user_id: int, training_id
 ):
-    print(type(exercises[0].exercise))
     performances = [
         {
             "user_id": user_id,
@@ -586,7 +585,6 @@ def update_user_performance(
         }
         for exercise in exercises
     ]
-    print(performances)
     insert_stmt = insert(User_current_performance).values(performances)
     if len(performances) > 0:
         session.execute(
@@ -738,6 +736,5 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
             }
             for id_ in training_ids_to_insert
         ]
-        print(performance_to_insert)
         session.execute(insert(User_current_performance).values(performance_to_insert))
         session.commit()
