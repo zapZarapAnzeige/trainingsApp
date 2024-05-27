@@ -1,8 +1,6 @@
 -- Active: 1709628091053@@127.0.0.1@3306@trainings_DB
 DELIMITER //
 USE trainings_DB //
-DROP TRIGGER IF EXISTS update_Overall_Exercise_Ratings_on_update //
-DROP TRIGGER IF EXISTS update_Overall_Exercise_Ratings_on_insert //
 
 CREATE TRIGGER update_Overall_Exercise_Ratings_on_insert AFTER 
 INSERT ON Individual_Exercise_Ratings FOR EACH ROW 
@@ -27,7 +25,6 @@ BEGIN
 	UPDATE Trainings_plan_history SET trainings_name = NEW.trainings_name WHERE Trainings_plan_history.training_id = NEW.training_id AND Trainings_plan_history.day = CURDATE() AND Trainings_plan_history.user_id = NEW.user_id;
 END //
 
-DROP TRIGGER days_on_insert//
 CREATE TRIGGER days_on_insert AFTER 
 INSERT ON Days FOR EACH ROW 
 BEGIN 
@@ -43,9 +40,10 @@ BEGIN
 		INNER JOIN Exercises ex ON e2t.exercise_id=ex.exercise_id 
 		LEFT OUTER JOIN User_current_performance ucp ON ucp.exercise_id=ex.exercise_id AND ucp.user_id = NEW.user_id  AND ucp.training_id=tp.training_id 
 		WHERE tp.training_id=NEW.training_id);
-        INSERT INTO LOGGING(TIMESTAMP, `INFO`) VALUES(CURDATE(), CONCAT(NEW.training_id, " : ", NEW.user_id, " : ", last_trainings_plan_history_id));
+        
     END IF;
 END //
+
 
 CREATE TRIGGER days_on_delete BEFORE 
 DELETE ON Days FOR EACH ROW 
@@ -53,6 +51,7 @@ BEGIN
 	IF OLD.weekday =  DAYNAME(CURDATE()) THEN
 		-- needed when trainingsplan is twice on the same day so only one is deleted
 		-- ON DELETE CASCADE deletes Exercises_history
+        INSERT INTO LOGGING(TIMESTAMP, `INFO`) VALUES(CURDATE(), "days_on_delete");
 		DELETE FROM Trainings_plan_history WHERE day = CURDATE() AND user_id=OLD.user_id AND training_id=OLD.training_id LIMIT 1;
     END IF;
 END //

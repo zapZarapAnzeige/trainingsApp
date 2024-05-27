@@ -60,7 +60,6 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
                         d, {}, {"exercise_type": d.constant_unit_of_measure}
                     )
                 )
-    print(formatted_data)
     return check_if_data_exists(formatted_data, "training_id")
 
 
@@ -143,7 +142,8 @@ def parse_past_or_future_trainings(
     data: List[unformatted_past_or_future_trainings_data], past: bool = False
 ):
     if past:
-        print(data)
+        # print(data)
+        pass
     formatted_data: List[formatted_history_trainings_data] = []
     for d in data:
         trainings_day_obj = next(

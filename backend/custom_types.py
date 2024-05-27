@@ -255,7 +255,7 @@ class post_Calendar(BaseModel):
 
 class In_training_camel_case(BaseModel):
     exerciseId: int
-    trainingsId: int
+    trainingId: int
     trainingsName: str
 
 

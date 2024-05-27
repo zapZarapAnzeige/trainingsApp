@@ -699,13 +699,13 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
     training_ids_to_delete = [
         d["training_id"]
         for d in current_exercises["in_training"]
-        if d["training_id"] in {ex.trainingsId for ex in exercise_add.not_in_training}
+        if d["training_id"] in {ex.trainingId for ex in exercise_add.not_in_training}
     ]
 
     training_ids_to_insert = [
         d["training_id"]
         for d in current_exercises["not_in_training"]
-        if d["training_id"] in {ex.trainingsId for ex in exercise_add.in_training}
+        if d["training_id"] in {ex.trainingId for ex in exercise_add.in_training}
     ]
 
     # check if user has access to trainingsplan
