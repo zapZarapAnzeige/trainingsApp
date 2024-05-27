@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_, distinct, literal, delete, update, case, not_
 from sqlalchemy.exc import NoResultFound
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from db_parser import (
     parse_trainings,
     parse_exercises,
@@ -32,6 +32,8 @@ from custom_types import (
     post_trainingSchedule_Exercises,
     post_Calendar,
     Post_ExercisesAdd,
+    Exercise_cardio_frontend,
+    Exercise_weighted_frontend,
 )
 
 
@@ -456,7 +458,9 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             )
 
             update_user_performance(
-                trainings_data.exercises, user_id, trainings_data.trainingId
+                trainings_data.exercises,
+                user_id,
+                insert_training.inserted_primary_key[0],
             )
 
             session.commit()
@@ -580,18 +584,33 @@ def update_user_performance(
             "user_id": user_id,
             "exercise_id": exercise.exerciseId,
             "trainings_id": trainings_id,
-            "minutes": exercises.minutes,
-            "number_of_repetition": exercises.repetitionAmount,
-            "number_of_sets": exercises.setAmount,
+            **get_user_performance_exercise(exercise.exercise),
         }
         for exercise in exercises
     ]
+    insert_stmt = insert(User_current_performance).values(performances)
+    print(performances)
     if len(performances) > 0:
         session.execute(
-            insert(User_current_performance)
-            .values(performances)
-            .on_duplicate_key_update(performances)
+            insert_stmt.on_duplicate_key_update(
+                minutes=insert_stmt.inserted.minutes,
+                number_of_repetition=insert_stmt.inserted.number_of_repetition,
+                number_of_sets=insert_stmt.inserted.number_of_sets,
+            )
         )
+
+
+def get_user_performance_exercise(
+    exercise: Union[Exercise_cardio_frontend, Exercise_weighted_frontend],
+):
+    return {
+        "minutes": exercise["minutes"] if "minutes" in exercise else None,
+        "number_of_repetition": exercise["repetitionAmount"]
+        if "repetitionAmount" in exercise
+        else None,
+        "number_of_sets": exercise["setAmount"] if "setAmount" in exercise else None,
+    }
+    pass
 
 
 def insert_days(days: List[str], user_id: int, trainings_id: int):
@@ -722,17 +741,6 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
                         "user_id": user_id,
                         "exercise_id": exercise_add.exercise_id,
                         "trainings_id": id_,
-                        "minutes": exercise_add.exercise["minutes"]
-                        if "minutes" in exercise_add.exercise
-                        else None,
-                        "number_of_repetition": exercise_add.exercise[
-                            "repetitionAmount"
-                        ]
-                        if "repetitionAmount" in exercise_add.exercise
-                        else None,
-                        "number_of_sets": exercise_add.exercise["setAmount"]
-                        if "setAmount" in exercise_add.exercise
-                        else None,
                     }
                     for id_ in training_ids_to_insert
                 ]

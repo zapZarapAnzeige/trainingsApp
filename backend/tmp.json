@@ -1,0 +1,68 @@
+[
+  {
+    "trainings_id": 1,
+    "name": "temp",
+    "on_days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "exercises": [
+      {
+        "exercise_id": 1,
+        "exercise_name": "test",
+        "exercise": { "minutes": "None" }
+      },
+      {
+        "exercise_id": 2,
+        "exercise_name": "c",
+        "exercise": { "repetition_amount": "None", "set_amount": "None" }
+      },
+      {
+        "exercise_id": 3,
+        "exercise_name": "qew",
+        "exercise": { "minutes": "None" }
+      },
+      {
+        "exercise_id": 4,
+        "exercise_name": "svd",
+        "exercise": { "repetition_amount": "None", "set_amount": "None" }
+      }
+    ]
+  },
+  {
+    "trainings_id": 2,
+    "name": "temp21",
+    "on_days": ["Tuesday"],
+    "exercises": [
+      {
+        "exercise_id": 1,
+        "exercise_name": "test",
+        "exercise": { "minutes": "None" }
+      }
+    ]
+  },
+  {
+    "trainings_id": 3,
+    "name": "temp3",
+    "on_days": ["Wednesday"],
+    "exercises": []
+  },
+  { "trainings_id": 9, "name": "asd", "on_days": ["None"], "exercises": [] },
+  {
+    "trainings_id": 15,
+    "name": "adsads",
+    "on_days": ["Monday"],
+    "exercises": [
+      {
+        "exercise_id": 2,
+        "exercise_name": "c",
+        "exercise": { "repetition_amount": "None", "set_amount": "None" }
+      }
+    ]
+  }
+]

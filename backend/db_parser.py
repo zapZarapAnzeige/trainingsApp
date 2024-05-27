@@ -36,7 +36,7 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
                 {
                     "trainings_id": d.trainings_id,
                     "name": d.trainings_name,
-                    "on_days": [d.weekday],
+                    "on_days": [d.weekday] if d.weekday else [],
                     "exercises": [get_exercise_formatted(d)]
                     if d.exercise_id is not None
                     else [],
