@@ -24,29 +24,36 @@ END //
 CREATE TRIGGER update_trainingsplan_name_on_update AFTER 
 UPDATE ON Trainings_plan FOR EACH ROW 
 BEGIN 
-	UPDATE Trainings_plan_history SET trainings_name = NEW.trainings_name WHERE Trainings_plan_history.trainings_id = NEW.trainings_id AND Trainings_plan_history.day = CURDATE() AND Trainings_plan_history.user_id = NEW.user_id;
+	UPDATE Trainings_plan_history SET trainings_name = NEW.trainings_name WHERE Trainings_plan_history.training_id = NEW.training_id AND Trainings_plan_history.day = CURDATE() AND Trainings_plan_history.user_id = NEW.user_id;
 END //
+
+DROP TRIGGER days_on_insert//
 CREATE TRIGGER days_on_insert AFTER 
 INSERT ON Days FOR EACH ROW 
 BEGIN 
+    DECLARE last_trainings_plan_history_id INT;
 	IF NEW.weekday =  DAYNAME(CURDATE()) THEN
-		INSERT INTO Trainings_plan_history(trainings_id, trainings_name, user_id, day) (SELECT trainings_id, trainings_name, NEW.user_id, CURDATE() FROM `Trainings_plan` tp where tp.trainings_id=NEW.trainings_id);
+		INSERT INTO Trainings_plan_history(training_id, trainings_name, user_id, day) (SELECT training_id, trainings_name, NEW.user_id, CURDATE() FROM `Trainings_plan` tp where tp.training_id=NEW.training_id);
+        
+        SET last_trainings_plan_history_id = LAST_INSERT_ID();
+        
         INSERT INTO Exercises_history(trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure) 
-        (SELECT LAST_INSERT_ID(), tp.user_id, FALSE, ex.exercise_id, minutes, ucp.number_of_repetition, ucp.number_of_sets,  ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure FROM Trainings_plan tp 
-		INNER JOIN Exercises2Trainings_plans e2t ON e2t.trainings_id = tp.trainings_id 
+        (SELECT last_trainings_plan_history_id, tp.user_id, FALSE, ex.exercise_id, minutes, ucp.number_of_repetition, ucp.number_of_sets,  ucp.trackable_unit_of_measure, ucp.value_trackable_unit_of_measure FROM Trainings_plan tp 
+		INNER JOIN Exercises2Trainings_plans e2t ON e2t.training_id = tp.training_id 
 		INNER JOIN Exercises ex ON e2t.exercise_id=ex.exercise_id 
-		LEFT OUTER JOIN User_current_performance ucp ON ucp.exercise_id=ex.exercise_id AND ucp.user_id = NEW.user_id  AND ucp.trainings_id=tp.trainings_id 
-		WHERE tp.trainings_id=NEW.trainings_id);
+		LEFT OUTER JOIN User_current_performance ucp ON ucp.exercise_id=ex.exercise_id AND ucp.user_id = NEW.user_id  AND ucp.training_id=tp.training_id 
+		WHERE tp.training_id=NEW.training_id);
+        INSERT INTO LOGGING(TIMESTAMP, `INFO`) VALUES(CURDATE(), CONCAT(NEW.training_id, " : ", NEW.user_id, " : ", last_trainings_plan_history_id));
     END IF;
 END //
 
-CREATE TRIGGER days_on_delete AFTER 
+CREATE TRIGGER days_on_delete BEFORE 
 DELETE ON Days FOR EACH ROW 
 BEGIN 
 	IF OLD.weekday =  DAYNAME(CURDATE()) THEN
 		-- needed when trainingsplan is twice on the same day so only one is deleted
 		-- ON DELETE CASCADE deletes Exercises_history
-		DELETE FROM Trainings_plan_history WHERE day = CURDATE() AND user_id=OLD.user_id AND trainings_id=OLD.trainings_id LIMIT 1;
+		DELETE FROM Trainings_plan_history WHERE day = CURDATE() AND user_id=OLD.user_id AND training_id=OLD.training_id LIMIT 1;
     END IF;
 END //
 
@@ -70,11 +77,11 @@ BEGIN
 	DECLARE done BOOLEAN DEFAULT FALSE;
 	DECLARE trainings_plan_history_id_var INT;
     DECLARE this_user_id INT;
-    DECLARE history_cursor CURSOR FOR SELECT trainings_plan_history_id FROM Trainings_plan_history WHERE trainings_id = NEW.trainings_id AND day = CURDATE();
+    DECLARE history_cursor CURSOR FOR SELECT trainings_plan_history_id FROM Trainings_plan_history WHERE training_id = NEW.training_id AND day = CURDATE();
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
     
-    SELECT user_id INTO this_user_id FROM Trainings_plan WHERE trainings_id = NEW.trainings_id;
+    SELECT user_id INTO this_user_id FROM Trainings_plan WHERE training_id = NEW.training_id;
 
     OPEN history_cursor;
 	
@@ -85,7 +92,7 @@ BEGIN
         END IF;
 
         INSERT INTO Exercises_history(trainings_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure)
-         SELECT trainings_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id AND trainings_id=NEW.trainings_id;
+         SELECT trainings_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id AND training_id=NEW.training_id;
     END LOOP;
 
     CLOSE history_cursor;
@@ -95,7 +102,7 @@ END //
 CREATE TRIGGER exercises2Trainings_plans_on_delete AFTER 
 DELETE ON Exercises2Trainings_plans FOR EACH ROW 
 BEGIN 
-    DELETE ex FROM Exercises_history ex INNER JOIN Trainings_plan_history tph ON ex.trainings_plan_history_id = tph.trainings_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.trainings_id = OLD.trainings_id AND day=CURDATE();
+    DELETE ex FROM Exercises_history ex INNER JOIN Trainings_plan_history tph ON ex.trainings_plan_history_id = tph.trainings_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.training_id = OLD.training_id AND day=CURDATE();
 END //
 
 -- TODO testing
