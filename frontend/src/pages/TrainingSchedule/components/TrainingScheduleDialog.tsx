@@ -249,7 +249,10 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
           <IconButton
             variant="solid"
             color="primary"
-            disabled={!isExerciseValid()}
+            disabled={
+              !isExerciseValid() ||
+              trainingScheduleDialog.exercises.length >= 15
+            }
             onClick={handleAddExercise}
           >
             <CheckIcon />
