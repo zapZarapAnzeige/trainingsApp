@@ -27,14 +27,14 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
             (
                 element
                 for element in formatted_data
-                if element["trainings_id"] == d.trainings_id
+                if element["training_id"] == d.training_id
             ),
             None,
         )
         if obj is None:
             formatted_data.append(
                 {
-                    "trainings_id": d.trainings_id,
+                    "training_id": d.training_id,
                     "name": d.trainings_name,
                     "on_days": [d.weekday] if d.weekday else [],
                     "exercises": [get_exercise_formatted(d)]
@@ -43,11 +43,11 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
                 }
             )
         else:
-            if d.weekday not in obj["on_days"]:
+            if d.weekday not in obj["on_days"] and d.weekday:
                 obj["on_days"].append(d.weekday)
             if d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]:
                 obj["exercises"].append(get_exercise_formatted(d))
-    return check_if_data_exists(formatted_data, "trainings_id")
+    return check_if_data_exists(formatted_data, "training_id")
 
 
 def get_exercise_formatted(d, additional_data={}):
@@ -125,8 +125,10 @@ def add_tag(obj, tag_type, tag_name):
 
 
 def parse_past_or_future_trainings(
-    data: List[unformatted_past_or_future_trainings_data],
+    data: List[unformatted_past_or_future_trainings_data], past: bool = False
 ):
+    if past:
+        print(data)
     formatted_data: List[formatted_history_trainings_data] = []
     for d in data:
         trainings_day_obj = next(
@@ -152,7 +154,7 @@ def parse_past_or_future_trainings(
         }
         trainings_obj = {
             "trainings_name": d["trainings_name"],
-            "trainings_id": d["trainings_id"],
+            "training_id": d["training_id"],
             "exercises": [exercise_obj],
         }
         if trainings_day_obj:
@@ -160,7 +162,7 @@ def parse_past_or_future_trainings(
                 (
                     element
                     for element in trainings_day_obj["trainings"]
-                    if element["trainings_id"] == d["trainings_id"]
+                    if element["training_id"] == d["training_id"]
                 ),
                 None,
             )
@@ -193,9 +195,9 @@ def parse_exercise_for_dialog(data, exercise_id: int):
     not_in_training = {}
     for d in data:
         if d["exercise_id"] == exercise_id:
-            in_training[d["trainings_id"]] = d
+            in_training[d["training_id"]] = d
         else:
-            not_in_training[d["trainings_id"]] = {**d, "exercise_id": exercise_id}
+            not_in_training[d["training_id"]] = {**d, "exercise_id": exercise_id}
 
     for k in list(not_in_training.keys()):
         if k in in_training.keys():

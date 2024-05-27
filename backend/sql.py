@@ -83,8 +83,8 @@ async def update_user_data(
         )
         session.commit()
     except Exception as e:
-        print(e)
         session.rollback()
+        raise e
 
 
 def get_profile_pic(user_id: int):
@@ -146,7 +146,7 @@ def get_exercise_for_dialog(exercise_id: int, user_id: int):
     return parse_exercise_for_dialog(
         session.execute(
             select(
-                Trainings_plan.c.trainings_id,
+                Trainings_plan.c.training_id,
                 Trainings_plan.c.trainings_name,
                 Exercises.c.exercise_id,
             )
@@ -154,8 +154,7 @@ def get_exercise_for_dialog(exercise_id: int, user_id: int):
             .where(Trainings_plan.c.user_id == user_id)
             .join(
                 Exercises2Trainings_plans,
-                Exercises2Trainings_plans.c.trainings_id
-                == Trainings_plan.c.trainings_id,
+                Exercises2Trainings_plans.c.training_id == Trainings_plan.c.training_id,
                 isouter=True,
             )
             .join(
@@ -224,7 +223,7 @@ def get_trainings(user_id: int):
     return parse_trainings(
         session.execute(
             select(
-                Trainings_plan.c.trainings_id,
+                Trainings_plan.c.training_id,
                 Trainings_plan.c.trainings_name,
                 Days.c.weekday,
                 Exercises.c.exercise_name,
@@ -240,15 +239,14 @@ def get_trainings(user_id: int):
             .join(
                 Days,
                 and_(
-                    Days.c.trainings_id == Trainings_plan.c.trainings_id,
+                    Days.c.training_id == Trainings_plan.c.training_id,
                     Days.c.user_id == Trainings_plan.c.user_id,
                 ),
                 isouter=True,
             )
             .join(
                 Exercises2Trainings_plans,
-                Exercises2Trainings_plans.c.trainings_id
-                == Trainings_plan.c.trainings_id,
+                Exercises2Trainings_plans.c.training_id == Trainings_plan.c.training_id,
                 isouter=True,
             )
             .join(
@@ -260,8 +258,8 @@ def get_trainings(user_id: int):
                 User_current_performance,
                 and_(
                     Exercises.c.exercise_id == User_current_performance.c.exercise_id,
-                    User_current_performance.c.trainings_id
-                    == Trainings_plan.c.trainings_id,
+                    User_current_performance.c.training_id
+                    == Trainings_plan.c.training_id,
                     User_current_performance.c.user_id == Trainings_plan.c.user_id,
                 ),
                 isouter=True,
@@ -339,9 +337,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             select(
                 Trainings_plan_history.c.day,
                 Trainings_plan_history.c.trainings_name,
-                Trainings_plan_history.c.trainings_plan_history_id.label(
-                    "trainings_id"
-                ),
+                Trainings_plan_history.c.trainings_plan_history_id.label("training_id"),
                 Exercises_history.c.exercises_history_id.label("exercise_id"),
                 Exercises.c.exercise_name,
                 Exercises_history.c.completed,
@@ -371,7 +367,8 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(),
+        True,
     )
 
 
@@ -389,7 +386,7 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
             select(
                 Days.c.weekday.label("day"),
                 Trainings_plan.c.trainings_name,
-                Trainings_plan.c.trainings_id,
+                Trainings_plan.c.training_id,
                 Exercises.c.exercise_id,
                 Exercises.c.exercise_name,
                 literal(False).label("completed"),
@@ -404,11 +401,10 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
             .where(
                 Days.c.user_id == user_id, Days.c.weekday.in_(get_weekdays(date_diff))
             )
-            .join(Trainings_plan, Trainings_plan.c.trainings_id == Days.c.trainings_id)
+            .join(Trainings_plan, Trainings_plan.c.training_id == Days.c.training_id)
             .join(
                 Exercises2Trainings_plans,
-                Trainings_plan.c.trainings_id
-                == Exercises2Trainings_plans.c.trainings_id,
+                Trainings_plan.c.training_id == Exercises2Trainings_plans.c.training_id,
                 isouter=True,
             )
             .join(
@@ -420,7 +416,7 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
                 and_(
                     User_current_performance.c.exercise_id == Exercises.c.exercise_id,
                     User_current_performance.c.user_id == user_id,
-                    User_current_performance.c.trainings_id == Days.c.trainings_id,
+                    User_current_performance.c.training_id == Days.c.training_id,
                 ),
                 isouter=True,
             )
@@ -448,14 +444,17 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     trainings_name=trainings_data.name, user_id=user_id
                 )
             )
+            session.commit()
 
             insert_days(
                 trainings_data.onDays, user_id, insert_training.inserted_primary_key[0]
             )
+            session.commit()
 
             insert_Exercises2Trainings_plans(
                 insert_training.inserted_primary_key[0], trainings_data.exercises
             )
+            session.commit()
 
             update_user_performance(
                 trainings_data.exercises,
@@ -469,7 +468,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             if (
                 not session.execute(
                     select(Trainings_plan.c.user_id).where(
-                        Trainings_plan.c.trainings_id == trainings_data.trainingId
+                        Trainings_plan.c.training_id == trainings_data.trainingId
                     )
                 ).scalar_one()
                 == user_id
@@ -480,14 +479,15 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 )
             session.execute(
                 update(Trainings_plan)
-                .where(Trainings_plan.c.trainings_id == trainings_data.trainingId)
+                .where(Trainings_plan.c.training_id == trainings_data.trainingId)
                 .values(trainings_name=trainings_data.name)
             )
+            session.commit()
             current_days = (
                 session.execute(
                     select(Days.c.weekday).where(
                         and_(
-                            Days.c.trainings_id == trainings_data.trainingId,
+                            Days.c.training_id == trainings_data.trainingId,
                             Days.c.user_id == user_id,
                         )
                     )
@@ -496,11 +496,13 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 .all()
             )
 
+            session.commit()
+
             session.execute(
                 delete(Days).where(
                     and_(
                         Days.c.user_id == user_id,
-                        Days.c.trainings_id == trainings_data.trainingId,
+                        Days.c.training_id == trainings_data.trainingId,
                         Days.c.weekday.in_(
                             day
                             for day in current_days
@@ -509,23 +511,25 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     )
                 )
             )
+            session.commit()
 
             days_to_insert = [
                 {
                     "weekday": day,
                     "user_id": user_id,
-                    "trainings_id": trainings_data.trainingId,
+                    "training_id": trainings_data.trainingId,
                 }
                 for day in trainings_data.onDays
                 if day not in current_days
             ]
             if len(days_to_insert) > 0:
                 session.execute(insert(Days).values(days_to_insert))
+            session.commit()
 
             current_exercises2trainings = (
                 session.execute(
                     select(Exercises2Trainings_plans.c.exercise_id).where(
-                        Exercises2Trainings_plans.c.trainings_id
+                        Exercises2Trainings_plans.c.training_id
                         == trainings_data.trainingId,
                     )
                 )
@@ -546,10 +550,11 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                     )
                 )
             )
+            session.commit()
 
             exercises_to_insert = [
                 {
-                    "trainings_id": trainings_data.trainingId,
+                    "training_id": trainings_data.trainingId,
                     "exercise_id": ex_id,
                 }
                 for ex_id in new_exercises
@@ -564,6 +569,7 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             update_user_performance(
                 trainings_data.exercises, user_id, trainings_data.trainingId
             )
+            session.commit()
 
             return Response(status_code=status.HTTP_202_ACCEPTED)
 
@@ -577,19 +583,18 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
 
 
 def update_user_performance(
-    exercises: List[post_trainingSchedule_Exercises], user_id: int, trainings_id
+    exercises: List[post_trainingSchedule_Exercises], user_id: int, training_id
 ):
     performances = [
         {
             "user_id": user_id,
             "exercise_id": exercise.exerciseId,
-            "trainings_id": trainings_id,
+            "training_id": training_id,
             **get_user_performance_exercise(exercise.exercise),
         }
         for exercise in exercises
     ]
     insert_stmt = insert(User_current_performance).values(performances)
-    print(performances)
     if len(performances) > 0:
         session.execute(
             insert_stmt.on_duplicate_key_update(
@@ -613,7 +618,7 @@ def get_user_performance_exercise(
     pass
 
 
-def insert_days(days: List[str], user_id: int, trainings_id: int):
+def insert_days(days: List[str], user_id: int, training_id: int):
     if len(days) > 0:
         session.execute(
             insert(Days).values(
@@ -621,29 +626,31 @@ def insert_days(days: List[str], user_id: int, trainings_id: int):
                     {
                         "weekday": day,
                         "user_id": user_id,
-                        "trainings_id": trainings_id,
+                        "training_id": training_id,
                     }
                     for day in days
                 ]
             )
         )
+        session.commit()
 
 
 def insert_Exercises2Trainings_plans(
-    trainings_id: int, exercises: List[post_trainingSchedule_Exercises]
+    training_id: int, exercises: List[post_trainingSchedule_Exercises]
 ):
     if len(exercises) > 0:
         session.execute(
             insert(Exercises2Trainings_plans).values(
                 [
                     {
-                        "trainings_id": trainings_id,
+                        "training_id": training_id,
                         "exercise_id": ex.exerciseId,
                     }
                     for ex in exercises
                 ]
             )
         )
+        session.commit()
 
 
 def save_calendar_data(trainings: List[dict], user_id: int):
@@ -700,15 +707,15 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
     current_exercises = get_exercise_for_dialog(exercise_add.exercise_id, user_id)
 
     training_ids_to_delete = [
-        d["trainings_id"]
+        d["training_id"]
         for d in current_exercises["in_training"]
-        if d["trainings_id"] in {ex.trainingsId for ex in exercise_add.not_in_training}
+        if d["training_id"] in {ex.trainingsId for ex in exercise_add.not_in_training}
     ]
 
     training_ids_to_insert = [
-        d["trainings_id"]
+        d["training_id"]
         for d in current_exercises["not_in_training"]
-        if d["trainings_id"] in {ex.trainingsId for ex in exercise_add.in_training}
+        if d["training_id"] in {ex.trainingsId for ex in exercise_add.in_training}
     ]
 
     # check if user has access to trainingsplan
@@ -716,9 +723,7 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
         session.execute(
             delete(Exercises2Trainings_plans).where(
                 and_(
-                    Exercises2Trainings_plans.c.trainings_id.in_(
-                        training_ids_to_delete
-                    ),
+                    Exercises2Trainings_plans.c.training_id.in_(training_ids_to_delete),
                     Exercises2Trainings_plans.c.exercise_id == exercise_add.exercise_id,
                 )
             )
@@ -727,11 +732,12 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
         session.execute(
             insert(Exercises2Trainings_plans).values(
                 [
-                    {"trainings_id": id_, "exercise_id": exercise_add.exercise_id}
+                    {"training_id": id_, "exercise_id": exercise_add.exercise_id}
                     for id_ in training_ids_to_insert
                 ]
             )
         )
+        session.commit()
 
     if len(training_ids_to_insert) > 0:
         session.execute(
@@ -740,9 +746,10 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
                     {
                         "user_id": user_id,
                         "exercise_id": exercise_add.exercise_id,
-                        "trainings_id": id_,
+                        "training_id": id_,
                     }
                     for id_ in training_ids_to_insert
                 ]
             )
         )
+        session.commit()

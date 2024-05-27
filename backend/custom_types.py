@@ -36,7 +36,7 @@ class User_in_db(User):
 
 
 class Unformatted_trainingsdata(TypedDict):
-    trainings_id: int
+    training_id: int
     trainings_name: str
     weekday: str
     exercise_name: Optional[str]
@@ -131,7 +131,7 @@ class Formatted_exercises(Base_exercise, Tags):
 
 class formatted_trainingsdata(BaseModel):
     name: str
-    trainings_id: int
+    training_id: int
     on_days: List[str]
     exercises: List[ExerciseDetail]
 
@@ -139,7 +139,7 @@ class formatted_trainingsdata(BaseModel):
 class unformatted_past_or_future_trainings_data(BaseModel):
     day: Union[datetime, str]
     trainings_name: str
-    trainings_id: int
+    training_id: int
     exercise_id: int
     exercise_name: str
     completed: bool
@@ -168,7 +168,7 @@ class exercise_history(BaseModel):
 
 class trainings_history(BaseModel):
     trainings_name: str
-    trainings_id: int
+    training_id: int
     exercises: List[exercise_history]
 
 
@@ -259,7 +259,7 @@ class In_training_camel_case(BaseModel):
 
 class In_training(BaseModel):
     exercise_id: int
-    trainings_id: int
+    training_id: int
     trainings_name: str
 
 
