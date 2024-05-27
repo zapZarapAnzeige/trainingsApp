@@ -253,7 +253,9 @@ async def get_exercise_info(
 
 @app.get("/trainingSchedule", response_model=List[formatted_trainingsdata])
 async def get_trainings_schedule(current_user=Depends(get_current_active_user)):
-    return get_trainings(current_user.get("user_id"))
+    a = get_trainings(current_user.get("user_id"))
+    print(a)
+    return a
 
 
 @app.get("/exercisesData", response_model=List[Formatted_exercises])
