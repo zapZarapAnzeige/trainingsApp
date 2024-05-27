@@ -141,8 +141,8 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                           setIsDataDirty(true);
                           dispatch(
                             e.target.checked
-                              ? addToTraining(training.trainingsId)
-                              : removeFromTraining(training.trainingsId)
+                              ? addToTraining(training.trainingId)
+                              : removeFromTraining(training.trainingId)
                           );
                         }}
                       />

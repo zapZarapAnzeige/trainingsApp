@@ -206,7 +206,7 @@ export function moveString(
   targetArray: InTraining[],
   id: number
 ): void {
-  const index = sourceArray.map((source) => source.trainingsId).indexOf(id);
+  const index = sourceArray.map((source) => source.trainingId).indexOf(id);
   if (index !== -1) {
     const removedItem = sourceArray.splice(index, 1)[0];
     targetArray.push(removedItem);

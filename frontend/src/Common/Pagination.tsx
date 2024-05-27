@@ -37,7 +37,7 @@ export default function Pagination() {
         color="neutral"
         startDecorator={<KeyboardArrowLeftIcon />}
         onClick={() => {
-          dispatch(increaseCW());
+          dispatch(decreaseCW());
           dispatch(setIsDataDirty(false));
         }}
       >

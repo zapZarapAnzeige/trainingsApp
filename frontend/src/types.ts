@@ -67,7 +67,7 @@ type Tags = {
 
 export type InTraining = {
   exerciseId: number;
-  trainingsId: number;
+  trainingId: number;
   trainingsName: string;
 };
 
