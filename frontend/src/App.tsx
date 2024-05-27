@@ -57,7 +57,7 @@ export default function App() {
         );
       });
     }
-  });
+  }, []);
 
   const getPage = (page: string): JSX.Element => {
     switch (page) {

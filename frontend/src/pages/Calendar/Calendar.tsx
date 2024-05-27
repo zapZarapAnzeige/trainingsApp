@@ -40,36 +40,26 @@ export default function Calendar() {
   const calendarData = useAppSelector((state) => state.calendar.calendarData);
 
   useEffect(() => {
-    getPastTrainings(
-      auth(),
-      getMondayOfWeek(currentCW, new Date().getFullYear())
-    )
-      .then((data: CalendarDayData[]) => {
+    const fetchTrainings = async () => {
+      try {
+        const token = auth();
+        const weekStart = getMondayOfWeek(currentCW, new Date().getFullYear());
+
+        const pastTrainings = await getPastTrainings(token, weekStart);
+        const futureTrainings = await getFutureTrainings(token, weekStart);
+
         dispatch(
           setCalendarData({
-            pastTrainings: data,
-            futureTrainings: calendarData.futureTrainings,
+            pastTrainings,
+            futureTrainings,
           })
         );
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching data", error);
-      });
-    getFutureTrainings(
-      auth(),
-      getMondayOfWeek(currentCW, new Date().getFullYear())
-    )
-      .then((data: CalendarDayData[]) => {
-        dispatch(
-          setCalendarData({
-            pastTrainings: calendarData.pastTrainings,
-            futureTrainings: data,
-          })
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
+      }
+    };
+
+    fetchTrainings();
   }, [currentCW]);
 
   return (
