@@ -132,7 +132,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
               return (
                 <ListItem>
                   <ListItemContent>
-                    <Stack direction="row" justifyContent="space-around">
+                    <Stack direction="row" justifyContent="space-between">
                       <Checkbox
                         defaultChecked={exercisesAddDialog.inTraining.includes(
                           training
