@@ -256,6 +256,8 @@ export function calculateDayGoal(
     (dayTraining) => dayTraining.date === today
   );
 
+  console.log(todayTraining);
+
   if (!todayTraining) {
     return 0;
   }
@@ -317,4 +319,20 @@ export function getMondayOfWeek(week: number, year: number): string {
   const mm = String(ISOweekStart.getMonth() + 1).padStart(2, "0");
   const dd = String(ISOweekStart.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
+}
+
+export function roundToTwoDecimalPlaces(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+export function modifyDateKeys(data: CalendarDayData[]): CalendarDayData[] {
+  data.forEach((obj) => {
+    const date = new Date(obj.date);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    obj.date = `${year}-${month}-${day}`;
+  });
+
+  return data;
 }

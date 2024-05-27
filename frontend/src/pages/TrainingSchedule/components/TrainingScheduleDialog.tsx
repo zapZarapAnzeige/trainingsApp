@@ -117,10 +117,10 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const isExerciseValid = () => {
     if (selectedExercise) {
       if (selectedExercise.exerciseType === "Min") {
-        return minutes !== 0 && !isNaN(minutes);
+        return minutes > 0 && !isNaN(minutes);
       } else if (selectedExercise.exerciseType === "SxWdh") {
         return (
-          repetitions !== 0 && !isNaN(repetitions) && sets !== 0 && !isNaN(sets)
+          repetitions > 0 && !isNaN(repetitions) && sets > 0 && !isNaN(sets)
         );
       } else {
         return false;
@@ -129,6 +129,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   };
 
   const handleAddExercise = () => {
+    console.log(selectedExercise);
     if (selectedExercise) {
       dispatch(
         selectedExercise.exerciseType === "Min"
