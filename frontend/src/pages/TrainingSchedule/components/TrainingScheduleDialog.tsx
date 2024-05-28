@@ -352,7 +352,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                         e.target.checked
                       )
                     }
-                    defaultChecked={trainingScheduleDialog.onDays.includes(day)}
+                    checked={trainingScheduleDialog.onDays.includes(day)}
                   />
                   <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                 </FormControl>

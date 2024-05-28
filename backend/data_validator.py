@@ -33,7 +33,7 @@ def validate_required_plz(plz: str = Query(...)):
     return plz
 
 
-def validate_rating(rating: int = Query(...)):
+def validate_rating(rating: float = Query(...)):
     if rating > 5 or rating < 1:
         INVALID_PRECONDITION("invalid rating")
     return rating

@@ -214,7 +214,7 @@ async def access_token_login(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.post("/ExerciseRating", response_model=bool)
 async def post_exercise_rating(
     exercise_id: int,
-    rating: int = Depends(validate_rating),
+    rating: float = Depends(validate_rating),
     current_user=Depends(get_current_active_user),
 ):
     return await save_exercise_rating(rating, exercise_id, current_user.get("user_id"))

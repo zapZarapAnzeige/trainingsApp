@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   Divider,
   FormControl,
@@ -77,8 +78,8 @@ const CalendarDay: FC<CalendarDayProps> = ({
                 key={training.trainingId}
               >
                 {training.exercises.map((exercise) => (
-                  <>
-                    <ListItem sx={{ flexGrow: 6 }} key={exercise.exerciseId}>
+                  <Box key={exercise.exerciseId}>
+                    <ListItem sx={{ flexGrow: 6 }}>
                       <ListItemContent>
                         <Stack direction="row" justifyContent="space-between">
                           <Typography>{exercise.exerciseName}</Typography>
@@ -171,7 +172,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                         />
                       </FormControl>
                     )}
-                  </>
+                  </Box>
                 ))}
               </List>
             ))
