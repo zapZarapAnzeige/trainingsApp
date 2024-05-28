@@ -103,5 +103,28 @@ BEGIN
     DELETE ex FROM Exercises_history ex INNER JOIN Trainings_plan_history tph ON ex.trainings_plan_history_id = tph.trainings_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.training_id = OLD.training_id AND day=CURDATE();
 END //
 
+
+CREATE TRIGGER insert_default_trainingsplan AFTER 
+INSERT ON Users FOR EACH ROW 
+BEGIN 
+    DECLARE last_inserted_training_id INT;
+    INSERT INTO `Trainings_plan`(trainings_name, user_id) VALUES ("Ganzkörpertraining", NEW.user_id);
+
+    SET last_inserted_training_id = LAST_INSERT_ID();
+    INSERT INTO `Exercises2Trainings_plans`(training_id, exercise_id) 
+    (SELECT last_inserted_training_id, exercise_id FROM `Exercises` WHERE 
+    exercise_name IN ("Fahrrad fahren", "Beinpresse", "Latzug", "Breites Rudern", "Hyperextension", "Schrägbankdrücken", "Crunchmaschine", "Seitheben") );
+	INSERT INTO `Days`(weekday, user_id, training_id) 
+    VALUES 
+    ("Monday", NEW.user_id, last_inserted_training_id), 
+    ("Wednesday", NEW.user_id, last_inserted_training_id),
+    ("Friday", NEW.user_id, last_inserted_training_id);
+
+    INSERT INTO `User_current_performance`(exercise_id, user_id, training_id, minutes, number_of_repetition, number_of_sets)
+    (SELECT exercise_id, NEW.user_id, last_inserted_training_id, 15 AS minutes, NULL AS number_of_repetition, NULL AS number_of_sets FROM `Exercises` WHERE exercise_name="Fahrrad fahren")
+    UNION ALL
+    (SELECT exercise_id, NEW.user_id, last_inserted_training_id, NULL AS minutes, 10 AS number_of_repetition, 3 AS number_of_sets FROM `Exercises` WHERE exercise_name IN ("Beinpresse", "Latzug", "Breites Rudern", "Hyperextension", "Schrägbankdrücken", "Crunchmaschine", "Seitheben"));
+END //
+
 -- TODO testing
 DELIMITER ;
