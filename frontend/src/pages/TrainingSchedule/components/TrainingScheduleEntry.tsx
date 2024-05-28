@@ -105,6 +105,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                 return (
                   <FormControl key={day}>
                     <Checkbox
+                      disabled={true}
                       checked={training.onDays.includes(day)}
                       sx={{ marginBottom: 1 }}
                       readOnly

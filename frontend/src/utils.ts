@@ -256,8 +256,6 @@ export function calculateDayGoal(
     (dayTraining) => dayTraining.date === today
   );
 
-  console.log(todayTraining);
-
   if (!todayTraining) {
     return 0;
   }

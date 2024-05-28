@@ -368,8 +368,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             )
         )
         .mappings()
-        .fetchall(),
-        True,
+        .fetchall()
     )
 
 

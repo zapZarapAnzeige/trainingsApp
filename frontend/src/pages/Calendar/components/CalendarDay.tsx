@@ -1,6 +1,5 @@
 import {
   Box,
-  Checkbox,
   Divider,
   FormControl,
   FormLabel,

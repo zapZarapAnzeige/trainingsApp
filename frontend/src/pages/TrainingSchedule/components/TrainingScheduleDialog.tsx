@@ -129,7 +129,6 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   };
 
   const handleAddExercise = () => {
-    console.log(selectedExercise);
     if (selectedExercise) {
       dispatch(
         selectedExercise.exerciseType === "Min"

@@ -139,11 +139,8 @@ def add_tag(obj, tag_type, tag_name):
 
 
 def parse_past_or_future_trainings(
-    data: List[unformatted_past_or_future_trainings_data], past: bool = False
+    data: List[unformatted_past_or_future_trainings_data],
 ):
-    if past:
-        # print(data)
-        pass
     formatted_data: List[formatted_history_trainings_data] = []
     for d in data:
         trainings_day_obj = next(
