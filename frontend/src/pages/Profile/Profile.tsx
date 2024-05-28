@@ -28,6 +28,7 @@ import { changeUserData, getUserData } from "../../api";
 import { useAuthHeader } from "react-auth-kit";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/reducers/userSlice";
+import { NumericFormatAdapter } from "../../Common/PlzFormatAdapter";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;
@@ -240,6 +241,11 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                       startDecorator={<EmailRoundedIcon />}
                       placeholder={getMessage("profile.label.plz")}
                       sx={{ flexGrow: 1 }}
+                      slotProps={{
+                        input: {
+                          component: NumericFormatAdapter,
+                        },
+                      }}
                     />
                   </FormControl>
                 </Stack>

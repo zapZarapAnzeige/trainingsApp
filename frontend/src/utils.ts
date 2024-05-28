@@ -1,6 +1,6 @@
 import { IntlShape } from "react-intl";
 import { weekdays, weekdaysNames } from "./constants";
-import { CalendarData, CalendarDayData, InTraining } from "./types";
+import { CalendarDayData, InTraining } from "./types";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {

@@ -24,6 +24,7 @@ import { useAuthHeader } from "react-auth-kit";
 import { findNewPartner } from "../../../api";
 import DismissDialog from "../../../Common/DismissDialog";
 import { ProfilePicture } from "../../../Common/ProfilePicture";
+import { NumericFormatAdapter } from "../../../Common/PlzFormatAdapter";
 
 type ChatSidebarProps = {
   chatsOverview: ChatsOverview[];
@@ -31,34 +32,6 @@ type ChatSidebarProps = {
   activePartner: PartnerData;
   setChatsOverview: (chatsOverview: ChatsOverview[]) => void;
 };
-
-interface NumericFormatAdapterProps {
-  onChange: (event: { target: { name: string; value: string } }) => void;
-  name: string;
-}
-
-const NumericFormatAdapter = forwardRef<
-  NumericFormatProps,
-  NumericFormatAdapterProps
->(function NumericFormatAdapter(props, ref) {
-  const { onChange, ...other } = props;
-
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={ref}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      valueIsNumericString
-    />
-  );
-});
 
 export const ChatSidebar: FC<ChatSidebarProps> = ({
   chatsOverview,
