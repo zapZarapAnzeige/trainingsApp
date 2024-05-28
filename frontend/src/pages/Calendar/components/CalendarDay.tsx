@@ -14,11 +14,7 @@ import {
 } from "@mui/joy";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { FC } from "react";
-import {
-  CalendarDayData,
-  CalendarExercise,
-  isExerciseWeighted,
-} from "../../../types";
+import { CalendarDayData, isExerciseWeighted } from "../../../types";
 import { getWeekday } from "../../../utils";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import {
@@ -26,7 +22,6 @@ import {
   setIsDataDirty,
 } from "../../../redux/reducers/calendarSlice";
 import { changePage } from "../../../redux/reducers/currentPageSlice";
-import { setExercisesAddDialog } from "../../../redux/reducers/exercisesAddDialogSlice";
 import { setQuickInfo } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { CalendarCheckbox } from "./CalendarCheckbox";
 

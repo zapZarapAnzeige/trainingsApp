@@ -34,6 +34,7 @@ import {
   removeExercise,
   clearAll,
   setId,
+  setReloadTrainingScheduleContent,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
 import { getExercises, postTrainingData } from "../../../api";
@@ -104,6 +105,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const handleClose = () => {
     setIsDataDirty(false);
     dispatch(clearAll());
+    dispatch(setReloadTrainingScheduleContent(true));
     setOpen(false);
   };
 
