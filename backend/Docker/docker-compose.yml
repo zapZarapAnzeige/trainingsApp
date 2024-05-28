@@ -15,7 +15,7 @@ services:
       - "./scripts/createProcedures.sql:/docker-entrypoint-initdb.d/4.sql"
       - "./scripts/createTriggers.sql:/docker-entrypoint-initdb.d/5.sql"
       - "./scripts/createEvents.sql:/docker-entrypoint-initdb.d/6.sql"
-      - "./scripts/insertDemoExercises.sql:/docker-entrypoint-initdb.d/7.sql"
+      - "./scripts/insertExercises.sql:/docker-entrypoint-initdb.d/7.sql"
       - "./scripts/insertTags.sql:/docker-entrypoint-initdb.d/8.sql"
       - "./scripts/insertTags2Exercises.sql:/docker-entrypoint-initdb.d/9.sql"
       - "./bck:/var/lib/bck"
