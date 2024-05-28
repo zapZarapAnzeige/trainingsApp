@@ -12,14 +12,12 @@ mongo_db_name = os.getenv("MONGO_DB_NAME")
 
 
 async def upload_file(fs, filename, file_data):
-    await fs.upload_from_stream(
-        filename, file_data, metadata={"contentType": "image/gif"}
-    )
+    await fs.upload_from_stream(filename, file_data)
     print(f"{filename} uploaded successfully.")
 
 
 async def upload_files(
-    directory=os.path.dirname(os.path.realpath(__file__)) + "/ressources",
+    directory=os.path.dirname(os.path.realpath(__file__)) + "/ressources/videos",
     db_name="mydatabase",
     bucket_name="videos",
 ):
