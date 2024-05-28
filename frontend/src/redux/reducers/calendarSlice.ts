@@ -6,12 +6,14 @@ export type calendarState = {
   isDataDirty: boolean;
   currentCW: number;
   calendarData: CalendarData;
+  reloadCalendar: boolean;
 };
 
 const initialState: calendarState = {
   isDataDirty: false,
   currentCW: getISOWeekNumber(new Date()),
   calendarData: { pastTrainings: [], futureTrainings: [] },
+  reloadCalendar: true,
 };
 
 const calendarSlice = createSlice({
@@ -35,6 +37,9 @@ const calendarSlice = createSlice({
       state.currentCW = getISOWeekNumber(new Date());
       state.calendarData = { pastTrainings: [], futureTrainings: [] };
     },
+    reloadCalendar: (state, action: PayloadAction<boolean>) => {
+      state.reloadCalendar = action.payload;
+    },
   },
 });
 
@@ -44,5 +49,6 @@ export const {
   decreaseCW,
   setCalendarData,
   resetCalendar,
+  reloadCalendar,
 } = calendarSlice.actions;
 export default calendarSlice.reducer;

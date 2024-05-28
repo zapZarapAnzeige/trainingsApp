@@ -27,6 +27,7 @@ import {
 import { useAppSelector } from "../../hooks";
 import { useDispatch } from "react-redux";
 import {
+  reloadCalendar,
   setCalendarData,
   setIsDataDirty,
 } from "../../redux/reducers/calendarSlice";
@@ -61,6 +62,11 @@ export default function Calendar() {
     };
 
     fetchTrainings();
+    dispatch(reloadCalendar(false));
+  }, [reloadCalendar]);
+
+  useEffect(() => {
+    dispatch(reloadCalendar(true));
   }, [currentCW]);
 
   return (
@@ -162,6 +168,7 @@ export default function Calendar() {
                 onClick={() => {
                   dispatch(setIsDataDirty(false));
                   postCalendar(auth(), calendarData.pastTrainings);
+                  dispatch(reloadCalendar(true));
                 }}
               >
                 <CheckIcon />
