@@ -241,7 +241,7 @@ export const postCalendar = async (
         training.exercises.map((exercise) => ({
           weight: isExerciseWeighted(exercise.exercise)
             ? exercise.exercise.weight
-            : undefined,
+            : null,
           exerciseId: exercise.exerciseId,
           completed: exercise.completed,
         }))

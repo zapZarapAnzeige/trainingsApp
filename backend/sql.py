@@ -17,7 +17,7 @@ from db_models import (
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
-from sqlalchemy import select, and_, distinct, literal, delete, update, case, not_
+from sqlalchemy import select, and_, distinct, literal, delete, update, case
 from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional, Union
 from db_parser import (
@@ -30,10 +30,11 @@ from custom_types import (
     WEEKDAY_MAP,
     post_trainingSchedule,
     post_trainingSchedule_Exercises,
-    post_Calendar,
     Post_ExercisesAdd,
     Exercise_cardio_frontend,
     Exercise_weighted_frontend,
+    Post_Calendar_w_weight,
+    Post_Calendar,
 )
 
 
@@ -640,7 +641,9 @@ def insert_Exercises2Trainings_plans(
         session.commit()
 
 
-def save_calendar_data(trainings: List[dict], user_id: int):
+def save_calendar_data(
+    trainings: List[Union[Post_Calendar_w_weight, Post_Calendar]], user_id: int
+):
     completed_case = case(
         *[
             (
@@ -657,7 +660,9 @@ def save_calendar_data(trainings: List[dict], user_id: int):
         *[
             (
                 Exercises_history.c.exercises_history_id == exercise.exerciseId,
-                exercise.weight,
+                exercise.weight
+                if isinstance(exercise, Post_Calendar_w_weight)
+                else None,
             )
             for exercise in trainings
         ]

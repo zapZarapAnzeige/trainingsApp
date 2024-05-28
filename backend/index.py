@@ -41,7 +41,8 @@ from custom_types import (
     response_model_get_chats,
     response_model_post_chat,
     post_trainingSchedule,
-    post_Calendar,
+    Post_Calendar,
+    Post_Calendar_w_weight,
     Post_ExercisesAdd,
     Response_model_ExercisesAdd,
 )
@@ -306,7 +307,7 @@ async def post_trainings_schedule(
 
 @app.post("/Calendar")
 async def save_Calendar(
-    trainings: List[post_Calendar],
+    trainings: List[Union[Post_Calendar_w_weight, Post_Calendar]],
     current_user=Depends(get_current_active_user),
 ):
     return save_calendar_data(trainings, current_user.get("user_id"))

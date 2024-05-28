@@ -247,10 +247,15 @@ class post_trainingSchedule(BaseModel):
     exercises: List[post_trainingSchedule_Exercises]
 
 
-class post_Calendar(BaseModel):
+class Post_Calendar_w_weight(BaseModel):
     exerciseId: int
     completed: bool
     weight: Optional[int]
+
+
+class Post_Calendar(BaseModel):
+    exerciseId: int
+    completed: bool
 
 
 class In_training_camel_case(BaseModel):
