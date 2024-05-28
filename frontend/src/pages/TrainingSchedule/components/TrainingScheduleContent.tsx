@@ -7,20 +7,31 @@ import { Training } from "../../../types";
 import { useEffect, useState } from "react";
 import { getTrainingData } from "../../../api";
 import { useAuthHeader } from "react-auth-kit";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { setReloadTrainingScheduleContent } from "../../../redux/reducers/trainingScheduleDialogSlice";
 
 export default function ExercisesContent() {
   const auth = useAuthHeader();
   const [trainingData, setTrainingData] = useState<Training[]>();
 
+  const reloadTrainingScheduleContent = useAppSelector(
+    (state) => state.trainingScheduleDialog.reloadTrainingScheduleContent
+  );
+
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    getTrainingData(auth())
-      .then((data: Training[]) => {
-        setTrainingData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
-  }, []);
+    if (reloadTrainingScheduleContent) {
+      getTrainingData(auth())
+        .then((data: Training[]) => {
+          setTrainingData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data", error);
+        });
+      dispatch(setReloadTrainingScheduleContent(false));
+    }
+  }, [reloadTrainingScheduleContent]);
 
   return (
     <Sheet

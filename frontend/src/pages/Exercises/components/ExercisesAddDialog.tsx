@@ -127,7 +127,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
         <List>
           {exercisesAddDialog.inTraining
             .concat(exercisesAddDialog.notInTraining)
-            .sort()
+            .sort((a, b) => a.trainingId - b.trainingId)
             .map((training) => {
               return (
                 <ListItem key={training.trainingId}>

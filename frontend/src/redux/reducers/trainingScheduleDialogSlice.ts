@@ -4,10 +4,12 @@ import { sortAndInsertDay } from "../../utils";
 
 export type TrainingScheduleDialogState = {
   value: Training;
+  reloadTrainingScheduleContent: boolean;
 };
 
 const initialState: TrainingScheduleDialogState = {
   value: { name: "", trainingId: -1, onDays: [], exercises: [] },
+  reloadTrainingScheduleContent: true,
 };
 
 const trainingScheduleDialogSlice = createSlice({
@@ -42,6 +44,12 @@ const trainingScheduleDialogSlice = createSlice({
     clearAll: (state) => {
       state.value = { name: "", trainingId: -1, onDays: [], exercises: [] };
     },
+    setReloadTrainingScheduleContent: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
+      state.reloadTrainingScheduleContent = action.payload;
+    },
   },
 });
 
@@ -54,5 +62,6 @@ export const {
   removeExercise,
   setTraining,
   clearAll,
+  setReloadTrainingScheduleContent,
 } = trainingScheduleDialogSlice.actions;
 export default trainingScheduleDialogSlice.reducer;
