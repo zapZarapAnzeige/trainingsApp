@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Exercises (
 CREATE TABLE IF NOT EXISTS Tags (
     tag_id INT AUTO_INCREMENT,
     tag_name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (tag_id),
+    PRIMARY KEY (tag_id)
 );
 
 CREATE TABLE IF NOT EXISTS Tags2Exercises (
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS Tags2Exercises (
     exercise_id INT NOT NULL,
     is_primary_tag BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (tag_id, exercise_id),   
-    FOREIGN KEY (tag_id) REFERENCES Tags (tag_id) ON DELETE CASCADE
+    FOREIGN KEY (tag_id) REFERENCES Tags (tag_id) ON DELETE CASCADE,
     FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE
 );
 
