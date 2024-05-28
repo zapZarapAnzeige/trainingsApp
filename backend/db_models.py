@@ -136,13 +136,21 @@ Exercises_history = Table(
 Tags = Table(
     "Tags",
     metaData,
+    Column("tag_id", Integer, nullable=False),
+    Column("tag_name", String(255), nullable=False),
+    PrimaryKeyConstraint("tag_id"),
+)
+
+Tags2Exercises = Table(
+    "Tags2Exercises",
+    metaData,
     Column("tag_id", Integer, primary_key=True, autoincrement=True),
     Column("exercise_id", Integer, nullable=False),
-    Column("tag_name", String(255), nullable=False),
     Column("is_primary_tag", Boolean, nullable=False, default=False),
     ForeignKeyConstraint(
         ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
     ),
+    ForeignKeyConstraint(["tag_id"], ["Tags.tag_id"], ondelete="CASCADE"),
 )
 
 Individual_Exercise_Ratings = Table(

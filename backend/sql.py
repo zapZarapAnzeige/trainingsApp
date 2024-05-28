@@ -12,6 +12,7 @@ from db_models import (
     Days,
     Exercises2Trainings_plans,
     Tags,
+    Tags2Exercises,
     Exercises_history,
 )
 from sqlalchemy.exc import IntegrityError
@@ -287,10 +288,13 @@ def get_all_exercises_for_user(user_id: int):
                 Exercises.c.preview_image,
                 Overall_Exercise_Ratings.c.total_exercise_ratings,
                 Tags.c.tag_name,
-                Tags.c.is_primary_tag,
+                Tags2Exercises.c.is_primary_tag,
             )
             .select_from(Exercises)
-            .join(Tags, Exercises.c.exercise_id == Tags.c.exercise_id, isouter=True)
+            .join(
+                Tags2Exercises, Exercises.c.exercise_id == Tags2Exercises, isouter=True
+            )
+            .join(Tags, Tags2Exercises.c.tag_id == Tags2Exercises.c.tag_id)
             .join(
                 Overall_Exercise_Ratings,
                 Overall_Exercise_Ratings.c.exercise_id == Exercises.c.exercise_id,
@@ -303,11 +307,7 @@ def get_all_exercises_for_user(user_id: int):
 
 
 def get_all_unique_tags():
-    return (
-        session.execute(select(distinct(Tags.c.tag_name)).select_from(Tags))
-        .scalars()
-        .all()
-    )
+    return session.execute(select(Tags.c.tag_name).select_from(Tags)).scalars().all()
 
 
 def get_base_exercises(user_id: int):

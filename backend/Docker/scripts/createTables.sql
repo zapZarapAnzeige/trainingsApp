@@ -25,12 +25,20 @@ CREATE TABLE IF NOT EXISTS Exercises (
 
 CREATE TABLE IF NOT EXISTS Tags (
     tag_id INT AUTO_INCREMENT,
-    exercise_id INT,
     tag_name VARCHAR(255) NOT NULL,
-    is_primary_tag BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (tag_id),
+);
+
+CREATE TABLE IF NOT EXISTS Tags2Exercises (
+    tag_id INT NOT NULL,
+    exercise_id INT NOT NULL,
+    is_primary_tag BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (tag_id, exercise_id),   
+    FOREIGN KEY (tag_id) REFERENCES Tags (tag_id) ON DELETE CASCADE
     FOREIGN KEY (exercise_id) REFERENCES Exercises (exercise_id) ON DELETE CASCADE
 );
+
+
 
 CREATE TABLE IF NOT EXISTS Individual_Exercise_Ratings (
     user_id INT,
