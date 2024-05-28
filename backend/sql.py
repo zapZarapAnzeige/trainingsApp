@@ -292,7 +292,9 @@ def get_all_exercises_for_user(user_id: int):
             )
             .select_from(Exercises)
             .join(
-                Tags2Exercises, Exercises.c.exercise_id == Tags2Exercises, isouter=True
+                Tags2Exercises,
+                Exercises.c.exercise_id == Tags2Exercises.c.exercise_id,
+                isouter=True,
             )
             .join(Tags, Tags2Exercises.c.tag_id == Tags2Exercises.c.tag_id)
             .join(
