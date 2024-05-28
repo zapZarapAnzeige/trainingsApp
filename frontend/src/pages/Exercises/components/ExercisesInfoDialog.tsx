@@ -63,11 +63,13 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
         </Typography>
         <Divider />
         <Stack direction="row" spacing={2}>
-          {exercisesInfoDialog.primaryTags.map((primaryTag) => (
-            <Chip color="primary">{primaryTag}</Chip>
+          {exercisesInfoDialog.primaryTags.map((primaryTag, i) => (
+            <Chip color="primary" key={i}>
+              {primaryTag}
+            </Chip>
           ))}
-          {exercisesInfoDialog.secondaryTags.map((secondaryTag) => (
-            <Chip>{secondaryTag}</Chip>
+          {exercisesInfoDialog.secondaryTags.map((secondaryTag, i) => (
+            <Chip key={i}>{secondaryTag}</Chip>
           ))}
         </Stack>
       </ModalDialog>

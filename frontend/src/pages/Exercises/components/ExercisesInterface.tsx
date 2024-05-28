@@ -46,16 +46,17 @@ export default function ExercisesInterface() {
         >
           {tags
             .filter((tag) => !currentTags.includes(tag))
-            .map((tag) => (
-              <Option key={tag} value={tag}>
+            .map((tag, i) => (
+              <Option key={i} value={tag}>
                 {tag}
               </Option>
             ))}
         </Select>
         <Stack direction="row" spacing={2}>
-          {currentTags.map((tag) => {
+          {currentTags.map((tag, i) => {
             return (
               <Chip
+                key={i}
                 variant="outlined"
                 endDecorator={
                   <ChipDelete

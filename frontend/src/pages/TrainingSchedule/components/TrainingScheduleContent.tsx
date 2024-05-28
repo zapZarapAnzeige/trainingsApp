@@ -31,7 +31,7 @@ export default function ExercisesContent() {
       <Grid container spacing={4}>
         {trainingData?.map((trainingScheduleEntryData) => {
           return (
-            <Grid xs={4}>
+            <Grid xs={4} key={trainingScheduleEntryData.trainingId}>
               <TrainingScheduleEntry training={trainingScheduleEntryData} />
             </Grid>
           );

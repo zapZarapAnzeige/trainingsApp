@@ -199,7 +199,9 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                       )
                   )
                   .map((exercise) => (
-                    <Option value={exercise}>{exercise.exerciseName}</Option>
+                    <Option value={exercise} key={exercise.exerciseId}>
+                      {exercise.exerciseName}
+                    </Option>
                   ))}
               </Select>
               {selectedExercise && selectedExercise.exerciseType === "Min" && (
@@ -302,7 +304,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             </Button>
             {trainingScheduleDialog.exercises.map((exercise, index) => {
               return (
-                <List>
+                <List key={exercise.exerciseId}>
                   <ListItem>
                     <ListItemContent>
                       <IconButton

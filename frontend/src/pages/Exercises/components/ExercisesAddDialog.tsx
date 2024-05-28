@@ -130,7 +130,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
             .sort()
             .map((training) => {
               return (
-                <ListItem>
+                <ListItem key={training.trainingId}>
                   <ListItemContent>
                     <Stack direction="row" justifyContent="space-between">
                       <Checkbox

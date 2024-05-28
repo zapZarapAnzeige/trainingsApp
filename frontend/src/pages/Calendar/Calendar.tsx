@@ -76,7 +76,7 @@ export default function Calendar() {
           {calendarData.pastTrainings.map(
             (calendarDayData: CalendarDayData) => {
               return (
-                <Grid xs={12 / 7}>
+                <Grid xs={12 / 7} key={calendarDayData.date}>
                   <CalendarDay
                     calendarDayData={calendarDayData}
                     completable={true}
@@ -85,18 +85,22 @@ export default function Calendar() {
               );
             }
           )}
-          {calendarData.futureTrainings.map(
-            (calendarDayData: CalendarDayData) => {
+          {calendarData.futureTrainings
+            .slice()
+            .sort(
+              (t1, t2) =>
+                new Date(t1.date).getTime() - new Date(t2.date).getTime()
+            )
+            .map((calendarDayData: CalendarDayData) => {
               return (
-                <Grid xs={12 / 7}>
+                <Grid xs={12 / 7} key={calendarDayData.date}>
                   <CalendarDay
                     calendarDayData={calendarDayData}
                     completable={false}
                   />
                 </Grid>
               );
-            }
-          )}
+            })}
           <Box
             sx={{
               width: "100%",

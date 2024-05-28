@@ -72,10 +72,13 @@ const CalendarDay: FC<CalendarDayProps> = ({
         >
           {calendarDayData.trainings ? (
             calendarDayData.trainings.map((training) => (
-              <List sx={{ display: "flex", flexDirection: "column" }}>
+              <List
+                sx={{ display: "flex", flexDirection: "column" }}
+                key={training.trainingId}
+              >
                 {training.exercises.map((exercise) => (
                   <>
-                    <ListItem sx={{ flexGrow: 6 }}>
+                    <ListItem sx={{ flexGrow: 6 }} key={exercise.exerciseId}>
                       <ListItemContent>
                         <Stack direction="row" justifyContent="space-between">
                           <Typography>{exercise.exerciseName}</Typography>

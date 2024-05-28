@@ -64,7 +64,7 @@ export default function ExercisesContent() {
       <Grid container spacing={4}>
         {sortedEntries.map((exercisesEntryData) => {
           return (
-            <Grid xs={4}>
+            <Grid xs={4} key={exercisesEntryData.exerciseId}>
               <ExercisesEntry exercisesEntryData={exercisesEntryData} />
             </Grid>
           );
