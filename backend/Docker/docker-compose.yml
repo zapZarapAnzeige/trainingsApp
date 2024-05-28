@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.8"
 services:
   mysql:
     image: mysql:latest
@@ -9,6 +9,7 @@ services:
     ports:
       - "3306:${DB_PORT}"
     volumes:
+      - "./scripts/ressources/images/:/tmp/images/"
       - "./scripts/createDB.sql:/docker-entrypoint-initdb.d/1.sql"
       - "./scripts/createTables.sql:/docker-entrypoint-initdb.d/2.sql"
       - "./scripts/insertDemoData.sql:/docker-entrypoint-initdb.d/3.sql"
