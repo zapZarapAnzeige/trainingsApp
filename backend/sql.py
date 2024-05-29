@@ -15,11 +15,10 @@ from db_models import (
     Tags2Exercises,
     Exercises_history,
 )
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from datetime import datetime, timedelta
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy import select, and_, distinct, literal, delete, update, case
-from sqlalchemy.exc import NoResultFound
 from typing import Dict, List, Optional, Union
 from db_parser import (
     parse_trainings,
@@ -76,7 +75,8 @@ async def update_user_data(
     if profile_picture:
         max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
-            raise HTTPException(status_code=413, detail="Image size exceeds 16 MB")
+            raise HTTPException(
+                status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
@@ -98,7 +98,8 @@ def get_profile_pic(user_id: int):
 
 
 def get_user(name):
-    result = session.execute(select(Users).where(Users.c.user_name == name)).fetchone()
+    result = session.execute(select(Users).where(
+        Users.c.user_name == name)).fetchone()
     if result is not None:
         return result._asdict()
 
@@ -296,7 +297,8 @@ def get_all_exercises_for_user(user_id: int):
                 Exercises.c.exercise_id == Tags2Exercises.c.exercise_id,
                 isouter=True,
             )
-            .join(Tags, Tags2Exercises.c.tag_id == Tags2Exercises.c.tag_id)
+            .join(Tags, Tags.c.tag_id == Tags2Exercises.c.tag_id,
+                  isouter=True,)
             .join(
                 Overall_Exercise_Ratings,
                 Overall_Exercise_Ratings.c.exercise_id == Exercises.c.exercise_id,
@@ -340,7 +342,8 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             select(
                 Trainings_plan_history.c.day,
                 Trainings_plan_history.c.trainings_name,
-                Trainings_plan_history.c.trainings_plan_history_id.label("training_id"),
+                Trainings_plan_history.c.trainings_plan_history_id.label(
+                    "training_id"),
                 Exercises_history.c.exercises_history_id.label("exercise_id"),
                 Exercises.c.exercise_name,
                 Exercises_history.c.completed,
@@ -401,7 +404,8 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
             )
             .select_from(Days)
             .where(
-                Days.c.user_id == user_id, Days.c.weekday.in_(get_weekdays(date_diff))
+                Days.c.user_id == user_id, Days.c.weekday.in_(
+                    get_weekdays(date_diff))
             )
             .join(Trainings_plan, Trainings_plan.c.training_id == Days.c.training_id)
             .join(
@@ -556,7 +560,8 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             ]
             if len(exercises_to_insert) > 0:
                 session.execute(
-                    insert(Exercises2Trainings_plans).values(exercises_to_insert)
+                    insert(Exercises2Trainings_plans).values(
+                        exercises_to_insert)
                 )
 
             update_user_performance(
@@ -692,12 +697,14 @@ def save_calendar_data(
 
 def get_exercise_name_by_id(exercise_id: int):
     return session.execute(
-        select(Exercises.c.exercise_name).where(Exercises.c.exercise_id == exercise_id)
+        select(Exercises.c.exercise_name).where(
+            Exercises.c.exercise_id == exercise_id)
     ).scalar_one()
 
 
 def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
-    current_exercises = get_exercise_for_dialog(exercise_add.exercise_id, user_id)
+    current_exercises = get_exercise_for_dialog(
+        exercise_add.exercise_id, user_id)
 
     training_ids_to_delete = [
         d["training_id"]
@@ -716,7 +723,8 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
         session.execute(
             delete(Exercises2Trainings_plans).where(
                 and_(
-                    Exercises2Trainings_plans.c.training_id.in_(training_ids_to_delete),
+                    Exercises2Trainings_plans.c.training_id.in_(
+                        training_ids_to_delete),
                     Exercises2Trainings_plans.c.exercise_id == exercise_add.exercise_id,
                 )
             )
@@ -742,5 +750,14 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
             }
             for id_ in training_ids_to_insert
         ]
-        session.execute(insert(User_current_performance).values(performance_to_insert))
+        session.execute(insert(User_current_performance).values(
+            performance_to_insert))
         session.commit()
+
+
+def delete_training(training_id, user_id):
+    session.execute(delete(Trainings_plan).where(and_(Trainings_plan.c.training_id ==
+                                                      training_id, Trainings_plan.c.user_id == user_id)))
+    session.commit()
+
+    return True
