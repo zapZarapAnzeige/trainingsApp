@@ -17,8 +17,10 @@ import { useEffect, useState } from "react";
 import {
   calculateDayGoal,
   calculateWeekGoal,
+  fillMissingTrainingDays,
   getMondayOfWeek,
   roundToTwoDecimalPlaces,
+  splitPastFuture,
 } from "../../utils";
 
 // TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
@@ -53,10 +55,14 @@ export default function Calendar() {
         const futureTrainings = await getFutureTrainings(token, weekStart);
 
         dispatch(
-          setCalendarData({
-            pastTrainings,
-            futureTrainings,
-          })
+          setCalendarData(
+            splitPastFuture(
+              fillMissingTrainingDays([
+                ...calendarData.pastTrainings,
+                ...calendarData.futureTrainings,
+              ])
+            )
+          )
         );
       } catch (error) {
         console.error("Error fetching data", error);
@@ -122,7 +128,7 @@ export default function Calendar() {
                 variant="outlined"
                 sx={{ mb: 1, borderRadius: 5, width: "100%", p: 2 }}
               >
-                {intl.formatMessage({id: "calendar.label.dailyGoal"})+
+                {intl.formatMessage({ id: "calendar.label.dailyGoal" }) +
                   roundToTwoDecimalPlaces(
                     calculateDayGoal(
                       [
@@ -146,7 +152,7 @@ export default function Calendar() {
                 />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
-                {intl.formatMessage({id: "calendar.label.weeklyGoal"}) +
+                {intl.formatMessage({ id: "calendar.label.weeklyGoal" }) +
                   roundToTwoDecimalPlaces(
                     calculateWeekGoal([
                       ...calendarData.pastTrainings,

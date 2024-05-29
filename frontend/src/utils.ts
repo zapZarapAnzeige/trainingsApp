@@ -32,19 +32,19 @@ export function toggleSidebar() {
 export function getPageName(page: string, intl: IntlShape) {
   switch (page) {
     case "calendar":
-      return intl.formatMessage({id: "utils.label.calender"});
+      return intl.formatMessage({ id: "utils.label.calender" });
     case "trainingSchedule":
-      return intl.formatMessage({id: "utils.label.trainingSchedule"});
+      return intl.formatMessage({ id: "utils.label.trainingSchedule" });
     case "chats":
-      return intl.formatMessage({id: "utils.label.chats"});
+      return intl.formatMessage({ id: "utils.label.chats" });
     case "exercises":
-      return intl.formatMessage({id: "utils.label.exercises"});
+      return intl.formatMessage({ id: "utils.label.exercises" });
     case "tips":
-      return intl.formatMessage({id: "utils.label.tips"});
+      return intl.formatMessage({ id: "utils.label.tips" });
     case "about":
-      return intl.formatMessage({id: "utils.label.about"});
+      return intl.formatMessage({ id: "utils.label.about" });
     case "profile":
-      return intl.formatMessage({id: "utils.label.profile"});
+      return intl.formatMessage({ id: "utils.label.profile" });
     default:
       return "";
   }
@@ -333,4 +333,55 @@ export function modifyDateKeys(data: CalendarDayData[]): CalendarDayData[] {
   });
 
   return data;
+}
+
+export function fillMissingTrainingDays(
+  data: CalendarDayData[]
+): CalendarDayData[] {
+  if (data.length === 0) return [];
+
+  const result: CalendarDayData[] = [];
+  const inputDates = data.map((d) => new Date(d.date));
+  const minDate = new Date(Math.min(...inputDates.map((d) => d.getTime())));
+  const monday = new Date(minDate);
+  const dayOfWeek = monday.getUTCDay();
+  const diffToMonday = (dayOfWeek + 6) % 7;
+  monday.setUTCDate(monday.getUTCDate() - diffToMonday);
+
+  const dateMap: { [key: string]: CalendarDayData } = {};
+  data.forEach((day) => (dateMap[day.date] = day));
+
+  for (let i = 0; i < 7; i++) {
+    const currentDate = new Date(monday);
+    currentDate.setUTCDate(monday.getUTCDate() + i);
+    const dateString = currentDate.toISOString().split("T")[0];
+
+    if (dateMap[dateString]) {
+      result.push(dateMap[dateString]);
+    } else {
+      result.push({
+        date: dateString,
+        trainings: [],
+      });
+    }
+  }
+
+  result.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  return result;
+}
+
+export function splitPastFuture(data: CalendarDayData[]): {
+  pastTrainings: CalendarDayData[];
+  futureTrainings: CalendarDayData[];
+} {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const pastTrainings = data.filter((d) => new Date(d.date) <= today);
+  const futureTrainings = data.filter((d) => new Date(d.date) > today);
+
+  return { pastTrainings, futureTrainings };
 }

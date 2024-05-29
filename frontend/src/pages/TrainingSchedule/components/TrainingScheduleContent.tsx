@@ -18,10 +18,12 @@ export default function ExercisesContent() {
     (state) => state.trainingScheduleDialog.reloadTrainingScheduleContent
   );
 
+  const currentPage = useAppSelector((state) => state.currentPage.value);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (reloadTrainingScheduleContent) {
+    if (reloadTrainingScheduleContent || currentPage === "trainingSchedule") {
       getTrainingData(auth())
         .then((data: Training[]) => {
           setTrainingData(data);
@@ -31,7 +33,7 @@ export default function ExercisesContent() {
         });
       dispatch(setReloadTrainingScheduleContent(false));
     }
-  }, [reloadTrainingScheduleContent]);
+  }, [reloadTrainingScheduleContent, currentPage]);
 
   return (
     <Sheet
