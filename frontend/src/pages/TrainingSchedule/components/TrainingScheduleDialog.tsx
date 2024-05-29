@@ -39,6 +39,7 @@ import {
 import { mapNumberToWeekdayString } from "../../../utils";
 import { getExercises, postTrainingData } from "../../../api";
 import { useAuthHeader } from "react-auth-kit";
+import { useIntl } from "react-intl";
 
 type TrainingScheduleDialogProps = {
   open: boolean;
@@ -52,6 +53,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   editTraining,
 }) => {
   const auth = useAuthHeader();
+  const intl = useIntl();
   const trainingScheduleDialog = useAppSelector(
     (state) => state.trainingScheduleDialog.value
   );
@@ -68,8 +70,8 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const [sets, setSets] = useState<number>(0);
 
   const title = editTraining
-    ? "Training bearbeiten"
-    : "Neues Training erstellen";
+    ? intl.formatMessage({id: "trainingSchedule.label.editTraining"})
+    : intl.formatMessage({id: "trainingSchedule.label.createTraining"});
 
   const handleDayToggle = (checkboxDay: string, check: boolean) => {
     dispatch(check ? addDay(checkboxDay) : dispatch(removeDay(checkboxDay)));
@@ -176,7 +178,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             alignItems="center"
             spacing={2}
           >
-            <DialogTitle>Übung hinzufügen</DialogTitle>
+            <DialogTitle>{intl.formatMessage({id: "trainingSchedule.label.addExercise"})}</DialogTitle>
             <IconButton onClick={() => setOpenExerciseDialog(false)}>
               <CloseIcon />
             </IconButton>
@@ -184,7 +186,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
           <Divider />
           <Stack spacing={2}>
             <FormControl>
-              <FormLabel>Übung</FormLabel>
+              <FormLabel>{intl.formatMessage({id: "trainingSchedule.label.exercise"})}</FormLabel>
               <Select
                 autoFocus
                 required
@@ -207,7 +209,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
               </Select>
               {selectedExercise && selectedExercise.exerciseType === "Min" && (
                 <FormControl>
-                  <FormLabel>Minuten</FormLabel>
+                  <FormLabel>{intl.formatMessage({id: "exercises.label.minutes"})}</FormLabel>
                   <Input
                     value={minutes}
                     autoFocus
@@ -224,7 +226,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                 selectedExercise.exerciseType === "SxWdh" && (
                   <>
                     <FormControl>
-                      <FormLabel>Wiederholungen</FormLabel>
+                      <FormLabel>{intl.formatMessage({id: "exercises.label.repetitions"})}</FormLabel>
                       <Input
                         value={repetitions}
                         required
@@ -235,7 +237,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                       />
                     </FormControl>
                     <FormControl>
-                      <FormLabel>Sets</FormLabel>
+                      <FormLabel>{intl.formatMessage({id: "exercises.label.sets"})}</FormLabel>
                       <Input
                         value={sets}
                         required
@@ -279,7 +281,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
           <Divider />
           <Stack>
             <FormControl>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{intl.formatMessage({id: "trainingSchedule.label.name"})}</FormLabel>
               <Input
                 defaultValue={trainingScheduleDialog.name}
                 autoFocus
@@ -301,7 +303,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                 trainingScheduleDialog.exercises.length >= exercises.length
               }
             >
-              Übung hinzufügen
+             {intl.formatMessage({id: "trainingSchedule.label.addExercise"})}
             </Button>
             {trainingScheduleDialog.exercises.map((exercise, index) => {
               return (
@@ -320,12 +322,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
                     {"minutes" in exercise.exercise ? (
                       <ListItemContent>
-                        {exercise.exercise.minutes} Min.
+                        {intl.formatMessage({id: "calendar.label.min"}, {min: exercise.exercise.minutes})}
                       </ListItemContent>
                     ) : (
                       <ListItemContent>
                         {exercise.exercise.setAmount} x{" "}
-                        {exercise.exercise.repetitionAmount} Wdh.
+                        {intl.formatMessage({id: "calendar.label.rep"}, {rep: exercise.exercise.repetitionAmount})}
                       </ListItemContent>
                     )}
                   </ListItem>

@@ -6,10 +6,12 @@ import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { useState } from "react";
 import { changePage } from "../../../redux/reducers/currentPageSlice";
 import { useAppDispatch } from "../../../hooks";
+import { useIntl } from "react-intl";
 
 export default function TrainingScheduleInterface() {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const intl = useIntl();
 
   return (
     <>
@@ -32,7 +34,7 @@ export default function TrainingScheduleInterface() {
             startDecorator={<AddIcon />}
             onClick={() => setOpen(true)}
           >
-            Neues Training hinzufügen
+            {intl.formatMessage({id: "trainingSchedule.label.addTraining"})}
           </Button>
         </Box>
         <Box>

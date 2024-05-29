@@ -33,9 +33,11 @@ import {
 } from "../../redux/reducers/calendarSlice";
 import { getFutureTrainings, getPastTrainings, postCalendar } from "../../api";
 import { useAuthHeader } from "react-auth-kit";
+import { useIntl } from "react-intl";
 
 export default function Calendar() {
   const auth = useAuthHeader();
+  const intl = useIntl();
   const dispatch = useDispatch();
   const isDataDirty = useAppSelector((state) => state.calendar.isDataDirty);
   const currentCW = useAppSelector((state) => state.calendar.currentCW);
@@ -120,7 +122,7 @@ export default function Calendar() {
                 variant="outlined"
                 sx={{ mb: 1, borderRadius: 5, width: "100%", p: 2 }}
               >
-                {"Tagesziel: " +
+                {intl.formatMessage({id: "calendar.label.dailyGoal"})+
                   roundToTwoDecimalPlaces(
                     calculateDayGoal(
                       [
@@ -144,7 +146,7 @@ export default function Calendar() {
                 />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
-                {"Wochenziel: " +
+                {intl.formatMessage({id: "calendar.label.weeklyGoal"}) +
                   roundToTwoDecimalPlaces(
                     calculateWeekGoal([
                       ...calendarData.pastTrainings,

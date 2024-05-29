@@ -9,6 +9,7 @@ import { clearAll } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import Chip from "@mui/joy/Chip";
 import Rating from "@mui/material/Rating";
 import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from "@mui/material/styles";
+import { useIntl } from "react-intl";
 
 type ExercisesInfoDialogProps = {
   open: boolean;
@@ -23,6 +24,7 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
     (state) => state.exercisesInfoDialog.value
   );
   const dispatch = useAppDispatch();
+  const intl = useIntl();
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -47,7 +49,7 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
         VIDEO AREA
         <Divider />
         <Stack direction="row" spacing={2}>
-          <Typography>Deine Bewertung:</Typography>
+          <Typography>{intl.formatMessage({id: "exercises.label.yourRating"})}</Typography>
           <MaterialCssVarsProvider>
             <Rating
               precision={0.5}

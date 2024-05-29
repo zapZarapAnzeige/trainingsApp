@@ -23,6 +23,7 @@ import {
 } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
 import { changePage } from "../../../redux/reducers/currentPageSlice";
+import { useIntl } from "react-intl";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 //import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
@@ -34,6 +35,7 @@ type ExercisesEntryProps = {
 
 const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   const auth = useAuthHeader();
+  const intl = useIntl();
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
 
@@ -129,7 +131,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
               </Stack>
               <Typography level="body-xs">
                 {exercisesEntryData.reviews}{" "}
-                {exercisesEntryData.reviews === 1 ? "Bewertung" : "Bewertungen"}
+                {exercisesEntryData.reviews === 1 ? intl.formatMessage({id: "exercises.label.rating"}) : intl.formatMessage({id: "exercises.label.ratings"})}
               </Typography>
             </Stack>
             <IconButton

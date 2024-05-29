@@ -43,13 +43,13 @@ const DismissDialog: FC<DismissDialogProps> = ({
   function getDialogTitle(dismissDialogType: DismissDialogType) {
     switch (dismissDialogType) {
       case DismissDialogType.INFO:
-        return "Hinweis";
+        return intl.formatMessage({id: "dismissDialog.label.note"});
       case DismissDialogType.WARNING:
-        return "Warnung";
+        return intl.formatMessage({id: "dismissDialog.label.warning"});
       case DismissDialogType.ERROR:
-        return "Error";
+        return intl.formatMessage({id: "dismissDialog.label.error"});
       default:
-        return "Error";
+        return intl.formatMessage({id: "dismissDialog.label.error"});
     }
   }
 
@@ -64,7 +64,7 @@ const DismissDialog: FC<DismissDialogProps> = ({
         <DialogContent>{dialogContent}</DialogContent>
         <DialogActions>
           <Button onClick={closeDismissDialog} variant="solid" color="neutral">
-            {intl.formatMessage({ id: "DismissDialog.close" })}
+            {intl.formatMessage({ id: "dismissDialog.close" })}
           </Button>
         </DialogActions>
       </ModalDialog>

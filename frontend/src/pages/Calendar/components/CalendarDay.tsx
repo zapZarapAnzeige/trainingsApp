@@ -24,6 +24,7 @@ import {
 import { changePage } from "../../../redux/reducers/currentPageSlice";
 import { setQuickInfo } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { CalendarCheckbox } from "./CalendarCheckbox";
+import { useIntl } from "react-intl";
 
 type CalendarDayProps = {
   calendarDayData: CalendarDayData;
@@ -36,6 +37,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const calendarData = useAppSelector((state) => state.calendar.calendarData);
+  const intl = useIntl();
 
   const handleInfoClick = (exerciseName: string) => {
     dispatch(setQuickInfo(exerciseName));
@@ -93,7 +95,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                         <ListItemContent>
                           <Stack direction="row" justifyContent="space-between">
                             <Typography>
-                              {exercise.exercise.minutes} Min.
+                              {intl.formatMessage({id: "calendar.label.min"}, {min: exercise.exercise.minutes})}
                             </Typography>
                             <CalendarCheckbox
                               completable={completable}
@@ -110,7 +112,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                           <Stack direction="row" justifyContent="space-between">
                             <Typography>
                               {exercise.exercise.setAmount} x{" "}
-                              {exercise.exercise.repetitionAmount} Wdh.
+                             {intl.formatMessage({id: "calendar.label.rep"}, {rep: exercise.exercise.repetitionAmount})}
                             </Typography>
                             <CalendarCheckbox
                               completable={completable}

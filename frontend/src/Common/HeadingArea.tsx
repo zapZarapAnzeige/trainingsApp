@@ -7,9 +7,11 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { useAppSelector } from "../hooks";
 import { getPageName } from "../utils";
+import { useIntl } from "react-intl";
 
 export default function HeadingArea() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
+  const intl = useIntl();
 
   return (
     <>
@@ -24,7 +26,7 @@ export default function HeadingArea() {
             <HomeRoundedIcon />
           </Link>
           <Typography color="primary" fontWeight={500} fontSize={12}>
-            {getPageName(currentPage)}
+            {getPageName(currentPage, intl)}
           </Typography>
         </Breadcrumbs>
       </Box>
@@ -40,7 +42,7 @@ export default function HeadingArea() {
         }}
       >
         <Typography level="h2" component="h1">
-          {getPageName(currentPage)}
+          {getPageName(currentPage, intl)}
         </Typography>
       </Box>
     </>

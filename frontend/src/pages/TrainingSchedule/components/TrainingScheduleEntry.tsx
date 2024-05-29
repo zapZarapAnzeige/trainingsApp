@@ -22,6 +22,7 @@ import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { weekdaysAbbreviation, weekdaysNames } from "../../../constants";
 import { setTraining } from "../../../redux/reducers/trainingScheduleDialogSlice";
+import { useIntl } from "react-intl";
 
 type TrainingScheduleEntryProps = {
   training: Training;
@@ -33,6 +34,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
+  const intl = useIntl();
 
   const handleOpenEditDialog = () => {
     dispatch(setTraining(training));
@@ -77,12 +79,12 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
                     {"minutes" in exercise.exercise ? (
                       <ListItemContent>
-                        {exercise.exercise.minutes} Min.
+                        {intl.formatMessage({id: "calendar.label.min"}, {min: exercise.exercise.minutes})}
                       </ListItemContent>
                     ) : (
                       <ListItemContent>
                         {exercise.exercise.setAmount} x{" "}
-                        {exercise.exercise.repetitionAmount} Wdh.
+                        {intl.formatMessage({id: "calendar.label.rep"}, {rep: exercise.exercise.repetitionAmount})}
                       </ListItemContent>
                     )}
                   </ListItem>

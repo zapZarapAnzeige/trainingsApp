@@ -29,12 +29,14 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 import { ProfilePicture } from "./ProfilePicture";
 import { useSignOut } from "react-auth-kit";
 import { Button } from "@mui/joy";
+import { useIntl } from "react-intl";
 
 export default function Sidebar() {
   const currentPage = useAppSelector((state) => state.currentPage.value);
   const dispatch = useAppDispatch();
   const userData = useAppSelector((state) => state.user.value);
   const logout = useSignOut();
+  const intl = useIntl();
 
   const isSelected = (page: string) => page === currentPage;
   return (
@@ -92,7 +94,7 @@ export default function Sidebar() {
         <IconButton variant="soft" color="primary" size="sm">
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Fitness App</Typography>
+        <Typography level="title-lg">{intl.formatMessage({ id: "sidebar.label.trainingapp"})}</Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
       <Box
@@ -123,7 +125,7 @@ export default function Sidebar() {
               <HomeRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">
-                  {getPageName("calendar")}
+                  {getPageName("calendar", intl)}
                 </Typography>
               </ListItemContent>
             </ListItemButton>
@@ -137,7 +139,7 @@ export default function Sidebar() {
               <FitnessCenterIcon />
               <ListItemContent>
                 <Typography level="title-sm">
-                  {getPageName("trainingSchedule")}
+                  {getPageName("trainingSchedule", intl)}
                 </Typography>
               </ListItemContent>
             </ListItemButton>
@@ -150,7 +152,7 @@ export default function Sidebar() {
             >
               <QuestionAnswerRoundedIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("chats")}</Typography>
+                <Typography level="title-sm">{getPageName("chats", intl)}</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -163,7 +165,7 @@ export default function Sidebar() {
               <SportsMmaIcon />
               <ListItemContent>
                 <Typography level="title-sm">
-                  {getPageName("exercises")}
+                  {getPageName("exercises", intl)}
                 </Typography>
               </ListItemContent>
             </ListItemButton>
@@ -176,7 +178,7 @@ export default function Sidebar() {
             >
               <HelpIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("tips")}</Typography>
+                <Typography level="title-sm">{getPageName("tips", intl)}</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -188,7 +190,7 @@ export default function Sidebar() {
             >
               <InfoIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("about")}</Typography>
+                <Typography level="title-sm">{getPageName("about", intl)}</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>

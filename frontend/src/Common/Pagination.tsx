@@ -11,9 +11,11 @@ import {
   decreaseCW,
   setIsDataDirty,
 } from "../redux/reducers/calendarSlice";
+import { useIntl } from "react-intl";
 
 export default function Pagination() {
   const dispatch = useAppDispatch();
+  const intl = useIntl();
   const isDataDirty = useAppSelector((state) => state.calendar.isDataDirty);
   const currentCW = useAppSelector((state) => state.calendar.currentCW);
 
@@ -41,11 +43,11 @@ export default function Pagination() {
           dispatch(setIsDataDirty(false));
         }}
       >
-        Zurück
+        {intl.formatMessage({ id: "pagination.label.back"})}
       </Button>
 
       <Box sx={{ flex: 1 }} />
-      <Typography>{"KW: " + currentCW}</Typography>
+      <Typography>{intl.formatMessage({ id: "pagination.label.cw"}) + currentCW}</Typography>
       <Box sx={{ flex: 1 }} />
 
       <Button
@@ -58,7 +60,7 @@ export default function Pagination() {
           dispatch(setIsDataDirty(false));
         }}
       >
-        Weiter
+        {intl.formatMessage({ id: "pagination.label.next"})}
       </Button>
     </Box>
   );

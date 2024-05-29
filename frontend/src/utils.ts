@@ -29,22 +29,22 @@ export function toggleSidebar() {
   }
 }
 
-export function getPageName(page: string) {
+export function getPageName(page: string, intl: IntlShape) {
   switch (page) {
     case "calendar":
-      return "Mein Kalendar";
+      return intl.formatMessage({id: "utils.label.calender"});
     case "trainingSchedule":
-      return "Mein Trainingsplan";
+      return intl.formatMessage({id: "utils.label.trainingSchedule"});
     case "chats":
-      return "Meine Chats";
+      return intl.formatMessage({id: "utils.label.chats"});
     case "exercises":
-      return "Meine Übungen";
+      return intl.formatMessage({id: "utils.label.exercises"});
     case "tips":
-      return "Tipps";
+      return intl.formatMessage({id: "utils.label.tips"});
     case "about":
-      return "Über uns";
+      return intl.formatMessage({id: "utils.label.about"});
     case "profile":
-      return "Mein Profil";
+      return intl.formatMessage({id: "utils.label.profile"});
     default:
       return "";
   }
