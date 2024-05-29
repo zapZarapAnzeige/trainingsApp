@@ -35,7 +35,7 @@ export const Chat: FC = () => {
     setChatHistory([]);
     if (activePartner.name !== "" && activePartner.id > 0) {
       getChatHistory(auth(), activePartner.id).then((res) => {
-        setChatHistory(res.data.chat);
+        setChatHistory(res.data);
       });
     }
   }, [activePartner]);
@@ -80,7 +80,7 @@ export const Chat: FC = () => {
   useEffect(() => {
     getChatsOverview(auth()).then((res) => {
       setChatsOverview(
-        res.data.chat_data.map(
+        res.data.map(
           (data: any): ChatsOverview => ({
             bio: data.bio,
             disabled: data.disabled,

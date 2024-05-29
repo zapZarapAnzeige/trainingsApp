@@ -1,14 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  CalendarData,
   CalendarDayData,
   Exercise,
   ExerciseAdd,
+  isExerciseWeighted,
   ExerciseInfo,
   ExercisesAddDialog,
   ExercisesEntryData,
   Training,
+  TrainingExercise,
 } from "./types";
-import { keysToCamelCase } from "./utils";
+import { keysToCamelCase, modifyDateKeys } from "./utils";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -21,8 +24,8 @@ export const axiosInstance = axios.create({
   },
 });
 
-const addAuth = (token: string) => {
-  return { headers: { Authorization: token } };
+const addAuth = (token: string, additionalHeaders?: Record<string, string>) => {
+  return { headers: { ...additionalHeaders, Authorization: token } };
 };
 
 //done
@@ -116,22 +119,23 @@ export const changeBlockStatus = (
 };
 
 // Gets
-export const getPastTrainings = async (token: string, kw: number) => {
+//done
+export const getPastTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/pastTrainings", {
     ...addAuth(token),
-    params: { kw: kw },
+    params: { start_date: week },
   });
 
-  return keysToCamelCase(response.data) as CalendarDayData[];
+  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
-
-export const getFutureTrainings = async (token: string, kw: number) => {
+//done
+export const getFutureTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/futureTrainings", {
     ...addAuth(token),
-    params: { kw: kw },
+    params: { start_date: week },
   });
 
-  return keysToCamelCase(response.data) as CalendarDayData[];
+  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
 
 //done
@@ -142,17 +146,20 @@ export const getTrainingData = async (token: string) => {
 };
 
 // For TrainingSchedule
+//done
 export const getExercises = async (token: string) => {
   const response = await axiosInstance.get("/exercises", addAuth(token));
-  return keysToCamelCase(response.data) as Exercise[];
+  return keysToCamelCase(response.data) as TrainingExercise[];
 };
 
 // I dont know if keysToCamelCase will break on String[] so dont even use it
+//done
 export const getTags = async (token: string) => {
   const response = await axiosInstance.get("/tags", addAuth(token));
   return response.data as string[];
 };
 
+//done
 export const getExercisesData = async (token: string) => {
   const response = await axiosInstance.get("/exercisesData", addAuth(token));
   return keysToCamelCase(response.data) as ExercisesEntryData[];
@@ -160,10 +167,10 @@ export const getExercisesData = async (token: string) => {
 
 // Add Dialog
 // done
-export const getExercisesAdd = async (token: string, exercise: string) => {
+export const getExercisesAdd = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesAdd", {
     ...addAuth(token),
-    params: { exercise: exercise },
+    params: { exercise_id: exerciseId },
   });
 
   return keysToCamelCase(response.data) as ExerciseAdd;
@@ -171,22 +178,22 @@ export const getExercisesAdd = async (token: string, exercise: string) => {
 
 // Info Dialog
 // done
-export const getExercisesInfo = async (token: string, exercise: string) => {
+export const getExercisesInfo = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesInfo", {
     ...addAuth(token),
-    params: { exercise: exercise },
+    params: { exercise_id: exerciseId },
   });
   return keysToCamelCase(response.data) as ExerciseInfo;
 };
 
 // Posts
+//done
 export const postTrainingData = async (
   token: string,
   trainingData: Training
 ) => {
-  axiosInstance.post("/trainingSchedule", undefined, {
-    ...addAuth(token),
-    params: { trainingData: trainingData },
+  axiosInstance.post("/trainingSchedule", trainingData, {
+    ...addAuth(token, { "Content-Type": "application/json" }),
   });
 };
 
@@ -194,19 +201,54 @@ export const postExercisesAdd = async (
   token: string,
   exercisesAdd: ExercisesAddDialog
 ) => {
-  axiosInstance.put("/ExercisesAdd", undefined, {
-    ...addAuth(token),
-    params: { exercisesAdd: exercisesAdd },
-  });
+  axiosInstance.put(
+    "/ExercisesAdd",
+    {
+      exercise_id: exercisesAdd.exerciseId,
+      in_training: exercisesAdd.inTraining,
+      not_in_training: exercisesAdd.notInTraining,
+      exercise: exercisesAdd.exercise,
+    },
+    {
+      ...addAuth(token, { "Content-Type": "application/json" }),
+    }
+  );
 };
-
+//done
 export const postExerciseNewUserRating = async (
   token: string,
   userRating: number,
-  excercise: string
+  exerciseId: number
 ) => {
-  axiosInstance.post("/ExerciseRating", undefined, {
-    ...addAuth(token),
-    params: { userRating: userRating, excercise: excercise },
-  });
+  axiosInstance.post(
+    "/ExerciseRating",
+    {},
+    {
+      ...addAuth(token),
+      params: { rating: userRating, exercise_id: exerciseId },
+    }
+  );
+};
+
+export const postCalendar = async (
+  token: string,
+  pastTrainings: CalendarDayData[]
+) => {
+  axiosInstance.post(
+    "/Calendar",
+    pastTrainings.flatMap((day) =>
+      day.trainings.flatMap((training) =>
+        training.exercises.map((exercise) => ({
+          weight: isExerciseWeighted(exercise.exercise)
+            ? exercise.exercise.weight
+            : null,
+          exerciseId: exercise.exerciseId,
+          completed: exercise.completed,
+        }))
+      )
+    ),
+    {
+      ...addAuth(token, { "Content-Type": "application/json" }),
+    }
+  );
 };

@@ -200,15 +200,13 @@ async def get_content_of_chat(partner_id: int, user_id: int):
         chat = await chats.find_one({"participants": {"$all": [partner_id, user_id]}})
     if not chat:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
-    return {
-        "chat": [
-            {
-                "content": message.get("content"),
-                "sender": message.get("sender"),
-                "timestamp": message.get("timestamp"),
-            }
-            for message in await messages.find({"chat_id": chat.get("_id")}).to_list(
-                length=None
-            )
-        ]
-    }
+    return [
+        {
+            "content": message.get("content"),
+            "sender": message.get("sender"),
+            "timestamp": message.get("timestamp"),
+        }
+        for message in await messages.find({"chat_id": chat.get("_id")}).to_list(
+            length=None
+        )
+    ]

@@ -1,5 +1,6 @@
 import { IntlShape } from "react-intl";
 import { weekdays, weekdaysNames } from "./constants";
+import { CalendarDayData, InTraining } from "./types";
 
 export function openSidebar() {
   if (typeof window !== "undefined") {
@@ -38,8 +39,8 @@ export function getPageName(page: string) {
       return "Meine Chats";
     case "exercises":
       return "Meine Übungen";
-    case "help":
-      return "Hilfe";
+    case "tips":
+      return "Tipps";
     case "about":
       return "Über uns";
     case "profile":
@@ -201,18 +202,14 @@ export function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
 }
 
 export function moveString(
-  sourceArray: string[],
-  targetArray: string[],
-  searchString: string
+  sourceArray: InTraining[],
+  targetArray: InTraining[],
+  id: number
 ): void {
-  const index = sourceArray.indexOf(searchString);
+  const index = sourceArray.map((source) => source.trainingId).indexOf(id);
   if (index !== -1) {
     const removedItem = sourceArray.splice(index, 1)[0];
     targetArray.push(removedItem);
-  } else {
-    console.log(
-      `Der String "${searchString}" wurde nicht im Quellarray gefunden.`
-    );
   }
 }
 
@@ -249,4 +246,91 @@ export function getWeekday(dateString: string): string {
   const dayIndex: number = date.getDay();
   const correctedDayIndex: number = (dayIndex + 6) % 7;
   return weekdays[correctedDayIndex];
+}
+
+export function calculateDayGoal(
+  trainings: CalendarDayData[],
+  today: string
+): number {
+  const todayTraining = trainings.find(
+    (dayTraining) => dayTraining.date === today
+  );
+
+  if (!todayTraining) {
+    return 0;
+  }
+
+  let totalExercises = 0;
+  let completedExercises = 0;
+
+  todayTraining.trainings.forEach((training) => {
+    training.exercises.forEach((exercise) => {
+      totalExercises++;
+      if (exercise.completed) {
+        completedExercises++;
+      }
+    });
+  });
+
+  return (completedExercises / totalExercises) * 100;
+}
+
+export function calculateWeekGoal(trainings: CalendarDayData[]): number {
+  let totalExercises = 0;
+  let completedExercises = 0;
+
+  trainings.forEach((dayTraining) => {
+    dayTraining.trainings.forEach((training) => {
+      training.exercises.forEach((exercise) => {
+        totalExercises++;
+        if (exercise.completed) {
+          completedExercises++;
+        }
+      });
+    });
+  });
+
+  return (completedExercises / totalExercises) * 100;
+}
+
+export function getISOWeekNumber(date: Date): number {
+  const tempDate = new Date(date.getTime());
+  tempDate.setUTCHours(0, 0, 0, 0);
+  tempDate.setUTCDate(tempDate.getUTCDate() + 4 - (tempDate.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(tempDate.getUTCFullYear(), 0, 1));
+  const weekNumber = Math.ceil(
+    ((tempDate.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+  );
+  return weekNumber;
+}
+
+export function getMondayOfWeek(week: number, year: number): string {
+  const simpleDate = new Date(year, 0, 1 + (week - 1) * 7);
+  const dayOfWeek = simpleDate.getDay();
+  const ISOweekStart = simpleDate;
+  if (dayOfWeek <= 4) {
+    ISOweekStart.setDate(simpleDate.getDate() - simpleDate.getDay() + 1);
+  } else {
+    ISOweekStart.setDate(simpleDate.getDate() + 8 - simpleDate.getDay());
+  }
+  const yyyy = ISOweekStart.getFullYear();
+  const mm = String(ISOweekStart.getMonth() + 1).padStart(2, "0");
+  const dd = String(ISOweekStart.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+export function roundToTwoDecimalPlaces(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+export function modifyDateKeys(data: CalendarDayData[]): CalendarDayData[] {
+  data.forEach((obj) => {
+    const date = new Date(obj.date);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    obj.date = `${year}-${month}-${day}`;
+  });
+
+  return data;
 }

@@ -4,10 +4,12 @@ import { sortAndInsertDay } from "../../utils";
 
 export type TrainingScheduleDialogState = {
   value: Training;
+  reloadTrainingScheduleContent: boolean;
 };
 
 const initialState: TrainingScheduleDialogState = {
-  value: { name: "", trainingId: 0, onDays: [], exercises: [] },
+  value: { name: "", trainingId: -1, onDays: [], exercises: [] },
+  reloadTrainingScheduleContent: true,
 };
 
 const trainingScheduleDialogSlice = createSlice({
@@ -16,6 +18,9 @@ const trainingScheduleDialogSlice = createSlice({
   reducers: {
     setName: (state, action: PayloadAction<string>) => {
       state.value.name = action.payload;
+    },
+    setId: (state, action: PayloadAction<number>) => {
+      state.value.trainingId = action.payload;
     },
     addDay: (state, action: PayloadAction<string>) => {
       state.value.onDays = sortAndInsertDay(state.value.onDays, action.payload);
@@ -37,18 +42,26 @@ const trainingScheduleDialogSlice = createSlice({
       state.value = action.payload;
     },
     clearAll: (state) => {
-      state.value = { name: "", trainingId: 0, onDays: [], exercises: [] };
+      state.value = { name: "", trainingId: -1, onDays: [], exercises: [] };
+    },
+    setReloadTrainingScheduleContent: (
+      state,
+      action: PayloadAction<boolean>
+    ) => {
+      state.reloadTrainingScheduleContent = action.payload;
     },
   },
 });
 
 export const {
   setName,
+  setId,
   addDay,
   removeDay,
   addExercise,
   removeExercise,
   setTraining,
   clearAll,
+  setReloadTrainingScheduleContent,
 } = trainingScheduleDialogSlice.actions;
 export default trainingScheduleDialogSlice.reducer;

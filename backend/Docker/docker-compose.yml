@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.8"
 services:
   mysql:
     image: mysql:latest
@@ -6,15 +6,19 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PWD}
+      - LANG=C.UTF-8
     ports:
       - "3306:${DB_PORT}"
     volumes:
+      - "./scripts/ressources/images/:/var/lib/mysql-files/images/"
       - "./scripts/createDB.sql:/docker-entrypoint-initdb.d/1.sql"
       - "./scripts/createTables.sql:/docker-entrypoint-initdb.d/2.sql"
-      - "./scripts/insertDemoData.sql:/docker-entrypoint-initdb.d/3.sql"
       - "./scripts/createProcedures.sql:/docker-entrypoint-initdb.d/4.sql"
       - "./scripts/createTriggers.sql:/docker-entrypoint-initdb.d/5.sql"
       - "./scripts/createEvents.sql:/docker-entrypoint-initdb.d/6.sql"
+      - "./scripts/insertExercises.sql:/docker-entrypoint-initdb.d/7.sql"
+      - "./scripts/insertTags.sql:/docker-entrypoint-initdb.d/8.sql"
+      - "./scripts/insertTags2Exercises.sql:/docker-entrypoint-initdb.d/9.sql"
       - "./bck:/var/lib/bck"
   mongo:
     image: mongo:4.4.6

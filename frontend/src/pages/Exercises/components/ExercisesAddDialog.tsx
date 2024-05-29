@@ -127,26 +127,28 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
         <List>
           {exercisesAddDialog.inTraining
             .concat(exercisesAddDialog.notInTraining)
-            .sort()
+            .sort((a, b) => a.trainingId - b.trainingId)
             .map((training) => {
               return (
-                <ListItem>
+                <ListItem key={training.trainingId}>
                   <ListItemContent>
-                    <Stack direction="row" justifyContent="space-around">
+                    <Stack direction="row" justifyContent="space-between">
                       <Checkbox
-                        defaultChecked={exercisesAddDialog.inTraining.includes(
+                        checked={exercisesAddDialog.inTraining.includes(
                           training
                         )}
                         onChange={(e) => {
                           setIsDataDirty(true);
                           dispatch(
                             e.target.checked
-                              ? addToTraining(training)
-                              : removeFromTraining(training)
+                              ? addToTraining(training.trainingId)
+                              : removeFromTraining(training.trainingId)
                           );
                         }}
                       />
-                      <Typography fontSize="lg">{training}</Typography>
+                      <Typography fontSize="lg">
+                        {training.trainingsName}
+                      </Typography>
                     </Stack>
                   </ListItemContent>
                 </ListItem>

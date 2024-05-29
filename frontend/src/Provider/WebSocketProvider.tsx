@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/joy";
 import {
   createContext,
   useState,
@@ -7,6 +8,8 @@ import {
   useRef,
 } from "react";
 import { useAuthHeader } from "react-auth-kit";
+import DismissDialog from "../Common/DismissDialog";
+import { DismissDialogType } from "../types";
 
 const WebSocketContext = createContext<WebSocket | null>(null);
 
@@ -15,9 +18,9 @@ type WebSocketProviderProps = {
 };
 
 const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
-  //const [socket, setSocket] = useState<WebSocket | null>(null);
   const socket = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [error, setError] = useState<string>("");
   const auth = useAuthHeader();
 
   useEffect(() => {
@@ -47,14 +50,21 @@ const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
         ws = null;
       }
     };
-  }, []); // Depends only on auth to avoid unnecessary reconnections
+  }, []);
 
-  // Consider rendering a loading state or similar until the WebSocket is connected
-  if (!isConnected) {
-    return <div>Connecting to WebSocket...</div>;
+  if (error) {
+    return (
+      <DismissDialog
+        closeDismissDialog={() => setError("")}
+        dialogContent={error}
+        dismissDialogType={DismissDialogType.ERROR}
+        open={error !== ""}
+      />
+    );
   }
-
-  // Optionally, handle error states here as well, similar to the previous example
+  if (!isConnected) {
+    return <CircularProgress sx={{ m: "auto" }} />;
+  }
 
   return (
     <WebSocketContext.Provider value={socket.current}>

@@ -39,9 +39,15 @@ v12.22.9
 
 ## TODOS:
 
-| Aufgabe | frontend | backend | Status |
-| ------- | -------- | ------- | ------ |
-| Example | D        | C       | Offen  |
+| Aufgabe                                                    | frontend | backend | Status |
+| ---------------------------------------------------------- | -------- | ------- | ------ |
+| Nur einmal wenn Kalendar nach vorne springt Daten abfragen | D        |         | Offen  |
+| Datenvalidierung Backend                                   | C        |         |        |
+| Backend Typen verbessern                                   | C        |         |        |
+
+BUGS:
+nach Account kreieren muss man pw und nutzername neu eingeben
 
 fickma link:
 https://bcwgruppe.sharepoint.com/:u:/s/Anwendungsprojekt-Traningsapp/ETrlmAnwdjFHvX2atQ2fns4Bid7_Z8NWUYg1-pFcPOEo9Q?e=PMCJuX
+https://www.figma.com/design/1i9dzF8AZeZmVUVFQYsbu4/Trainingsapp?node-id=7617-80512

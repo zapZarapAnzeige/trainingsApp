@@ -39,7 +39,7 @@ def create_new_user(username: str, password: str):
             detail=f"incorrect username {username} alredy exists",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    insert_new_user(username, get_pwd_hash(password))
+    return insert_new_user(username, get_pwd_hash(password))
 
 
 def get_pwd_hash(plain_pwd):

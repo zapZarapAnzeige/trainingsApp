@@ -11,9 +11,27 @@ export default function AboutContent() {
         <Grid xs={6} mb={1}>
           <Box mb={1}>
             <Typography level="h2" fontSize="xl" sx={{ mb: 0.5 }}>
-              Wer sind wir
+              Was bietet die Trainingsapp?
             </Typography>
-            <Typography>Ein Langer Text</Typography>
+            <Typography>
+              Die Trainingsapp ist dein Wegbegleiter zu einem gesünderen
+              Lebensstil. Durch individuell angepasste Trainingspläne und eine
+              Community, unterstützt die App dich dabei, deine Fitnessziele
+              effektiv und nachhaltig zu erreichen. Unsere Trainingsapp umfasste
+              folgende Features: - Personalisierte Trainingspläne: Erstelle
+              deinen eigenen Trainingsplan, der genau auf deine Ziele, deinen
+              Zeitplan und dein Fitnesslevel abgestimmt ist. Ob du Muskeln
+              aufbauen, Gewicht verlieren oder einfach nur aktiver sein möchtest
+              – unsere App hat alles, was du brauchst. - zahlreiche Übungen:
+              Finde klare Anleitungen und anschauliche Videos für jede Übung aus
+              denen du deinen idealen Plan zusammenstellen kannst. - Community:
+              Tritt in Kontakt mit anderen Nutzern, die ähnliche Ziele
+              verfolgen, finde Trainingspartner in deiner Nähe und tausche Tipps
+              und Erfahrungen aus. - Einfaches Tracking deiner Fortschritte: Mit
+              unserer einfach zu bedienenden Tracking-Funktion kannst du deine
+              Fortschritte verfolgen und deine Ziele anpassen. Sieh auf einen
+              Blick, wie weit du gekommen bist.
+            </Typography>
           </Box>
           <Box mb={1}>
             <AspectRatio minHeight="120px" maxHeight="200px">
@@ -39,9 +57,20 @@ export default function AboutContent() {
           </Box>
           <Box mb={1}>
             <Typography level="h2" fontSize="xl" sx={{ mb: 0.5 }}>
-              Welche Vision verfolgen wir
+              Welche Vision verfolgen wir?
             </Typography>
-            <Typography>Ein Langer Text</Typography>
+            <Typography>
+              Bei der Trainingsapp geht es uns darum, Fitness zugänglich und
+              umsetzbar für jeden zu machen. Wir möchten, dass du dich gut
+              fühlst, fit bleibst und Spaß an Bewegung hast, unabhängig von
+              deinem Fitnesslevel oder deinem straffen Zeitplan. Unsere App soll
+              dir helfen, regelmäßiges Training in deinen Alltag zu integrieren
+              und dabei Freude zu empfinden. Wir legen großen Wert auf Qualität,
+              Benutzerfreundlichkeit und innovative Lösungen. Wir sind
+              überzeugt, dass unsere App nicht nur deine Fitness verbessern,
+              sondern auch dein Wohlbefinden und deine allgemeine Lebensqualität
+              steigern kann.
+            </Typography>
           </Box>
           <Box mb={1}>
             <Typography level="h2" fontSize="xl" sx={{ mb: 0.5 }}>

@@ -10,7 +10,7 @@ import DialogTitle from "@mui/joy/DialogTitle";
 import Stack from "@mui/joy/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Exercise, Training } from "../../../types";
+import { Exercise, Training, TrainingExercise } from "../../../types";
 import Option from "@mui/joy/Option";
 import {
   Checkbox,
@@ -33,6 +33,8 @@ import {
   addExercise,
   removeExercise,
   clearAll,
+  setId,
+  setReloadTrainingScheduleContent,
 } from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { mapNumberToWeekdayString } from "../../../utils";
 import { getExercises, postTrainingData } from "../../../api";
@@ -57,7 +59,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
 
   const [openExerciseDialog, setOpenExerciseDialog] = useState<boolean>(false);
   const [isDataDirty, setIsDataDirty] = useState<boolean>(false);
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<TrainingExercise[]>([]);
 
   // Excerise Dialog States
   const [selectedExercise, setSelectedExercise] = useState<Exercise>();
@@ -75,9 +77,15 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   };
 
   useEffect(() => {
+    if (editTraining) {
+      setId(trainingScheduleDialog.trainingId);
+    }
+  });
+
+  useEffect(() => {
     if (open) {
       getExercises(auth())
-        .then((exercises: Exercise[]) => {
+        .then((exercises: TrainingExercise[]) => {
           setExercises(exercises);
         })
         .catch((error) => {
@@ -97,6 +105,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const handleClose = () => {
     setIsDataDirty(false);
     dispatch(clearAll());
+    dispatch(setReloadTrainingScheduleContent(true));
     setOpen(false);
   };
 
@@ -109,10 +118,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
 
   const isExerciseValid = () => {
     if (selectedExercise) {
-      if ("minutes" in selectedExercise.exercise) {
-        return minutes !== 0;
-      } else if ("repetitionAmount" in selectedExercise.exercise) {
-        return repetitions !== 0 && sets !== 0;
+      if (selectedExercise.exerciseType === "Min") {
+        return minutes > 0 && !isNaN(minutes);
+      } else if (selectedExercise.exerciseType === "SxWdh") {
+        return (
+          repetitions > 0 && !isNaN(repetitions) && sets > 0 && !isNaN(sets)
+        );
       } else {
         return false;
       }
@@ -122,7 +133,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const handleAddExercise = () => {
     if (selectedExercise) {
       dispatch(
-        "minutes" in selectedExercise.exercise
+        selectedExercise.exerciseType === "Min"
           ? addExercise({
               exerciseName: selectedExercise.exerciseName,
               exerciseId: selectedExercise.exerciseId,
@@ -189,10 +200,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                       )
                   )
                   .map((exercise) => (
-                    <Option value={exercise}>{exercise.exerciseName}</Option>
+                    <Option value={exercise} key={exercise.exerciseId}>
+                      {exercise.exerciseName}
+                    </Option>
                   ))}
               </Select>
-              {selectedExercise && "minutes" in selectedExercise.exercise && (
+              {selectedExercise && selectedExercise.exerciseType === "Min" && (
                 <FormControl>
                   <FormLabel>Minuten</FormLabel>
                   <Input
@@ -207,39 +220,43 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                 </FormControl>
               )}
 
-              {selectedExercise && "weight" in selectedExercise.exercise && (
-                <>
-                  <FormControl>
-                    <FormLabel>Wiederholungen</FormLabel>
-                    <Input
-                      value={repetitions}
-                      required
-                      type="number"
-                      onChange={(e) => {
-                        setRepetitions(parseInt(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Sets</FormLabel>
-                    <Input
-                      value={sets}
-                      required
-                      type="number"
-                      onChange={(e) => {
-                        setSets(parseInt(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                </>
-              )}
+              {selectedExercise &&
+                selectedExercise.exerciseType === "SxWdh" && (
+                  <>
+                    <FormControl>
+                      <FormLabel>Wiederholungen</FormLabel>
+                      <Input
+                        value={repetitions}
+                        required
+                        type="number"
+                        onChange={(e) => {
+                          setRepetitions(parseInt(e.target.value));
+                        }}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Sets</FormLabel>
+                      <Input
+                        value={sets}
+                        required
+                        type="number"
+                        onChange={(e) => {
+                          setSets(parseInt(e.target.value));
+                        }}
+                      />
+                    </FormControl>
+                  </>
+                )}
             </FormControl>
           </Stack>
           <Divider />
           <IconButton
             variant="solid"
             color="primary"
-            disabled={!isExerciseValid()}
+            disabled={
+              !isExerciseValid() ||
+              trainingScheduleDialog.exercises.length >= 15
+            }
             onClick={handleAddExercise}
           >
             <CheckIcon />
@@ -288,11 +305,12 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             </Button>
             {trainingScheduleDialog.exercises.map((exercise, index) => {
               return (
-                <List>
+                <List key={exercise.exerciseId}>
                   <ListItem>
                     <ListItemContent>
                       <IconButton
                         onClick={() => {
+                          setIsDataDirty(true);
                           dispatch(removeExercise(exercise.exerciseName));
                         }}
                       >
@@ -335,7 +353,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                         e.target.checked
                       )
                     }
-                    defaultChecked={trainingScheduleDialog.onDays.includes(day)}
+                    checked={trainingScheduleDialog.onDays.includes(day)}
                   />
                   <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                 </FormControl>
@@ -346,7 +364,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
           <IconButton
             variant="solid"
             color="primary"
-            disabled={!isDataDirty}
+            disabled={!isDataDirty || trainingScheduleDialog.name === ""}
             onClick={handleSave}
           >
             <CheckIcon />

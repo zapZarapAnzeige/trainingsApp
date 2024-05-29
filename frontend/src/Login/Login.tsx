@@ -252,6 +252,7 @@ export default function Login() {
               <form onSubmit={isSignIn ? handleSignIn : handleSignUp}>
                 <InputField
                   errorMessage={usernameError}
+                  showPassword={true}
                   fieldName={getMessage("loginScreen.username")}
                   setField={setUsername}
                 />

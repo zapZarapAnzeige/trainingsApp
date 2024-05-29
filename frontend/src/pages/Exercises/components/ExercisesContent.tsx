@@ -1,9 +1,6 @@
 import { Sheet, Grid } from "@mui/joy";
 import ExercisesEntry from "./ExercisesEntry";
 import { useAppSelector } from "../../../hooks";
-
-// TESTDATEN // Benötigt werden Daten vom Typ Training
-// import exercisesTestData from "../../../example/exampleExerciseEntry.json";
 import { ExercisesEntryData } from "../../../types";
 import { useEffect, useState } from "react";
 import { getExercisesData } from "../../../api";
@@ -56,7 +53,7 @@ export default function ExercisesContent() {
     if (exercisesEntryData) {
       setSortedEntries([...sortExerciseEntriesByTags(exercisesEntryData)]);
     }
-  }, [currentTags]);
+  }, [currentTags, exercisesEntryData]);
 
   return (
     <Sheet
@@ -67,7 +64,7 @@ export default function ExercisesContent() {
       <Grid container spacing={4}>
         {sortedEntries.map((exercisesEntryData) => {
           return (
-            <Grid xs={4}>
+            <Grid xs={4} key={exercisesEntryData.exerciseId}>
               <ExercisesEntry exercisesEntryData={exercisesEntryData} />
             </Grid>
           );

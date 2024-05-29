@@ -3,6 +3,7 @@ import CardContent from "@mui/joy/CardContent";
 import CardOverflow from "@mui/joy/CardOverflow";
 import ListDivider from "@mui/joy/ListDivider";
 import {
+  Box,
   Checkbox,
   FormControl,
   Grid,
@@ -29,8 +30,6 @@ type TrainingScheduleEntryProps = {
 const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
   training,
 }) => {
-  console.log("HERE");
-  console.log(training.onDays);
   const [open, setOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
@@ -73,7 +72,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
           <List>
             {training.exercises.map((exercise, index) => {
               return (
-                <>
+                <Box key={exercise.exerciseId}>
                   <ListItem>
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
                     {"minutes" in exercise.exercise ? (
@@ -90,7 +89,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                   {index < training.exercises.length - 1 && (
                     <ListDivider inset="gutter" />
                   )}
-                </>
+                </Box>
               );
             })}
           </List>
@@ -104,11 +103,13 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
             >
               {weekdaysNames.map((day, index) => {
                 return (
-                  <FormControl>
+                  <FormControl key={day}>
                     <Checkbox
+                      disabled={true}
                       checked={training.onDays.includes(day)}
                       sx={{ marginBottom: 1 }}
                       readOnly
+                      color="neutral"
                     />
                     <FormLabel>{weekdaysAbbreviation[index]}</FormLabel>
                   </FormControl>

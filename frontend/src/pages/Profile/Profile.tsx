@@ -1,5 +1,4 @@
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
-import AccessTimeFilledRoundedIcon from "@mui/icons-material/AccessTimeFilledRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
 import {
@@ -15,10 +14,8 @@ import {
   FormLabel,
   FormControl,
   Input,
-  Select,
   CardActions,
   Button,
-  Option,
   Avatar,
   Switch,
 } from "@mui/joy";
@@ -31,6 +28,7 @@ import { changeUserData, getUserData } from "../../api";
 import { useAuthHeader } from "react-auth-kit";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/reducers/userSlice";
+import { NumericFormatAdapter } from "../../Common/PlzFormatAdapter";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;
@@ -188,31 +186,35 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Stack spacing={1}>
                 <FormLabel>{getMessage("profile.label.name")}</FormLabel>
-                <FormControl
+                <Box
                   sx={{
                     display: { sm: "flex-column", md: "flex-row" },
                     gap: 2,
                   }}
                 >
-                  <Input
-                    disabled={true}
-                    size="sm"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                  />
-                  <Input
-                    disabled={!isUserData(userData)}
-                    size="sm"
-                    placeholder={getMessage("profile.label.nickName")}
-                    value={nickName}
-                    onChange={(e) => {
-                      setNickname(e.target.value);
-                    }}
-                    sx={{ flexGrow: 1 }}
-                  />
-                </FormControl>
+                  <FormControl>
+                    <Input
+                      disabled={true}
+                      size="sm"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormControl sx={{ pt: "0.3rem" }}>
+                    <Input
+                      disabled={!isUserData(userData)}
+                      size="sm"
+                      placeholder={getMessage("profile.label.nickName")}
+                      value={nickName}
+                      onChange={(e) => {
+                        setNickname(e.target.value);
+                      }}
+                      sx={{ flexGrow: 1 }}
+                    />
+                  </FormControl>
+                </Box>
               </Stack>
               {isUserData(userData) && (
                 <Stack direction="row" spacing={2}>
@@ -239,6 +241,11 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                       startDecorator={<EmailRoundedIcon />}
                       placeholder={getMessage("profile.label.plz")}
                       sx={{ flexGrow: 1 }}
+                      slotProps={{
+                        input: {
+                          component: NumericFormatAdapter,
+                        },
+                      }}
                     />
                   </FormControl>
                 </Stack>

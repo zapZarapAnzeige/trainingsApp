@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { ExercisesAddDialog } from "../../types";
+import { ExercisesAddDialog, InTraining } from "../../types";
 import { moveString } from "../../utils";
 
 export type ExercisesAddDialogState = {
@@ -10,7 +10,7 @@ const initialState: ExercisesAddDialogState = {
   value: {
     exerciseName: "",
     exerciseId: 0,
-    exerciseType: "cardio",
+    exerciseType: "Min",
     exercise: { minutes: 0 },
     inTraining: [],
     notInTraining: [],
@@ -21,14 +21,14 @@ const exercisesAddDialogSlice = createSlice({
   name: "exercisesAddDialog",
   initialState,
   reducers: {
-    addToTraining: (state, action: PayloadAction<string>) => {
+    addToTraining: (state, action: PayloadAction<number>) => {
       moveString(
         state.value?.notInTraining,
         state.value?.inTraining,
         action.payload
       );
     },
-    removeFromTraining: (state, action: PayloadAction<string>) => {
+    removeFromTraining: (state, action: PayloadAction<number>) => {
       moveString(
         state.value?.inTraining,
         state.value?.notInTraining,
@@ -60,7 +60,7 @@ const exercisesAddDialogSlice = createSlice({
       state.value = {
         exerciseName: "",
         exerciseId: 0,
-        exerciseType: "cardio",
+        exerciseType: "Min",
         exercise: { minutes: 0 },
         inTraining: [],
         notInTraining: [],

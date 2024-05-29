@@ -17,8 +17,12 @@ import {
 } from "../../../api";
 
 import ExercisesInfoDialog from "./ExercisesInfoDialog";
-import { setExercisesInfoDialog } from "../../../redux/reducers/exercisesInfoDialogSlice";
+import {
+  setExercisesInfoDialog,
+  setQuickInfo,
+} from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
+import { changePage } from "../../../redux/reducers/currentPageSlice";
 
 // TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
 //import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
@@ -33,11 +37,15 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
 
+  const quickInfo = useAppSelector(
+    (state) => state.exercisesInfoDialog.quickInfo
+  );
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (openAddDialog) {
-      getExercisesAdd(auth(), exercisesEntryData.exerciseName)
+      getExercisesAdd(auth(), exercisesEntryData.exerciseId)
         .then((exercisesAddDialogData: ExerciseAdd) => {
           dispatch(
             setExercisesAddDialog({
@@ -57,7 +65,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   useEffect(() => {
     if (openInfoDialog) {
-      getExercisesInfo(auth(), exercisesEntryData.exerciseName)
+      getExercisesInfo(auth(), exercisesEntryData.exerciseId)
         .then((exercisesInfoDialogData: ExerciseInfo) => {
           dispatch(
             setExercisesInfoDialog({
@@ -73,6 +81,13 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
         });
     }
   }, [openInfoDialog]);
+
+  useEffect(() => {
+    if (quickInfo === exercisesEntryData.exerciseName) {
+      setOpenInfoDialog(true);
+      dispatch(setQuickInfo(""));
+    }
+  }, []);
 
   return (
     <>
@@ -90,7 +105,6 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             alt=""
           />
         </AspectRatio>
-        <Stack></Stack>
         <CardContent>
           <Stack direction="row" justifyContent="space-between" spacing={1}>
             <Stack direction="column">
@@ -107,7 +121,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                       postExerciseNewUserRating(
                         auth(),
                         newValue ?? 0,
-                        exercisesEntryData.exerciseName
+                        exercisesEntryData.exerciseId
                       );
                     }}
                   />
