@@ -69,7 +69,8 @@ async def handle_session(websocket: WebSocket, user_id: int):
 
             # insert message into db
             is_inserted = await save_new_message(
-                data.get("content"), user_id, data.get("recipient_id"), timestamp
+                data.get("content"), user_id, data.get(
+                    "recipient_id"), timestamp
             )
             if is_inserted.get("error"):
                 # TODO: watch out for this error in frontend
@@ -87,7 +88,7 @@ async def handle_session(websocket: WebSocket, user_id: int):
             if user:
                 await user.send_json(
                     {
-                        # maybe by user_name
+                        # maybe by username
                         "sender": user_id,
                         "content": data.get("content"),
                         "timestamp": str(timestamp),
