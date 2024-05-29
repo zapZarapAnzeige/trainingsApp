@@ -88,15 +88,6 @@ export default function Login() {
     }
   };
 
-  const clearFields = () => {
-    setPasswordError("");
-    setSignInError("");
-    setUsernameError("");
-    setPassword("");
-    setRepeatPassword("");
-    setUsername("");
-  };
-
   const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -132,8 +123,7 @@ export default function Login() {
       if (checkIfUsernameAndPaswordArePresent(username, password)) {
         signUp(username!.toString(), password!.toString())
           .then(() => {
-            setIsSignIn(true);
-            clearFields();
+            handleSignIn(event);
           })
           .catch((err: AxiosError) => {
             if ((err.status = 409)) {
@@ -251,12 +241,14 @@ export default function Login() {
             <Stack gap={4} sx={{ mt: 2 }}>
               <form onSubmit={isSignIn ? handleSignIn : handleSignUp}>
                 <InputField
+                  fieldValue={username}
                   errorMessage={usernameError}
                   showPassword={true}
                   fieldName={getMessage("loginScreen.username")}
                   setField={setUsername}
                 />
                 <InputField
+                  fieldValue={password}
                   errorMessage={passwordError}
                   fieldName={getMessage("loginScreen.password")}
                   setField={setPassword}
@@ -265,6 +257,7 @@ export default function Login() {
                 />
                 {!isSignIn && (
                   <InputField
+                    fieldValue={repeatPassword}
                     errorMessage={passwordError}
                     fieldName={getMessage("loginScreen.repeatPassword")}
                     setField={setRepeatPassword}

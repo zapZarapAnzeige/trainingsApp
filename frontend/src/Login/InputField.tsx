@@ -11,6 +11,7 @@ type InputFieldProps = {
   errorMessage: string;
   showPassword?: boolean;
   setShowPassword?: (password: boolean) => void;
+  fieldValue: string;
 };
 
 export const InputField: FC<InputFieldProps> = ({
@@ -19,11 +20,13 @@ export const InputField: FC<InputFieldProps> = ({
   showPassword,
   setField,
   errorMessage,
+  fieldValue,
 }) => {
   return (
     <FormControl required>
       <FormLabel>{fieldName}</FormLabel>
       <Input
+        value={fieldValue}
         type={showPassword ? "" : "Password"}
         name={fieldName}
         onChange={(e) => {

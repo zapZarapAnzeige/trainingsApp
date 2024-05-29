@@ -16,13 +16,13 @@ from sqlalchemy import (
 from db_connection import metaData
 
 
-Users = Table(
-    "Users",
+User = Table(
+    "User",
     metaData,
     Column("user_id", Integer, primary_key=True, autoincrement=True),
     Column("profile_picture", BLOB, nullable=True),
     Column("nickname", String(255), nullable=True),
-    Column("user_name", String(255), unique=True, nullable=False),
+    Column("username", String(255), unique=True, nullable=False),
     Column("password", String(255), nullable=False),
     Column("expired", Boolean, nullable=False, default=False),
     Column("plz", String(5), nullable=True),
@@ -30,18 +30,18 @@ Users = Table(
     Column("bio", Text, nullable=True),
 )
 
-Trainings_plan = Table(
-    "Trainings_plan",
+Training_plan = Table(
+    "Training_plan",
     metaData,
     Column("training_id", Integer, primary_key=True, autoincrement=True),
-    Column("trainings_name", String(255), nullable=False),
+    Column("training_name", String(255), nullable=False),
     Column("user_id", Integer, nullable=False),
-    ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
+    ForeignKeyConstraint(["user_id"], ["User.user_id"], ondelete="CASCADE"),
 )
 
 
-Exercises = Table(
-    "Exercises",
+Exercise = Table(
+    "Exercise",
     metaData,
     Column("exercise_id", Integer, primary_key=True, autoincrement=True),
     Column("exercise_name", String(255), nullable=False, unique=True),
@@ -61,52 +61,52 @@ User_current_performance = Table(
     Column("number_of_sets", Integer, nullable=True),
     Column("value_trackable_unit_of_measure", DECIMAL(20, 3), nullable=True),
     Column("trackable_unit_of_measure", String(255), nullable=True),
-    ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
+    ForeignKeyConstraint(["user_id"], ["User.user_id"], ondelete="CASCADE"),
     ForeignKeyConstraint(
-        ["training_id"], ["Trainings_plan.training_id"], ondelete="CASCADE"
+        ["training_id"], ["Training_plan.training_id"], ondelete="CASCADE"
     ),
     ForeignKeyConstraint(
-        ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
+        ["exercise_id"], ["Exercise.exercise_id"], ondelete="CASCADE"
     ),
     PrimaryKeyConstraint("user_id", "exercise_id", "training_id"),
 )
 
-Exercises2Trainings_plans = Table(
-    "Exercises2Trainings_plans",
+Exercise2Training_plan = Table(
+    "Exercise2Training_plan",
     metaData,
     Column("training_id", Integer, nullable=False),
     Column("exercise_id", Integer, nullable=False),
     PrimaryKeyConstraint("training_id", "exercise_id"),
     ForeignKeyConstraint(
-        ["training_id"], ["Trainings_plan.training_id"], ondelete="CASCADE"
+        ["training_id"], ["Training_plan.training_id"], ondelete="CASCADE"
     ),
     ForeignKeyConstraint(
-        ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
+        ["exercise_id"], ["Exercise.exercise_id"], ondelete="CASCADE"
     ),
 )
 
 
-Trainings_plan_history = Table(
-    "Trainings_plan_history",
+Training_plan_history = Table(
+    "Training_plan_history",
     metaData,
-    Column("trainings_plan_history_id", Integer, autoincrement=True),
+    Column("training_plan_history_id", Integer, autoincrement=True),
     Column("training_id", Integer),
-    Column("trainings_name", String),
+    Column("training_name", String),
     Column("day", Date, nullable=False),
     Column("user_id", Integer, nullable=False),
     ForeignKeyConstraint(
         ["user_id"],
-        ["Users.user_id"],
+        ["User.user_id"],
         ondelete="CASCADE",
     ),
-    PrimaryKeyConstraint("trainings_plan_history_id"),
+    PrimaryKeyConstraint("training_plan_history_id"),
 )
 
-Exercises_history = Table(
-    "Exercises_history",
+Exercise_history = Table(
+    "Exercise_history",
     metaData,
-    Column("exercises_history_id", Integer, nullable=False),
-    Column("trainings_plan_history_id", Integer, nullable=False),
+    Column("excercise_history_id", Integer, nullable=False),
+    Column("training_plan_history_id", Integer, nullable=False),
     Column("user_id", Integer, nullable=False),
     Column("exercise_id", Integer, nullable=False),
     Column("completed", Boolean, nullable=False, default=False),
@@ -117,20 +117,20 @@ Exercises_history = Table(
     Column("trackable_unit_of_measure", String(255), nullable=True),
     ForeignKeyConstraint(
         ["exercise_id"],
-        ["Exercises.exercise_id"],
+        ["Exercise.exercise_id"],
         ondelete="CASCADE",
     ),
     ForeignKeyConstraint(
-        ["exercises_history_id"],
-        ["Trainings_plan_history.trainings_plan_history_id"],
+        ["excercise_history_id"],
+        ["Training_plan_history.training_plan_history_id"],
         ondelete="CASCADE",
     ),
     ForeignKeyConstraint(
         ["user_id"],
-        ["Users.user_id"],
+        ["User.user_id"],
         ondelete="CASCADE",
     ),
-    PrimaryKeyConstraint("exercises_history_id"),
+    PrimaryKeyConstraint("excercise_history_id"),
 )
 
 Tags = Table(
@@ -148,38 +148,38 @@ Tags2Exercises = Table(
     Column("exercise_id", Integer, nullable=False),
     Column("is_primary_tag", Boolean, nullable=False, default=False),
     ForeignKeyConstraint(
-        ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
+        ["exercise_id"], ["Exercise.exercise_id"], ondelete="CASCADE"
     ),
     ForeignKeyConstraint(["tag_id"], ["Tags.tag_id"], ondelete="CASCADE"),
 )
 
-Individual_Exercise_Ratings = Table(
-    "Individual_Exercise_Ratings",
+Individual_rating = Table(
+    "Individual_rating",
     metaData,
     Column("user_id", Integer, nullable=False),
     Column("exercise_id", Integer, nullable=False),
     Column("rating", Integer, nullable=False),
     ForeignKeyConstraint(
-        ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
+        ["exercise_id"], ["Exercise.exercise_id"], ondelete="CASCADE"
     ),
-    ForeignKeyConstraint(["user_id"], ["Users.user_id"], ondelete="CASCADE"),
+    ForeignKeyConstraint(["user_id"], ["User.user_id"], ondelete="CASCADE"),
     PrimaryKeyConstraint("user_id", "exercise_id"),
 )
 
-Overall_Exercise_Ratings = Table(
-    "Overall_Exercise_Ratings",
+Average_rating = Table(
+    "Average_rating",
     metaData,
     Column("exercise_id", Integer, nullable=False),
     Column("total_exercise_ratings", Integer, nullable=False),
     Column("rating", Float, nullable=True),
     ForeignKeyConstraint(
-        ["exercise_id"], ["Exercises.exercise_id"], ondelete="CASCADE"
+        ["exercise_id"], ["Exercise.exercise_id"], ondelete="CASCADE"
     ),
     PrimaryKeyConstraint("exercise_id"),
 )
 
-Days = Table(
-    "Days",
+Day = Table(
+    "Day",
     metaData,
     Column(
         "days_id",
@@ -197,7 +197,7 @@ Days = Table(
     Column("user_id", Integer, nullable=False),
     ForeignKeyConstraint(
         ["training_id", "user_id"],
-        ["Trainings_plan.training_id", "Trainings_plan.user_is"],
+        ["Training_plan.training_id", "Training_plan.user_is"],
         ondelete="CASCADE",
     ),
     PrimaryKeyConstraint("days_id"),

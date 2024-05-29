@@ -1,8 +1,8 @@
 USE trainings_DB;
 
 INSERT INTO
-    Users (
-        user_name,
+    User (
+        username,
         password,
         expired,
         searching_for_partner,
@@ -17,8 +17,8 @@ VALUES (
     );
 
 INSERT INTO
-    Users (
-        user_name,
+    User (
+        username,
         password,
         expired,
         searching_for_partner,
@@ -33,7 +33,7 @@ VALUES (
     );
 
 INSERT INTO
-    `Exercises` (
+    `Exercise` (
         exercise_id,
         exercise_name,
         constant_unit_of_measure
@@ -41,7 +41,7 @@ INSERT INTO
 VALUES (1, "test", "Min");
 
 INSERT INTO
-    `Exercises` (
+    `Exercise` (
         exercise_id,
         exercise_name,
         constant_unit_of_measure
@@ -49,7 +49,7 @@ INSERT INTO
 VALUES (2, "c", "SxWdh");
 
 INSERT INTO
-    `Exercises` (
+    `Exercise` (
         exercise_id,
         exercise_name,
         constant_unit_of_measure
@@ -57,7 +57,7 @@ INSERT INTO
 VALUES (3, "qew", "Min");
 
 INSERT INTO
-    `Exercises` (
+    `Exercise` (
         exercise_id,
         exercise_name,
         constant_unit_of_measure
@@ -65,31 +65,31 @@ INSERT INTO
 VALUES (4, "svd", "SxWdh");
 
 insert into
-    `Trainings_plan` (
+    `Training_plan` (
         training_id,
-        trainings_name,
+        training_name,
         user_id
     )
 values (1, "temp", 1);
 
 insert into
-    `Trainings_plan` (
+    `Training_plan` (
         training_id,
-        trainings_name,
+        training_name,
         user_id
     )
 values (2, "temp2", 1);
 
 insert into
-    `Trainings_plan` (
+    `Training_plan` (
         training_id,
-        trainings_name,
+        training_name,
         user_id
     )
 values (3, "temp3", 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -98,7 +98,7 @@ insert into
 values (1, "Monday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -107,7 +107,7 @@ insert into
 values (2, "Tuesday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -116,7 +116,7 @@ insert into
 values (8, "Tuesday", 1, 2);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -125,7 +125,7 @@ insert into
 values (3, "Wednesday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -134,7 +134,7 @@ insert into
 values (9, "Wednesday", 1, 3);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -143,7 +143,7 @@ insert into
 values (4, "Thursday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -152,7 +152,7 @@ insert into
 values (5, "Friday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -161,7 +161,7 @@ insert into
 values (6, "Saturday", 1, 1);
 
 insert into
-    `Days` (
+    `Day` (
         days_id,
         weekday,
         user_id,
@@ -170,28 +170,28 @@ insert into
 values (7, "Sunday", 1, 1);
 
 insert into
-    `Exercises2Trainings_plans` (
+    `Exercise2Training_plan` (
         training_id,
         exercise_id
     )
 values (1, 1);
 
 insert into
-    `Exercises2Trainings_plans` (
+    `Exercise2Training_plan` (
         training_id,
         exercise_id
     )
 values (1, 2);
 
 insert into
-    `Exercises2Trainings_plans` (
+    `Exercise2Training_plan` (
         training_id,
         exercise_id
     )
 values (1, 3);
 
 insert into
-    `Exercises2Trainings_plans` (
+    `Exercise2Training_plan` (
         training_id,
         exercise_id
     )

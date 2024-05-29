@@ -18,26 +18,26 @@ class Token(BaseModel):
 
 class User_name_id(BaseModel):
     user_id: int
-    user_name: str
+    username: str
 
 
 class Token_data(BaseModel):
-    user_name: str or None = None
+    username: str or None = None
 
 
 class User(BaseModel):
-    user_name: str
+    username: str
     expired: bool or None = None
 
 
 class User_in_db(User):
     hashed_password: str
-    user_name: str
+    username: str
 
 
 class Unformatted_trainingsdata(TypedDict):
     training_id: int
-    trainings_name: str
+    training_name: str
     weekday: str
     exercise_name: Optional[str]
     exercise_id: Optional[int]
@@ -140,7 +140,7 @@ class formatted_trainingsdata(BaseModel):
 
 class unformatted_past_or_future_trainings_data(BaseModel):
     day: Union[datetime, str]
-    trainings_name: str
+    training_name: str
     training_id: int
     exercise_id: int
     exercise_name: str
@@ -169,7 +169,7 @@ class exercise_history(BaseModel):
 
 
 class trainings_history(BaseModel):
-    trainings_name: str
+    training_name: str
     training_id: int
     exercises: List[exercise_history]
 
@@ -191,7 +191,7 @@ class response_model_users_me(BaseModel):
     user_id: int
     profile_picture: Optional[str]
     nickname: Optional[str]
-    user_name: str
+    username: str
     plz: Optional[int]
     searching_for_partner: bool
     bio: Optional[str]
@@ -217,7 +217,7 @@ class response_model_get_chats(BaseModel):
 
 
 class response_model_post_chat(BaseModel):
-    user_name: str
+    username: str
     user_id: int
     profile_picture: Optional[str]
     nickname: Optional[str]
@@ -267,7 +267,7 @@ class In_training_camel_case(BaseModel):
 class In_training(BaseModel):
     exercise_id: int
     training_id: int
-    trainings_name: str
+    training_name: str
 
 
 class Post_ExercisesAdd(BaseModel):
