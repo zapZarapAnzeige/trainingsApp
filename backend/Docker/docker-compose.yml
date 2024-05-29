@@ -17,7 +17,7 @@ services:
       - "./scripts/createEvents.sql:/docker-entrypoint-initdb.d/6.sql"
       - "./bck:/var/lib/bck"
   mongo:
-    image: mongo:latest
+    image: mongo:4.4.6
     container_name: ${MONGO_DB_CONTAINER_NAME}
     restart: always
     ports:
