@@ -52,18 +52,17 @@ export default function Calendar() {
         const weekStart = getMondayOfWeek(currentCW, new Date().getFullYear());
 
         const pastTrainings = await getPastTrainings(token, weekStart);
+
         const futureTrainings = await getFutureTrainings(token, weekStart);
 
-        dispatch(
-          setCalendarData(
-            splitPastFuture(
-              fillMissingTrainingDays([
-                ...calendarData.pastTrainings,
-                ...calendarData.futureTrainings,
-              ])
-            )
-          )
-        );
+        const filledTrainings = fillMissingTrainingDays([
+          ...pastTrainings,
+          ...futureTrainings,
+        ]);
+
+        const splitData = splitPastFuture(filledTrainings);
+
+        dispatch(setCalendarData(splitData));
       } catch (error) {
         console.error("Error fetching data", error);
       }
