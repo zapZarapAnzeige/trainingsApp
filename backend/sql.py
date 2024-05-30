@@ -75,8 +75,7 @@ async def update_user_data(
     if profile_picture:
         max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
-            raise HTTPException(
-                status_code=413, detail="Image size exceeds 16 MB")
+            raise HTTPException(status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
@@ -98,8 +97,7 @@ def get_profile_pic(user_id: int):
 
 
 def get_user(name):
-    result = session.execute(select(User).where(
-        User.c.username == name)).fetchone()
+    result = session.execute(select(User).where(User.c.username == name)).fetchone()
     if result is not None:
         return result._asdict()
 
@@ -297,8 +295,11 @@ def get_all_exercises_for_user(user_id: int):
                 Exercise.c.exercise_id == Tags2Exercises.c.exercise_id,
                 isouter=True,
             )
-            .join(Tags, Tags.c.tag_id == Tags2Exercises.c.tag_id,
-                  isouter=True,)
+            .join(
+                Tags,
+                Tags.c.tag_id == Tags2Exercises.c.tag_id,
+                isouter=True,
+            )
             .join(
                 Average_rating,
                 Average_rating.c.exercise_id == Exercise.c.exercise_id,
@@ -342,8 +343,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             select(
                 Training_plan_history.c.day,
                 Training_plan_history.c.training_name,
-                Training_plan_history.c.training_plan_history_id.label(
-                    "training_id"),
+                Training_plan_history.c.training_plan_history_id.label("training_id"),
                 Exercise_history.c.excercise_history_id.label("exercise_id"),
                 Exercise.c.exercise_name,
                 Exercise_history.c.completed,
@@ -403,10 +403,7 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
                 User_current_performance.c.trackable_unit_of_measure,
             )
             .select_from(Day)
-            .where(
-                Day.c.user_id == user_id, Day.c.weekday.in_(
-                    get_weekdays(date_diff))
-            )
+            .where(Day.c.user_id == user_id, Day.c.weekday.in_(get_weekdays(date_diff)))
             .join(Training_plan, Training_plan.c.training_id == Day.c.training_id)
             .join(
                 Exercise2Training_plan,
@@ -550,6 +547,10 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
                 )
             )
 
+            update_user_performance(
+                trainings_data.exercises, user_id, trainings_data.trainingId
+            )
+
             exercises_to_insert = [
                 {
                     "training_id": trainings_data.trainingId,
@@ -560,13 +561,8 @@ def save_trainings_data(trainings_data: post_trainingSchedule, user_id: int):
             ]
             if len(exercises_to_insert) > 0:
                 session.execute(
-                    insert(Exercise2Training_plan).values(
-                        exercises_to_insert)
+                    insert(Exercise2Training_plan).values(exercises_to_insert)
                 )
-
-            update_user_performance(
-                trainings_data.exercises, user_id, trainings_data.trainingId
-            )
             session.commit()
 
             return Response(status_code=status.HTTP_202_ACCEPTED)
@@ -697,14 +693,12 @@ def save_calendar_data(
 
 def get_exercise_name_by_id(exercise_id: int):
     return session.execute(
-        select(Exercise.c.exercise_name).where(
-            Exercise.c.exercise_id == exercise_id)
+        select(Exercise.c.exercise_name).where(Exercise.c.exercise_id == exercise_id)
     ).scalar_one()
 
 
 def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
-    current_exercises = get_exercise_for_dialog(
-        exercise_add.exercise_id, user_id)
+    current_exercises = get_exercise_for_dialog(exercise_add.exercise_id, user_id)
 
     training_ids_to_delete = [
         d["training_id"]
@@ -723,8 +717,7 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
         session.execute(
             delete(Exercise2Training_plan).where(
                 and_(
-                    Exercise2Training_plan.c.training_id.in_(
-                        training_ids_to_delete),
+                    Exercise2Training_plan.c.training_id.in_(training_ids_to_delete),
                     Exercise2Training_plan.c.exercise_id == exercise_add.exercise_id,
                 )
             )
@@ -750,14 +743,19 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
             }
             for id_ in training_ids_to_insert
         ]
-        session.execute(insert(User_current_performance).values(
-            performance_to_insert))
+        session.execute(insert(User_current_performance).values(performance_to_insert))
         session.commit()
 
 
 def delete_training(training_id, user_id):
-    session.execute(delete(Training_plan).where(and_(Training_plan.c.training_id ==
-                                                     training_id, Training_plan.c.user_id == user_id)))
+    session.execute(
+        delete(Training_plan).where(
+            and_(
+                Training_plan.c.training_id == training_id,
+                Training_plan.c.user_id == user_id,
+            )
+        )
+    )
     session.commit()
 
     return True

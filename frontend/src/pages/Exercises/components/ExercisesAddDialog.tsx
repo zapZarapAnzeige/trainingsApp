@@ -27,7 +27,7 @@ import {
   setRepetitionAmount,
   setSetAmount,
 } from "../../../redux/reducers/exercisesAddDialogSlice";
-import { postExercisesAdd } from "../../../api";
+import { putExercisesAdd } from "../../../api";
 import { useAuthHeader } from "react-auth-kit";
 import { useIntl } from "react-intl";
 
@@ -52,7 +52,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
   };
 
   const handleSave = () => {
-    postExercisesAdd(auth(), {
+    putExercisesAdd(auth(), {
       exerciseName: exercisesAddDialog.exerciseName,
       exerciseId: exercisesAddDialog.exerciseId,
       exerciseType: exercisesAddDialog.exerciseType,
@@ -80,7 +80,9 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
         <Divider />
         {"minutes" in exercisesAddDialog.exercise && (
           <FormControl>
-            <FormLabel>{intl.formatMessage({id: "exercises.label.minutes"})}</FormLabel>
+            <FormLabel>
+              {intl.formatMessage({ id: "exercises.label.minutes" })}
+            </FormLabel>
             <Input
               value={exercisesAddDialog.exercise.minutes}
               autoFocus
@@ -96,8 +98,10 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
 
         {"repetitionAmount" in exercisesAddDialog.exercise && (
           <>
-          <FormControl>
-              <FormLabel>{intl.formatMessage({id: "exercises.label.sets"})}</FormLabel>
+            <FormControl>
+              <FormLabel>
+                {intl.formatMessage({ id: "exercises.label.sets" })}
+              </FormLabel>
               <Input
                 value={exercisesAddDialog.exercise.setAmount}
                 required
@@ -109,7 +113,9 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>{intl.formatMessage({id: "exercises.label.repetitions"})}</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "exercises.label.repetitions" })}
+              </FormLabel>
               <Input
                 value={exercisesAddDialog.exercise.repetitionAmount}
                 required
@@ -119,12 +125,12 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                   dispatch(setRepetitionAmount(parseInt(e.target.value)));
                 }}
               />
-            </FormControl> 
+            </FormControl>
           </>
         )}
         <Divider />
         <Typography sx={{ mx: "auto" }} fontSize="lg">
-        {intl.formatMessage({id: "exercises.label.addExercise"})}
+          {intl.formatMessage({ id: "exercises.label.addExercise" })}
         </Typography>
         <List>
           {exercisesAddDialog.inTraining
@@ -149,7 +155,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
                         }}
                       />
                       <Typography fontSize="lg">
-                        {training.trainingsName}
+                        {training.trainingName}
                       </Typography>
                     </Stack>
                   </ListItemContent>

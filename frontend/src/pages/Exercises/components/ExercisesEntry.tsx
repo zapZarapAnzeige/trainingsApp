@@ -55,7 +55,10 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
               exerciseName: exercisesEntryData.exerciseName,
               exerciseId: exercisesEntryData.exerciseId,
               exerciseType: exercisesEntryData.exerciseType,
-              exercise: { minutes: 0 },
+              exercise:
+                exercisesEntryData.exerciseType == "Min"
+                  ? { minutes: 0 }
+                  : { repetitionAmount: 0, setAmount: 0 },
             })
           );
         })
@@ -131,7 +134,9 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
               </Stack>
               <Typography level="body-xs">
                 {exercisesEntryData.reviews}{" "}
-                {exercisesEntryData.reviews === 1 ? intl.formatMessage({id: "exercises.label.rating"}) : intl.formatMessage({id: "exercises.label.ratings"})}
+                {exercisesEntryData.reviews === 1
+                  ? intl.formatMessage({ id: "exercises.label.rating" })
+                  : intl.formatMessage({ id: "exercises.label.ratings" })}
               </Typography>
             </Stack>
             <IconButton

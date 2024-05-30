@@ -47,7 +47,7 @@ export default function App() {
         dispatch(
           changeUser({
             id: res.data.user_id,
-            name: res.data.user_name,
+            name: res.data.username,
             searchingForPartner: res.data.searching_for_partner,
             plz: res.data.plz,
             profilePicture: res.data.profile_picture,
