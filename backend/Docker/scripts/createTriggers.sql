@@ -68,36 +68,35 @@ BEGIN
 	CALL insert_user_performance_update (NEW.exercise_id, NEW.user_id, NEW.minutes, NEW.number_of_repetition, NEW.number_of_sets,  NEW.trackable_unit_of_measure , NEW.value_trackable_unit_of_measure);
 END //
 
-CREATE TRIGGER exercises2Trainings_plans_on_insert AFTER 
+CREATE TRIGGER exercise2Training_plan_on_insert AFTER 
 INSERT ON Exercise2Training_plan FOR EACH ROW 
 BEGIN 
 
 	DECLARE done BOOLEAN DEFAULT FALSE;
-	DECLARE trainings_plan_history_id_var INT;
+	DECLARE training_plan_history_id_var INT;
     DECLARE this_user_id INT;
     DECLARE history_cursor CURSOR FOR SELECT training_plan_history_id FROM Training_plan_history WHERE training_id = NEW.training_id AND day = CURDATE();
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    
     
     SELECT user_id INTO this_user_id FROM Training_plan WHERE training_id = NEW.training_id;
 
     OPEN history_cursor;
 	
     read_loop: LOOP
-        FETCH history_cursor INTO trainings_plan_history_id_var;
+        FETCH history_cursor INTO training_plan_history_id_var;
         IF done THEN
             LEAVE read_loop;
         END IF;
 
         INSERT INTO Exercise_history(training_plan_history_id, user_id, completed, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure)
-         SELECT trainings_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id AND training_id=NEW.training_id;
+         SELECT training_plan_history_id_var, user_id, FALSE, exercise_id, minutes, number_of_repetition, number_of_sets, trackable_unit_of_measure, value_trackable_unit_of_measure FROM User_current_performance WHERE user_id = this_user_id AND exercise_id = NEW.exercise_id AND training_id=NEW.training_id;
     END LOOP;
 
     CLOSE history_cursor;
 
 END //
 
-CREATE TRIGGER exercises2Trainings_plans_on_delete AFTER 
+CREATE TRIGGER exercise2Training_plans_on_delete AFTER 
 DELETE ON Exercise2Training_plan FOR EACH ROW 
 BEGIN 
     DELETE ex FROM Exercise_history ex INNER JOIN Training_plan_history tph ON ex.training_plan_history_id = tph.training_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.training_id = OLD.training_id AND day=CURDATE();

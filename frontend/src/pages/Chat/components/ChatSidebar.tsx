@@ -176,7 +176,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
                                 lastMessageTimestamp: Date.now(),
                                 lastSenderId: res.data.user_id,
                                 partnerId: res.data.user_id,
-                                partnerName: res.data.user_name,
+                                partnerName: res.data.username,
                                 unreadMessages: 1,
                                 profilePicture: res.data.profile_picture,
                               },

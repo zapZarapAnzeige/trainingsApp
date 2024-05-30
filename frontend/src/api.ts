@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
-  CalendarData,
   CalendarDayData,
-  Exercise,
   ExerciseAdd,
   isExerciseWeighted,
   ExerciseInfo,
@@ -42,6 +40,7 @@ export const getChatsOverview = (token: string) => {
 };
 
 //done
+// TODO I think unused
 export const getUsers = (
   token: string,
   onSuccess: (res: AxiosResponse) => void
@@ -197,7 +196,7 @@ export const postTrainingData = async (
   });
 };
 
-export const postExercisesAdd = async (
+export const putExercisesAdd = async (
   token: string,
   exercisesAdd: ExercisesAddDialog
 ) => {
