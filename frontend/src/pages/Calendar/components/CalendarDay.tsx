@@ -69,108 +69,126 @@ const CalendarDay: FC<CalendarDayProps> = ({
         >
           {calendarDayData.trainings ? (
             calendarDayData.trainings.map((training) => (
-              <List
-                sx={{ display: "flex", flexDirection: "column" }}
-                key={training.trainingId}
-              >
-                {training.exercises.map((exercise) => (
-                  <Box key={exercise.exerciseId}>
-                    <ListItem sx={{ flexGrow: 6 }}>
-                      <ListItemContent>
-                        <Stack direction="row" justifyContent="space-between">
-                          <Typography>{exercise.exerciseName}</Typography>
-                          <IconButton
-                            onClick={() =>
-                              handleInfoClick(exercise.exerciseName)
-                            }
-                          >
-                            <InfoOutlinedIcon />
-                          </IconButton>
-                        </Stack>
-                      </ListItemContent>
-                    </ListItem>
-                    <Divider />
-                    {!isExerciseWeighted(exercise.exercise) ? (
+              <>
+                <Typography>{training.name}</Typography>
+                <Divider />
+                <List
+                  sx={{ display: "flex", flexDirection: "column" }}
+                  key={training.trainingId}
+                >
+                  {training.exercises.map((exercise) => (
+                    <Box key={exercise.exerciseId}>
                       <ListItem sx={{ flexGrow: 6 }}>
                         <ListItemContent>
                           <Stack direction="row" justifyContent="space-between">
-                            <Typography>
-                              {intl.formatMessage({id: "calendar.label.min"}, {min: exercise.exercise.minutes})}
-                            </Typography>
-                            <CalendarCheckbox
-                              completable={completable}
-                              calendarData={calendarData}
-                              exercise={exercise}
-                              training={training}
-                            />
+                            <Typography>{exercise.exerciseName}</Typography>
+                            <IconButton
+                              onClick={() =>
+                                handleInfoClick(exercise.exerciseName)
+                              }
+                            >
+                              <InfoOutlinedIcon />
+                            </IconButton>
                           </Stack>
                         </ListItemContent>
                       </ListItem>
-                    ) : (
-                      <ListItem sx={{ flexGrow: 6 }}>
-                        <ListItemContent>
-                          <Stack direction="row" justifyContent="space-between">
-                            <Typography>
-                              {exercise.exercise.setAmount} x{" "}
-                             {intl.formatMessage({id: "calendar.label.rep"}, {rep: exercise.exercise.repetitionAmount})}
-                            </Typography>
-                            <CalendarCheckbox
-                              completable={completable}
-                              calendarData={calendarData}
-                              exercise={exercise}
-                              training={training}
-                            />
-                          </Stack>
-                        </ListItemContent>
-                      </ListItem>
-                    )}
-                    <Divider />
-                    {isExerciseWeighted(exercise.exercise) && (
-                      <FormControl>
-                        <FormLabel>{"KG"}</FormLabel>
-                        <Input
-                          required
-                          type="number"
-                          value={exercise.exercise.weight}
-                          onChange={(e) => {
-                            dispatch(setIsDataDirty(true));
-                            dispatch(
-                              setCalendarData({
-                                pastTrainings: calendarData.pastTrainings.map(
-                                  (day) => ({
-                                    ...day,
-                                    trainings: day.trainings.map((t) => ({
-                                      ...t,
-                                      exercises:
-                                        t.trainingId === training.trainingId
-                                          ? t.exercises.map((ex) => ({
-                                              ...ex,
-                                              exercise:
-                                                exercise.exerciseId ===
-                                                  ex.exerciseId &&
-                                                isExerciseWeighted(ex.exercise)
-                                                  ? {
-                                                      ...ex.exercise,
-                                                      weight: parseInt(
-                                                        e.target.value
-                                                      ),
-                                                    }
-                                                  : ex.exercise,
-                                            }))
-                                          : t.exercises,
-                                    })),
-                                  })
-                                ),
-                                futureTrainings: calendarData.futureTrainings,
-                              })
-                            );
-                          }}
-                        />
-                      </FormControl>
-                    )}
-                  </Box>
-                ))}
-              </List>
+                      <Divider />
+                      {!isExerciseWeighted(exercise.exercise) ? (
+                        <ListItem sx={{ flexGrow: 6 }}>
+                          <ListItemContent>
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
+                            >
+                              <Typography>
+                                {intl.formatMessage(
+                                  { id: "calendar.label.min" },
+                                  { min: exercise.exercise.minutes }
+                                )}
+                              </Typography>
+                              <CalendarCheckbox
+                                completable={completable}
+                                calendarData={calendarData}
+                                exercise={exercise}
+                                training={training}
+                              />
+                            </Stack>
+                          </ListItemContent>
+                        </ListItem>
+                      ) : (
+                        <ListItem sx={{ flexGrow: 6 }}>
+                          <ListItemContent>
+                            <Stack
+                              direction="row"
+                              justifyContent="space-between"
+                            >
+                              <Typography>
+                                {exercise.exercise.setAmount} x{" "}
+                                {intl.formatMessage(
+                                  { id: "calendar.label.rep" },
+                                  { rep: exercise.exercise.repetitionAmount }
+                                )}
+                              </Typography>
+                              <CalendarCheckbox
+                                completable={completable}
+                                calendarData={calendarData}
+                                exercise={exercise}
+                                training={training}
+                              />
+                            </Stack>
+                          </ListItemContent>
+                        </ListItem>
+                      )}
+                      <Divider />
+                      {isExerciseWeighted(exercise.exercise) && (
+                        <FormControl>
+                          <Input
+                            required
+                            type="number"
+                            placeholder="KG"
+                            value={exercise.exercise.weight}
+                            onChange={(e) => {
+                              dispatch(setIsDataDirty(true));
+                              dispatch(
+                                setCalendarData({
+                                  pastTrainings: calendarData.pastTrainings.map(
+                                    (day) => ({
+                                      ...day,
+                                      trainings: day.trainings.map((t) => ({
+                                        ...t,
+                                        exercises:
+                                          t.trainingId === training.trainingId
+                                            ? t.exercises.map((ex) => ({
+                                                ...ex,
+                                                exercise:
+                                                  exercise.exerciseId ===
+                                                    ex.exerciseId &&
+                                                  isExerciseWeighted(
+                                                    ex.exercise
+                                                  )
+                                                    ? {
+                                                        ...ex.exercise,
+                                                        weight: parseInt(
+                                                          e.target.value
+                                                        ),
+                                                      }
+                                                    : ex.exercise,
+                                              }))
+                                            : t.exercises,
+                                      })),
+                                    })
+                                  ),
+                                  futureTrainings: calendarData.futureTrainings,
+                                })
+                              );
+                            }}
+                          />
+                        </FormControl>
+                      )}
+                    </Box>
+                  ))}
+                </List>
+              </>
             ))
           ) : (
             <></>

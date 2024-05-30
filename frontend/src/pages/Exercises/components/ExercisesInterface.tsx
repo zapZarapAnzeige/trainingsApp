@@ -33,6 +33,7 @@ export default function ExercisesInterface() {
     >
       <Stack direction="column" spacing={2}>
         <Select
+          placeholder="Tags auswählen"
           disabled={arraysEqual(tags, currentTags)}
           onChange={(
             event: React.SyntheticEvent | null,

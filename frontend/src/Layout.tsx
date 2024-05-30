@@ -10,7 +10,27 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Login from "./Login/Login";
 import { AuthProvider } from "react-auth-kit";
 
+import { extendTheme } from "@mui/joy/styles";
+
 export const Layout: FC = () => {
+  const primaryPalette = {
+    primary: {
+      solidBg: "#438d3f",
+      solidHoverBg: "#3b7e37",
+      solidActiveBg: "#336f2f",
+    },
+  };
+  const theme = extendTheme({
+    colorSchemes: {
+      dark: {
+        palette: primaryPalette,
+      },
+      light: {
+        palette: primaryPalette,
+      },
+    },
+  });
+
   return (
     <AuthProvider
       authType={"cookie"}
@@ -18,7 +38,7 @@ export const Layout: FC = () => {
       cookieDomain={window.location.hostname}
       cookieSecure={window.location.protocol === "https:"}
     >
-      <CssVarsProvider disableTransitionOnChange>
+      <CssVarsProvider disableTransitionOnChange theme={theme}>
         <Provider store={store}>
           <LocalizationProvider
             locale={getBrowserLocales({ languageCodeOnly: true })}
