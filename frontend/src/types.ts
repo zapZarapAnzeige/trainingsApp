@@ -58,6 +58,7 @@ export type ExercisesEntryData = Exercise &
   Tags & {
     rating: number;
     reviews: number;
+    previewImage: string;
   };
 
 type Tags = {

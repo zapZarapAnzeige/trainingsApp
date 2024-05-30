@@ -45,6 +45,8 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   const dispatch = useAppDispatch();
 
+  console.log(exercisesEntryData.previewImage);
+
   useEffect(() => {
     if (openAddDialog) {
       getExercisesAdd(auth(), exercisesEntryData.exerciseId)
@@ -104,8 +106,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
         </Typography>
         <AspectRatio minHeight="120px" maxHeight="200px">
           <img
-            src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-            srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
+            src={"data:image/jpeg;base64," + exercisesEntryData.previewImage}
             loading="lazy"
             alt=""
           />
