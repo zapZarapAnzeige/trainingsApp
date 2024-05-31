@@ -91,10 +91,17 @@ export default function Sidebar() {
         onClick={() => closeSidebar()}
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <IconButton variant="soft" color="primary" size="sm">
+        <IconButton
+          variant="soft"
+          color="primary"
+          size="sm"
+          onClick={() => dispatch(changePage("calendar"))}
+        >
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">{intl.formatMessage({ id: "sidebar.label.trainingapp"})}</Typography>
+        <Typography level="title-lg">
+          {intl.formatMessage({ id: "sidebar.label.trainingapp" })}
+        </Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
       <Box
@@ -152,7 +159,9 @@ export default function Sidebar() {
             >
               <QuestionAnswerRoundedIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("chats", intl)}</Typography>
+                <Typography level="title-sm">
+                  {getPageName("chats", intl)}
+                </Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -178,7 +187,9 @@ export default function Sidebar() {
             >
               <HelpIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("tips", intl)}</Typography>
+                <Typography level="title-sm">
+                  {getPageName("tips", intl)}
+                </Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -190,7 +201,9 @@ export default function Sidebar() {
             >
               <InfoIcon />
               <ListItemContent>
-                <Typography level="title-sm">{getPageName("about", intl)}</Typography>
+                <Typography level="title-sm">
+                  {getPageName("about", intl)}
+                </Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>

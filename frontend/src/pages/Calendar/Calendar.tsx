@@ -76,6 +76,16 @@ export default function Calendar() {
     dispatch(reloadCalendar(true));
   }, [currentCW]);
 
+  const dayGoal = calculateDayGoal(
+    [...calendarData.pastTrainings, ...calendarData.futureTrainings],
+    new Date().toISOString().split("T")[0]
+  );
+
+  const weekGoal = calculateWeekGoal([
+    ...calendarData.pastTrainings,
+    ...calendarData.futureTrainings,
+  ]);
+
   return (
     <>
       <HeadingArea />
@@ -128,45 +138,15 @@ export default function Calendar() {
                 sx={{ mb: 1, borderRadius: 5, width: "100%", p: 2 }}
               >
                 {intl.formatMessage({ id: "calendar.label.dailyGoal" }) +
-                  roundToTwoDecimalPlaces(
-                    calculateDayGoal(
-                      [
-                        ...calendarData.pastTrainings,
-                        ...calendarData.futureTrainings,
-                      ],
-                      new Date().toISOString().split("T")[0]
-                    )
-                  ) +
+                  roundToTwoDecimalPlaces(dayGoal) +
                   "%"}
-                <LinearProgress
-                  color="success"
-                  determinate
-                  value={calculateDayGoal(
-                    [
-                      ...calendarData.pastTrainings,
-                      ...calendarData.futureTrainings,
-                    ],
-                    new Date().toISOString().split("T")[0]
-                  )}
-                />
+                <LinearProgress color="success" determinate value={dayGoal} />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
                 {intl.formatMessage({ id: "calendar.label.weeklyGoal" }) +
-                  roundToTwoDecimalPlaces(
-                    calculateWeekGoal([
-                      ...calendarData.pastTrainings,
-                      ...calendarData.futureTrainings,
-                    ])
-                  ) +
+                  roundToTwoDecimalPlaces(weekGoal) +
                   "%"}
-                <LinearProgress
-                  color="success"
-                  determinate
-                  value={calculateWeekGoal([
-                    ...calendarData.pastTrainings,
-                    ...calendarData.futureTrainings,
-                  ])}
-                />
+                <LinearProgress color="success" determinate value={weekGoal} />
               </Sheet>
               <IconButton
                 variant="solid"

@@ -272,7 +272,9 @@ export function calculateDayGoal(
     });
   });
 
-  return (completedExercises / totalExercises) * 100;
+  const result = (completedExercises / totalExercises) * 100;
+
+  return !isNaN(result) ? result : 0;
 }
 
 export function calculateWeekGoal(trainings: CalendarDayData[]): number {
@@ -290,7 +292,9 @@ export function calculateWeekGoal(trainings: CalendarDayData[]): number {
     });
   });
 
-  return (completedExercises / totalExercises) * 100;
+  const result = (completedExercises / totalExercises) * 100;
+
+  return !isNaN(result) ? result : 0;
 }
 
 export function getISOWeekNumber(date: Date): number {
