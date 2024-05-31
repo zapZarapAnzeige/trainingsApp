@@ -2,7 +2,14 @@ import { FC } from "react";
 import * as React from "react";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
-import { DialogTitle, Divider, IconButton, Stack, Typography } from "@mui/joy";
+import {
+  AspectRatio,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/joy";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { clearAll } from "../../../redux/reducers/exercisesInfoDialogSlice";
@@ -25,6 +32,7 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
   );
   const dispatch = useAppDispatch();
   const intl = useIntl();
+  const video = "data:video/mp4;base64," + exercisesInfoDialog.video;
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -46,10 +54,17 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
           </IconButton>
         </Stack>
         <Divider />
-        VIDEO AREA
+        <AspectRatio minHeight="120px" maxHeight="200px">
+          <video controls>
+            <source src={video} type="video/mp4" />
+            Ihr Browser unterstützt das Video-Tag nicht.
+          </video>
+        </AspectRatio>
         <Divider />
         <Stack direction="row" spacing={2}>
-          <Typography>{intl.formatMessage({id: "exercises.label.yourRating"})}</Typography>
+          <Typography>
+            {intl.formatMessage({ id: "exercises.label.yourRating" })}
+          </Typography>
           <MaterialCssVarsProvider>
             <Rating
               precision={0.5}

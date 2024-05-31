@@ -45,8 +45,6 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   const dispatch = useAppDispatch();
 
-  console.log(exercisesEntryData.previewImage);
-
   useEffect(() => {
     if (openAddDialog) {
       getExercisesAdd(auth(), exercisesEntryData.exerciseId)
