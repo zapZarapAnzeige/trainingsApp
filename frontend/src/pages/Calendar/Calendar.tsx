@@ -70,7 +70,7 @@ export default function Calendar() {
 
     fetchTrainings();
     dispatch(reloadCalendar(false));
-  }, [reloadCalendar]);
+  }, [reloadCalendar, currentCW]);
 
   useEffect(() => {
     dispatch(reloadCalendar(true));

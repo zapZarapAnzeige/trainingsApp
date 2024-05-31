@@ -70,7 +70,9 @@ const CalendarDay: FC<CalendarDayProps> = ({
           {calendarDayData.trainings ? (
             calendarDayData.trainings.map((training) => (
               <>
-                <Typography>{training.name}</Typography>
+                <Typography fontWeight={"bold"}>
+                  {training.trainingName}
+                </Typography>
                 <Divider />
                 <List
                   sx={{ display: "flex", flexDirection: "column" }}
@@ -139,7 +141,6 @@ const CalendarDay: FC<CalendarDayProps> = ({
                           </ListItemContent>
                         </ListItem>
                       )}
-                      <Divider />
                       {isExerciseWeighted(exercise.exercise) && (
                         <FormControl>
                           <Input

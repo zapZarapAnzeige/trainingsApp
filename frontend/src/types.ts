@@ -39,7 +39,7 @@ export type CalendarDayData = {
 };
 
 export type CalendarTraining = {
-  name: string;
+  trainingName: string;
   trainingId: number;
   onDays: string[];
   exercises: CalendarExercise[];
