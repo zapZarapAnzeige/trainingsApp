@@ -14,45 +14,34 @@ export default function AboutContent() {
               Was bietet die Trainingsapp?
             </Typography>
             <Typography>
-              Die Trainingsapp ist dein Wegbegleiter zu einem gesünderen
-              Lebensstil. Durch individuell angepasste Trainingspläne und eine
-              Community, unterstützt die App dich dabei, deine Fitnessziele
-              effektiv und nachhaltig zu erreichen. Unsere Trainingsapp umfasste
+              "Die Trainingsapp ist dein Wegbegleiter zu einem gesünderen
+              Lebensstil. Wir legen dabei einen besonderen Fokus auf
+              Krafttraining und unterstützen dich dabei deine Fitnessziele
+              effektiv und nachhaltig zu erreichen. Unsere Trainingsapp umfasst
               folgende Features: - Personalisierte Trainingspläne: Erstelle
               deinen eigenen Trainingsplan, der genau auf deine Ziele, deinen
-              Zeitplan und dein Fitnesslevel abgestimmt ist. Ob du Muskeln
-              aufbauen, Gewicht verlieren oder einfach nur aktiver sein möchtest
-              – unsere App hat alles, was du brauchst. - zahlreiche Übungen:
-              Finde klare Anleitungen und anschauliche Videos für jede Übung aus
-              denen du deinen idealen Plan zusammenstellen kannst. - Community:
-              Tritt in Kontakt mit anderen Nutzern, die ähnliche Ziele
-              verfolgen, finde Trainingspartner in deiner Nähe und tausche Tipps
-              und Erfahrungen aus. - Einfaches Tracking deiner Fortschritte: Mit
-              unserer einfach zu bedienenden Tracking-Funktion kannst du deine
-              Fortschritte verfolgen und deine Ziele anpassen. Sieh auf einen
-              Blick, wie weit du gekommen bist.
+              Zeitplan und dein Fitnesslevel abgestimmt ist. - Zahlreiche
+              Übungen: Finde klare Anleitungen und anschauliche Videos für
+              unterschiedlichste Übungen aus denen du deinen idealen
+              Trainingsplan zusammenstellen kannst. - Ortsabhängige
+              Trainingspartnersuche: Tritt in Kontakt mit anderen Nutzern, die
+              ähnliche Ziele verfolgen, finde Trainingspartner in deiner Nähe
+              und tausche Tipps und Erfahrungen aus. - Einfaches Tracking deiner
+              Fortschritte: Trage im Rahmen deines Kalenders deine im Training
+              verwendeten Gewichte ein. So kannst du deine Fortschritte
+              verfolgen und sehen wie weit du schon gekommen bist."
             </Typography>
           </Box>
           <Box mb={1}>
-            <AspectRatio minHeight="120px" maxHeight="200px">
-              <img
-                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                loading="lazy"
-                alt=""
-              />
+            <AspectRatio minHeight="120px" maxHeight="300px">
+              <img src="/about1.jpg" loading="lazy" alt="" />
             </AspectRatio>
           </Box>
         </Grid>
         <Grid xs={6} mb={1}>
           <Box mb={1}>
-            <AspectRatio minHeight="120px" maxHeight="200px">
-              <img
-                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                loading="lazy"
-                alt=""
-              />
+            <AspectRatio minHeight="120px" maxHeight="300px">
+              <img src="/about2.jpg" loading="lazy" alt="" />
             </AspectRatio>
           </Box>
           <Box mb={1}>
@@ -72,12 +61,32 @@ export default function AboutContent() {
               steigern kann.
             </Typography>
           </Box>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={4}>
+        <Grid xs={12} mb={1}>
           <Box mb={1}>
             <Typography level="h2" fontSize="xl" sx={{ mb: 0.5 }}>
-              Hast du weitere Fragen oder Anmerkungen?
+              Wer sind wir?
             </Typography>
             <Typography>
-              Kontaktiere uns hier ganz einfach per E-Mail
+              Wir sind ein Team aus vier Studierenden, die sich neben der IT
+              auch gemeinsam für einen gesunden Lebensstil begeistern. Aus
+              dieser Begeisterung heraus entstand die Idee, eine App zu
+              entwickeln, die es Menschen jeglichen Fitnessstands und mit
+              unterschiedlichsten Vorkenntnissen ermöglicht, aktiv zu werden und
+              ihre persönlichen Gesundheitsziele zu verfolgen.
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid xs={12} mb={1}>
+          <Box mb={1}>
+            <Typography level="h2" fontSize="xl" sx={{ mb: 0.5 }}>
+              Hast du Fragen oder Anmerkungen?
+            </Typography>
+            <Typography>
+              Kontaktiere uns hier ganz einfach per E-Mail!
             </Typography>
           </Box>
         </Grid>
