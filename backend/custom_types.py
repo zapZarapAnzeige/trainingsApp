@@ -272,7 +272,6 @@ class In_training(BaseModel):
 
 class Post_ExercisesAdd(BaseModel):
     in_training: List[In_training_camel_case]
-    not_in_training: List[In_training_camel_case]
     exercise_id: int
     exercise: Union[
         Exercise_cardio,
