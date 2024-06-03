@@ -381,11 +381,12 @@ export function splitPastFuture(data: CalendarDayData[]): {
   pastTrainings: CalendarDayData[];
   futureTrainings: CalendarDayData[];
 } {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date().getDate();
 
-  const pastTrainings = data.filter((d) => new Date(d.date) <= today);
-  const futureTrainings = data.filter((d) => new Date(d.date) > today);
+  const pastTrainings = data.filter((d) => new Date(d.date).getDate() <= today);
+  const futureTrainings = data.filter(
+    (d) => new Date(d.date).getDate() > today
+  );
 
   return { pastTrainings, futureTrainings };
 }
