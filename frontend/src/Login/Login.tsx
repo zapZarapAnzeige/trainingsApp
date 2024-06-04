@@ -11,12 +11,14 @@ import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import { AxiosError } from "axios";
 import { useIntl } from "react-intl";
-import { login, signUp } from "../api";
+import { getUserData, login, signUp } from "../api";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, FC } from "react";
 import { useSignIn, useIsAuthenticated } from "react-auth-kit";
 import { Link, Snackbar } from "@mui/joy";
 import { InputField } from "./InputField";
+import { changeUser } from "../redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
 
 function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, ...other } = props;
@@ -42,7 +44,7 @@ function ColorSchemeToggle(props: IconButtonProps) {
   );
 }
 
-export default function Login() {
+export const Login: FC = () => {
   const [signInError, setSignInError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [usernameError, setUsernameError] = useState<string>("");
@@ -55,6 +57,13 @@ export default function Login() {
   const navigate = useNavigate();
   const intl = useIntl();
   const isAuthenticated = useIsAuthenticated();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setPasswordError("");
+    setUsernameError("");
+    setSignInError("");
+  }, [isSignIn]);
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -102,6 +111,19 @@ export default function Login() {
               authState: {},
             })
           ) {
+            getUserData("Bearer " + res.data.access_token).then((res) =>
+              dispatch(
+                changeUser({
+                  id: res.data.user_id,
+                  name: res.data.username,
+                  searchingForPartner: res.data.searching_for_partner,
+                  bio: res.data.bio,
+                  nickname: res.data.nickname,
+                  plz: res.data.plz,
+                  profilePicture: res.data.profile_picture,
+                })
+              )
+            );
             navigate("/");
           }
         })
@@ -318,4 +340,4 @@ export default function Login() {
       </Snackbar>
     </CssVarsProvider>
   );
-}
+};

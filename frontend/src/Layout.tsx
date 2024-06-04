@@ -7,7 +7,7 @@ import { store } from "./redux/store";
 import LocalizationProvider from "./messages/LocalizationProvider";
 import { getBrowserLocales } from "./messages/tools";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Login from "./Login/Login";
+import { Login } from "./Login/Login";
 import { AuthProvider } from "react-auth-kit";
 
 import { extendTheme } from "@mui/joy/styles";
