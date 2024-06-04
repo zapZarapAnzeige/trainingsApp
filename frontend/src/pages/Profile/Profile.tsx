@@ -67,13 +67,15 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
       bio !== (userData.bio ?? "") ||
       nickName !== (userData.nickname ?? "") ||
       plz !== (isUserData(userData) ? userData.plz ?? "" : "") ||
-      profilePicture !== userData.profilePicture
+      profilePicture !== userData.profilePicture ||
+      searchingForPartner !==
+        (isUserData(userData) ? userData.searchingForPartner : false)
     ) {
       setIsDataDirty(true);
     } else {
       setIsDataDirty(false);
     }
-  }, [bio, nickName, plz, profilePicture]);
+  }, [bio, nickName, plz, profilePicture, searchingForPartner]);
 
   useEffect(() => {
     let fileURL: undefined | string;
@@ -168,7 +170,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     boxShadow: "sm",
                   }}
                 >
-                  <EditRoundedIcon/>
+                  <EditRoundedIcon />
                   <input
                     type="file"
                     accept="image/*"
@@ -295,7 +297,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     setPlz(userData.plz ?? "");
                   }}
                 >
-                  <CloseIcon/>
+                  <CloseIcon />
                 </Button>
                 <Button
                   disabled={!isDataDirty}

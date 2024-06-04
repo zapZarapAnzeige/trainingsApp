@@ -1,7 +1,7 @@
 from fastapi import Query
 from datetime import datetime
 from fastapi import HTTPException, status
-from typing import Optional, List
+from typing import Optional
 from custom_types import (
     post_trainingSchedule,
     WEEKDAY_MAP,

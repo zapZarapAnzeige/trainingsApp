@@ -92,12 +92,16 @@ export default function Sidebar() {
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <IconButton
-          variant="soft"
+          variant="plain"
           color="primary"
           size="sm"
           onClick={() => dispatch(changePage("calendar"))}
         >
-          <BrightnessAutoRoundedIcon />
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="Logo"
+            style={{ width: "2.5rem", height: "2.5rem" }}
+          />
         </IconButton>
         <Typography level="title-lg">
           {intl.formatMessage({ id: "sidebar.label.trainingapp" })}

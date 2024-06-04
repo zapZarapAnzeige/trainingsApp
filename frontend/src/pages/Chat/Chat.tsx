@@ -58,6 +58,14 @@ export const Chat: FC = () => {
     );
   };
 
+  const getCustomErrorMessage = (message: string) => {
+    if (message === "Chat does not exist or one party blocked the other") {
+      return "chat.error.blocked";
+    } else {
+      return "error.unknown";
+    }
+  };
+
   const websocket = useWebsocket((e) => {
     const data: SingleChatHistory | WSError = JSON.parse(e.data);
     if (isSingleChatHistory(data)) {
@@ -67,7 +75,11 @@ export const Chat: FC = () => {
       setNewLastMessage(data);
     } else if (isWSError(data)) {
       setErrorMessage(
-        data.error_message ?? intl.formatMessage({ id: "error.unknown" })
+        data.error_message
+          ? intl.formatMessage({
+              id: getCustomErrorMessage(data.error_message),
+            })
+          : intl.formatMessage({ id: "error.unknown" })
       );
       setChatHistory(
         chatHistory.filter((chat) => chat.tempId !== data.message.id)

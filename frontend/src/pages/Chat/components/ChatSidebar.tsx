@@ -186,22 +186,27 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({
                                 sx={{
                                   display: "flex",
                                   flexDirection: "column",
-                                  alignContent: "center",
                                 }}
                               >
                                 {res.data.profile_picture && (
                                   <ProfilePicture
+                                    props={{
+                                      sx: { ml: "auto", mr: "auto" },
+                                      size: "lg",
+                                    }}
                                     base64ProfilePicture={
                                       res.data.profile_picture
                                     }
                                   />
                                 )}
-                                <Typography>
+                                <Typography
+                                  sx={{ ml: "auto", mr: "auto", mt: "2rem" }}
+                                >
                                   {intl.formatMessage(
                                     {
                                       id: "chat.info.newPartner",
                                     },
-                                    { partnerName: res.data.user_name }
+                                    { partnerName: res.data.username }
                                   )}
                                 </Typography>
                               </Box>

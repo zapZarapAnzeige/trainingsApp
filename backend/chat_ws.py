@@ -6,7 +6,6 @@ from typing import Dict
 from custom_types import Message_json
 from no_sql import save_new_message
 from datetime import datetime
-from starlette.websockets import WebSocketState
 
 
 connected_users: Dict[int, WebSocket] = {}
@@ -69,8 +68,7 @@ async def handle_session(websocket: WebSocket, user_id: int):
 
             # insert message into db
             is_inserted = await save_new_message(
-                data.get("content"), user_id, data.get(
-                    "recipient_id"), timestamp
+                data.get("content"), user_id, data.get("recipient_id"), timestamp
             )
             if is_inserted.get("error"):
                 # TODO: watch out for this error in frontend
