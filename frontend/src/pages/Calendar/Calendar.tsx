@@ -43,13 +43,14 @@ export default function Calendar() {
   const dispatch = useDispatch();
   const isDataDirty = useAppSelector((state) => state.calendar.isDataDirty);
   const currentCW = useAppSelector((state) => state.calendar.currentCW);
+  const currentYear = useAppSelector((state) => state.calendar.currentYear);
   const calendarData = useAppSelector((state) => state.calendar.calendarData);
 
   useEffect(() => {
     const fetchTrainings = async () => {
       try {
         const token = auth();
-        const weekStart = getMondayOfWeek(currentCW, new Date().getFullYear());
+        const weekStart = getMondayOfWeek(currentCW, currentYear);
 
         const pastTrainings = await getPastTrainings(token, weekStart);
 

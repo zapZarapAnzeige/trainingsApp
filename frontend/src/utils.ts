@@ -390,3 +390,16 @@ export function splitPastFuture(data: CalendarDayData[]): {
 
   return { pastTrainings, futureTrainings };
 }
+
+export function getCurrentYear(): number {
+  const currentYear = new Date().getFullYear();
+  return currentYear;
+}
+
+export function getYearCwCount(year: number): number {
+  const date = new Date(year, 0, 1);
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+
+  const firstDay = date.getDay();
+  return firstDay === 4 || (isLeapYear && firstDay === 3) ? 53 : 52;
+}
