@@ -63,6 +63,17 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
     handleClose();
   };
 
+  const isDataValid = () => {
+    if ("minutes" in exercisesAddDialog.exercise) {
+      return exercisesAddDialog.exercise.minutes != 0;
+    } else {
+      return (
+        exercisesAddDialog.exercise.repetitionAmount != 0 &&
+        exercisesAddDialog.exercise.setAmount != 0
+      );
+    }
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <ModalDialog>
@@ -168,7 +179,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
         <IconButton
           variant="solid"
           color="primary"
-          disabled={!isDataDirty}
+          disabled={!isDataDirty || !isDataValid()}
           onClick={handleSave}
         >
           <CheckIcon />
