@@ -5,7 +5,7 @@
   "unit.days": "{count, plural, one {day} other {days}}",
   "unit.months": "{count, plural, one {month} other {months}}",
   "unit.years": "{count, plural, one {year} other {years}}",
-  "label.companyName": "Curry Calle",
+  "label.companyName": "Training App",
   "loginScreen.label.signIn": "Sign in",
   "loginScreen.label.signUp": "Sign up",
   "loginScreen.subheading.signIn": "New to this site? ",

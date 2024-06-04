@@ -19,7 +19,8 @@ import {
   Avatar,
   Switch,
 } from "@mui/joy";
-
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { FC, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { PartnerData, UserData } from "../../types";
@@ -167,7 +168,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     boxShadow: "sm",
                   }}
                 >
-                  <EditRoundedIcon />
+                  <EditRoundedIcon/>
                   <input
                     type="file"
                     accept="image/*"
@@ -294,7 +295,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     setPlz(userData.plz ?? "");
                   }}
                 >
-                  {getMessage("profile.label.cancel")}
+                  <CloseIcon/>
                 </Button>
                 <Button
                   disabled={!isDataDirty}
@@ -325,7 +326,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     );
                   }}
                 >
-                  {getMessage("profile.label.save")}
+                  <CheckIcon />
                 </Button>
               </CardActions>
             </CardOverflow>
