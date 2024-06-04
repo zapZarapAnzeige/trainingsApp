@@ -195,7 +195,6 @@ def parse_past_or_future_trainings(
 
 
 def get_date_from_weekday(day: Union[datetime, str], date_of_monday: datetime = datetime.now()):
-    print(isinstance(day, str))
     if not day in WEEKDAY_MAP.keys():
         return day
 

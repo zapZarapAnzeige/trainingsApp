@@ -727,7 +727,6 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
             }
             for id_ in training_ids_to_insert
         ]
-        print(exercise_add.exercise)
         if len(performance_to_insert) > 0:
             session.execute(
                 insert(User_current_performance).values(performance_to_insert)
