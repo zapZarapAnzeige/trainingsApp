@@ -52,6 +52,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
           dispatch(
             setExercisesAddDialog({
               ...exercisesAddDialogData,
+              inTraining: [],
               exerciseName: exercisesEntryData.exerciseName,
               exerciseId: exercisesEntryData.exerciseId,
               exerciseType: exercisesEntryData.exerciseType,

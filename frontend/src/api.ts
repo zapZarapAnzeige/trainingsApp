@@ -195,7 +195,6 @@ export const putExercisesAdd = async (
     {
       exercise_id: exercisesAdd.exerciseId,
       in_training: exercisesAdd.inTraining,
-      not_in_training: exercisesAdd.notInTraining,
       exercise: exercisesAdd.exercise,
     },
     {
