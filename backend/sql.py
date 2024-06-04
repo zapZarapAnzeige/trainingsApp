@@ -376,7 +376,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(), start_date
     )
 
 
@@ -388,7 +388,7 @@ def get_weekdays(date_diff: bool):
     return [list(WEEKDAY_MAP.keys())[i * -1] for i in range(days_start_ind, 0, -1)]
 
 
-def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
+def get_future_trainings_from_cur_date(user_id: int, date_diff: bool, start_date: datetime):
     return parse_past_or_future_trainings(
         session.execute(
             select(
@@ -428,7 +428,8 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(),
+        start_date
     )
 
 

@@ -140,7 +140,7 @@ def add_tag(obj, tag_type, tag_name):
 
 
 def parse_past_or_future_trainings(
-    data: List[unformatted_past_or_future_trainings_data],
+    data: List[unformatted_past_or_future_trainings_data], start_date: datetime
 ):
     formatted_data: List[formatted_history_trainings_data] = []
     for d in data:
@@ -148,7 +148,7 @@ def parse_past_or_future_trainings(
             (
                 element
                 for element in formatted_data
-                if element["date"] == get_date_from_weekday(d["day"])
+                if element["date"] == get_date_from_weekday(d["day"], start_date)
             ),
             None,
         )
@@ -186,7 +186,7 @@ def parse_past_or_future_trainings(
         else:
             formatted_data.append(
                 {
-                    "date": get_date_from_weekday(d["day"]),
+                    "date": get_date_from_weekday(d["day"], start_date),
                     "trainings": [trainings_obj],
                 }
             )
@@ -194,13 +194,15 @@ def parse_past_or_future_trainings(
     return formatted_data
 
 
-def get_date_from_weekday(day: Union[datetime, str]):
-    if not isinstance(day, str):
+def get_date_from_weekday(day: Union[datetime, str], date_of_monday: datetime = datetime.now()):
+    print(isinstance(day, str))
+    if not day in WEEKDAY_MAP.keys():
         return day
+
     dif_from_curdate = WEEKDAY_MAP.get(day) - datetime.today().weekday()
     if dif_from_curdate < 0:
         dif_from_curdate += 7
-    return date.today() + timedelta(days=dif_from_curdate)
+    return date_of_monday.date() + timedelta(days=dif_from_curdate)
 
 
 def parse_exercise_for_dialog(data, exercise_id: int):

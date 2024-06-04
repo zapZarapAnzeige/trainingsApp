@@ -300,7 +300,8 @@ async def get_future_trainings(
         return []
 
     return get_future_trainings_from_cur_date(
-        current_user.get("user_id"), cur_date - start_date < timedelta(days=0)
+        current_user.get("user_id"), cur_date -
+        start_date < timedelta(days=0), start_date
     )
 
 
