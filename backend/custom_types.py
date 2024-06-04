@@ -78,18 +78,18 @@ class Exercise_weighted_formatted(BaseModel):
 
 
 class Exercise_weighted_formatted_trackable_measurement(Exercise_weighted_formatted):
-    trackable_unit_of_measure: Optional[str] = None
-    value_trackable_unit_of_measure: Optional[float] = None
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
 
 
 class Exercise_weighted_trackable_measurement(Exercise_weighted):
-    trackable_unit_of_measure: Optional[str] = None
-    value_trackable_unit_of_measure: Optional[float] = None
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
 
 
 class Exercise_cardio_trackable_measurement(Exercise_weighted):
-    trackable_unit_of_measure: Optional[str] = None
-    value_trackable_unit_of_measure: Optional[float] = None
+    trackable_unit_of_measure: Optional[str]
+    value_trackable_unit_of_measure: Optional[float]
 
 
 class Base_exercise(TypedDict):
@@ -274,12 +274,8 @@ class Post_ExercisesAdd(BaseModel):
     in_training: List[In_training_camel_case]
     exercise_id: int
     exercise: Union[
-        Exercise_cardio,
-        Exercise_weighted_formatted,
-        Exercise_weighted,
-        Exercise_cardio_trackable_measurement,
-        Exercise_weighted_formatted_trackable_measurement,
-        Exercise_weighted_trackable_measurement,
+        Exercise_cardio_frontend,
+        Exercise_weighted_frontend
     ]
 
 
