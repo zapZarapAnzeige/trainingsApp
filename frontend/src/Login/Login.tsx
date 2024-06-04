@@ -8,7 +8,6 @@ import Typography from "@mui/joy/Typography";
 import Stack from "@mui/joy/Stack";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import { AxiosError } from "axios";
 import { useIntl } from "react-intl";
 import { getUserData, login, signUp } from "../api";
@@ -203,9 +202,12 @@ export const Login: FC = () => {
             }}
           >
             <Box sx={{ gap: 2, display: "flex", alignItems: "center" }}>
-              <IconButton variant="soft" color="primary" size="sm">
-                <BadgeRoundedIcon />
-              </IconButton>
+              <img
+                src={`${process.env.PUBLIC_URL}/logo.png`}
+                alt="Logo"
+                style={{ width: "2.5rem", height: "2.5rem" }}
+              />
+
               <Typography level="title-lg">
                 {getMessage("label.companyName")}
               </Typography>
@@ -323,7 +325,7 @@ export const Login: FC = () => {
           backgroundRepeat: "no-repeat",
           backgroundImage: `url(${"/lightModeBackgroundImage.avif"})`,
           [theme.getColorSchemeSelector("dark")]: {
-            backgroundImage: `url(${"/darkModeBackgroundImage.avif"})`,
+            backgroundImage: `url(${"/darkModeBackgroundImage.jpg"})`,
           },
         })}
       />
