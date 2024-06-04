@@ -20,7 +20,7 @@ from sql import (
     save_calendar_data,
     get_exercise_name_by_id,
     save_exercise_to_trainings,
-    delete_training
+    delete_training,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
@@ -163,12 +163,14 @@ async def get_chat_content(
         )
     return await get_content_of_chat(partner_id, current_user.get("user_id"))
 
+
 # delete
 
 
 @app.post("/video")
 async def upload_file(file: UploadFile = File(...)):
     return await upload_video(file)
+
 
 # delete
 
@@ -326,5 +328,7 @@ async def save_exercise_add(
 
 
 @app.delete("/trainingSchedule")
-async def delete_training_plan(training_id, current_user=Depends(get_current_active_user)):
+async def delete_training_plan(
+    training_id, current_user=Depends(get_current_active_user)
+):
     return delete_training(training_id, current_user.get("user_id"))

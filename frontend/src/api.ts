@@ -26,7 +26,6 @@ const addAuth = (token: string, additionalHeaders?: Record<string, string>) => {
   return { headers: { ...additionalHeaders, Authorization: token } };
 };
 
-//done
 export const getChatHistory = async (token: string, partnerId: number) => {
   return await axiosInstance.get("/chat/content", {
     ...addAuth(token),
@@ -34,12 +33,10 @@ export const getChatHistory = async (token: string, partnerId: number) => {
   });
 };
 
-// done
 export const getChatsOverview = (token: string) => {
   return axiosInstance.get("/chats", addAuth(token));
 };
 
-//done
 // TODO I think unused
 export const getUsers = (
   token: string,
@@ -49,14 +46,14 @@ export const getUsers = (
     res && onSuccess(res);
   });
 };
-//done
+
 export const signUp = async (username: string, password: string) => {
   await axiosInstance.post(
     "/api/v1/signUp",
     new URLSearchParams({ username: username, password: password })
   );
 };
-//done
+
 export const login = async (username: string, password: string) => {
   return await axiosInstance.post(
     "/api/v1/login",
@@ -64,11 +61,10 @@ export const login = async (username: string, password: string) => {
   );
 };
 
-//done
 export const getUserData = (token: string) => {
   return axiosInstance.get("/users/me", addAuth(token));
 };
-//done
+
 export const findNewPartner = (token: string, plz: string) => {
   return axiosInstance.post("/chat", undefined, {
     ...addAuth(token),
@@ -76,7 +72,6 @@ export const findNewPartner = (token: string, plz: string) => {
   });
 };
 
-//done
 export const changeUserData = (
   token: string,
   nickname?: string,
@@ -102,7 +97,6 @@ export const changeUserData = (
   });
 };
 
-//done
 export const changeBlockStatus = (
   token: string,
   currentlyBlocked: boolean,
@@ -118,7 +112,7 @@ export const changeBlockStatus = (
 };
 
 // Gets
-//done
+
 export const getPastTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/pastTrainings", {
     ...addAuth(token),
@@ -127,7 +121,7 @@ export const getPastTrainings = async (token: string, week: string) => {
 
   return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
-//done
+
 export const getFutureTrainings = async (token: string, week: string) => {
   const response = await axiosInstance.get("/futureTrainings", {
     ...addAuth(token),
@@ -137,7 +131,6 @@ export const getFutureTrainings = async (token: string, week: string) => {
   return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
 };
 
-//done
 export const getTrainingData = async (token: string) => {
   const response = await axiosInstance.get("/trainingSchedule", addAuth(token));
 
@@ -145,27 +138,24 @@ export const getTrainingData = async (token: string) => {
 };
 
 // For TrainingSchedule
-//done
+
 export const getExercises = async (token: string) => {
   const response = await axiosInstance.get("/exercises", addAuth(token));
   return keysToCamelCase(response.data) as TrainingExercise[];
 };
 
-// I dont know if keysToCamelCase will break on String[] so dont even use it
-//done
 export const getTags = async (token: string) => {
   const response = await axiosInstance.get("/tags", addAuth(token));
   return response.data as string[];
 };
 
-//done
 export const getExercisesData = async (token: string) => {
   const response = await axiosInstance.get("/exercisesData", addAuth(token));
   return keysToCamelCase(response.data) as ExercisesEntryData[];
 };
 
 // Add Dialog
-// done
+
 export const getExercisesAdd = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesAdd", {
     ...addAuth(token),
@@ -176,7 +166,7 @@ export const getExercisesAdd = async (token: string, exerciseId: number) => {
 };
 
 // Info Dialog
-// done
+
 export const getExercisesInfo = async (token: string, exerciseId: number) => {
   const response = await axiosInstance.get("/exercisesInfo", {
     ...addAuth(token),
@@ -186,7 +176,7 @@ export const getExercisesInfo = async (token: string, exerciseId: number) => {
 };
 
 // Posts
-//done
+
 export const postTrainingData = async (
   token: string,
   trainingData: Training
@@ -213,7 +203,7 @@ export const putExercisesAdd = async (
     }
   );
 };
-//done
+
 export const postExerciseNewUserRating = async (
   token: string,
   userRating: number,
