@@ -2,9 +2,6 @@ DELIMITER ?/
 
 USE trainings_DB ?/
 
-DROP PROCEDURE IF EXISTS Update_overall_ratings_by_exercise_id ?/
-DROP PROCEDURE IF EXISTS insert_todays_plans_and_exercises ?/
-
 CREATE PROCEDURE change_average_rating_by_exercise_id
 (IN new_exercise_id INT) READS SQL DATA 
 BEGIN 
