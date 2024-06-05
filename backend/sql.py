@@ -75,7 +75,8 @@ async def update_user_data(
     if profile_picture:
         max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
-            raise HTTPException(status_code=413, detail="Image size exceeds 16 MB")
+            raise HTTPException(
+                status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
@@ -97,7 +98,8 @@ def get_profile_pic(user_id: int):
 
 
 def get_user(name):
-    result = session.execute(select(User).where(User.c.username == name)).fetchone()
+    result = session.execute(select(User).where(
+        User.c.username == name)).fetchone()
     if result is not None:
         return result._asdict()
 
@@ -335,15 +337,16 @@ def get_base_exercises(user_id: int):
 def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
     end_date = start_date + timedelta(weeks=1)
     cur_date = datetime.now()
-    if cur_date < end_date:
-        # not neccessary but makes query faster
-        end_date = cur_date
+    # if cur_date < end_date:
+    # not neccessary but makes query faster
+    # end_date = cur_date
     return parse_past_or_future_trainings(
         session.execute(
             select(
                 Training_plan_history.c.day,
                 Training_plan_history.c.training_name,
-                Training_plan_history.c.training_plan_history_id.label("training_id"),
+                Training_plan_history.c.training_plan_history_id.label(
+                    "training_id"),
                 Exercise_history.c.excercise_history_id.label("exercise_id"),
                 Exercise.c.exercise_name,
                 Exercise_history.c.completed,
@@ -373,7 +376,7 @@ def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(), start_date
     )
 
 
@@ -385,7 +388,7 @@ def get_weekdays(date_diff: bool):
     return [list(WEEKDAY_MAP.keys())[i * -1] for i in range(days_start_ind, 0, -1)]
 
 
-def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
+def get_future_trainings_from_cur_date(user_id: int, date_diff: bool, start_date: datetime):
     return parse_past_or_future_trainings(
         session.execute(
             select(
@@ -425,7 +428,8 @@ def get_future_trainings_from_cur_date(user_id: int, date_diff: bool):
             )
         )
         .mappings()
-        .fetchall()
+        .fetchall(),
+        start_date
     )
 
 
@@ -693,12 +697,14 @@ def save_calendar_data(
 
 def get_exercise_name_by_id(exercise_id: int):
     return session.execute(
-        select(Exercise.c.exercise_name).where(Exercise.c.exercise_id == exercise_id)
+        select(Exercise.c.exercise_name).where(
+            Exercise.c.exercise_id == exercise_id)
     ).scalar_one()
 
 
 def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
-    training_ids_to_insert = [d["training_id"] for d in exercise_add["in_training"]]
+    training_ids_to_insert = [d.trainingId
+                              for d in exercise_add.in_training]
 
     if len(training_ids_to_insert) > 0:
         session.execute(
@@ -717,7 +723,7 @@ def save_exercise_to_trainings(exercise_add: Post_ExercisesAdd, user_id: int):
                 "user_id": user_id,
                 "exercise_id": exercise_add.exercise_id,
                 "training_id": id_,
-                **get_user_performance_exercise(exercise_add.exercise),
+                **get_user_performance_exercise(dict(exercise_add.exercise)),
             }
             for id_ in training_ids_to_insert
         ]

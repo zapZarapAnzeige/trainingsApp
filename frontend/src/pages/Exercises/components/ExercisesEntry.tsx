@@ -49,18 +49,21 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
     if (openAddDialog) {
       getExercisesAdd(auth(), exercisesEntryData.exerciseId)
         .then((exercisesAddDialogData: ExerciseAdd) => {
-          dispatch(
-            setExercisesAddDialog({
-              ...exercisesAddDialogData,
-              exerciseName: exercisesEntryData.exerciseName,
-              exerciseId: exercisesEntryData.exerciseId,
-              exerciseType: exercisesEntryData.exerciseType,
-              exercise:
-                exercisesEntryData.exerciseType == "Min"
-                  ? { minutes: 0 }
-                  : { repetitionAmount: 0, setAmount: 0 },
-            })
-          );
+          exercisesAddDialogData.notInTraining.length === 0
+            ? setOpenAddDialog(false)
+            : dispatch(
+                setExercisesAddDialog({
+                  ...exercisesAddDialogData,
+                  inTraining: [],
+                  exerciseName: exercisesEntryData.exerciseName,
+                  exerciseId: exercisesEntryData.exerciseId,
+                  exerciseType: exercisesEntryData.exerciseType,
+                  exercise:
+                    exercisesEntryData.exerciseType == "Min"
+                      ? { minutes: 0 }
+                      : { repetitionAmount: 0, setAmount: 0 },
+                })
+              );
         })
         .catch((error) => {
           console.error("Error fetching data", error);
