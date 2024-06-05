@@ -2,30 +2,30 @@
 DELIMITER //
 USE trainings_DB //
 
-CREATE TRIGGER update_Overall_Exercise_Ratings_on_insert AFTER 
+CREATE TRIGGER after_insert_individual_rating AFTER 
 INSERT ON Individual_rating FOR EACH ROW 
 BEGIN 
-	CALL update_or_insert_overall_ratings_by_exercise_id (NEW.exercise_id);
+	CALL change_average_rating_by_exercise_id (NEW.exercise_id);
 END //
 
-CREATE TRIGGER update_Overall_Exercise_Ratings_on_update AFTER 
+CREATE TRIGGER after_update_individual_rating AFTER 
 UPDATE ON Individual_rating FOR EACH ROW 
 BEGIN 
-	CALL update_or_insert_overall_ratings_by_exercise_id (NEW.exercise_id);
+	CALL change_average_rating_by_exercise_id (NEW.exercise_id);
 END //
 
-CREATE TRIGGER update_Overall_Exercise_Ratings_on_delete AFTER 
+CREATE TRIGGER after_delete_individual_rating AFTER 
 DELETE ON Individual_rating FOR EACH ROW 
 BEGIN 
-	CALL update_or_insert_overall_ratings_by_exercise_id (OLD.exercise_id);
+	CALL change_average_rating_by_exercise_id (OLD.exercise_id);
 END //
-CREATE TRIGGER update_trainingsplan_name_on_update AFTER 
+CREATE TRIGGER after_update_training_plan AFTER 
 UPDATE ON Training_plan FOR EACH ROW 
 BEGIN 
 	UPDATE Training_plan_history SET training_name = NEW.training_name WHERE Training_plan_history.training_id = NEW.training_id AND Training_plan_history.day = CURDATE() AND Training_plan_history.user_id = NEW.user_id;
 END //
 
-CREATE TRIGGER days_on_insert AFTER 
+CREATE TRIGGER after_insert_day AFTER 
 INSERT ON Day FOR EACH ROW 
 BEGIN 
     DECLARE last_trainings_plan_history_id INT;
@@ -45,7 +45,7 @@ BEGIN
 END //
 
 
-CREATE TRIGGER days_on_delete BEFORE 
+CREATE TRIGGER before_delete_day BEFORE 
 DELETE ON Day FOR EACH ROW 
 BEGIN 
 	IF OLD.weekday =  DAYNAME(CURDATE()) THEN
@@ -56,19 +56,19 @@ BEGIN
 END //
 
 
-CREATE TRIGGER user_current_performance_on_insert AFTER 
+CREATE TRIGGER after_insert_user_current_performance AFTER 
 INSERT ON User_current_performance FOR EACH ROW 
 BEGIN 
 	CALL insert_user_performance_update (NEW.exercise_id, NEW.user_id, NEW.minutes, NEW.number_of_repetition, NEW.number_of_sets,  NEW.trackable_unit_of_measure , NEW.value_trackable_unit_of_measure);
 END //
 
-CREATE TRIGGER user_current_performance_on_update AFTER 
+CREATE TRIGGER after_update_user_current_performance AFTER 
 UPDATE ON User_current_performance FOR EACH ROW 
 BEGIN 
 	CALL insert_user_performance_update (NEW.exercise_id, NEW.user_id, NEW.minutes, NEW.number_of_repetition, NEW.number_of_sets,  NEW.trackable_unit_of_measure , NEW.value_trackable_unit_of_measure);
 END //
 
-CREATE TRIGGER exercise2Training_plan_on_insert AFTER 
+CREATE TRIGGER after_insert_exercise2Training_plan AFTER 
 INSERT ON Exercise2Training_plan FOR EACH ROW 
 BEGIN 
 
@@ -96,14 +96,14 @@ BEGIN
 
 END //
 
-CREATE TRIGGER exercise2Training_plans_on_delete AFTER 
+CREATE TRIGGER after_delete_exercise2Training_plan AFTER 
 DELETE ON Exercise2Training_plan FOR EACH ROW 
 BEGIN 
     DELETE ex FROM Exercise_history ex INNER JOIN Training_plan_history tph ON ex.training_plan_history_id = tph.training_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.training_id = OLD.training_id AND day=CURDATE();
 END //
 
 
-CREATE TRIGGER insert_default_trainingsplan AFTER 
+CREATE TRIGGER after_insert_user AFTER 
 INSERT ON User FOR EACH ROW 
 BEGIN 
     DECLARE last_inserted_training_id INT;
