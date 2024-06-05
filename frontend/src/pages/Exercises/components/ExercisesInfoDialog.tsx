@@ -75,11 +75,11 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
           </MaterialCssVarsProvider>
         </Stack>
         <Divider />
-        <Typography sx={{ mx: "auto" }}>
+        <Typography sx={{ mx: "auto", overflow: "auto" }}>
           {exercisesInfoDialog.exerciseText}
         </Typography>
         <Divider />
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} sx={{ overflow: "auto" }}>
           {exercisesInfoDialog.primaryTags.map((primaryTag, i) => (
             <Chip color="primary" key={i}>
               {primaryTag}

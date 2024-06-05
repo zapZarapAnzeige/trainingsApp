@@ -335,7 +335,8 @@ def get_base_exercises(user_id: int):
 
 
 def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
-    end_date = start_date + timedelta(weeks=1)
+    end_date = start_date + timedelta(days=6)
+    print(end_date)
     cur_date = datetime.now()
     # if cur_date < end_date:
     # not neccessary but makes query faster
