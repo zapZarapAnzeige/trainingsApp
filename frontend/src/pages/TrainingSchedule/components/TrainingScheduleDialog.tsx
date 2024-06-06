@@ -322,8 +322,10 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             {trainingScheduleDialog.exercises.map((exercise, index) => {
               return (
                 <List key={exercise.exerciseId}>
-                  <ListItem>
-                    <ListItemContent>
+                  <ListItem
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <ListItemContent sx={{ m: "auto" }}>
                       <IconButton
                         onClick={() => {
                           setIsDataDirty(true);
@@ -333,16 +335,18 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                         <DeleteIcon />
                       </IconButton>
                     </ListItemContent>
-                    <ListItemContent>{exercise.exerciseName}</ListItemContent>
+                    <ListItemContent sx={{ m: "auto" }}>
+                      {exercise.exerciseName}
+                    </ListItemContent>
                     {"minutes" in exercise.exercise ? (
-                      <ListItemContent>
+                      <ListItemContent sx={{ m: "auto" }}>
                         {intl.formatMessage(
                           { id: "calendar.label.min" },
                           { min: exercise.exercise.minutes }
                         )}
                       </ListItemContent>
                     ) : (
-                      <ListItemContent>
+                      <ListItemContent sx={{ m: "auto" }}>
                         {exercise.exercise.setAmount} x{" "}
                         {intl.formatMessage(
                           { id: "calendar.label.rep" },
