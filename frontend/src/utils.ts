@@ -340,9 +340,10 @@ export function modifyDateKeys(data: CalendarDayData[]): CalendarDayData[] {
 }
 
 export function fillMissingTrainingDays(
-  data: CalendarDayData[]
+  data: CalendarDayData[],
+  empty: string
 ): CalendarDayData[] {
-  if (data.length === 0) return [];
+  if (data.length === 0) return generateEmptyCalendarDays(empty);
 
   const result: CalendarDayData[] = [];
   const inputDates = data.map((d) => new Date(d.date));
@@ -402,4 +403,29 @@ export function getYearCwCount(year: number): number {
 
   const firstDay = date.getDay();
   return firstDay === 4 || (isLeapYear && firstDay === 3) ? 53 : 52;
+}
+
+export function generateEmptyCalendarDays(
+  startMonday: string
+): CalendarDayData[] {
+  const result: CalendarDayData[] = [];
+  const startDate = new Date(startMonday);
+
+  for (let i = 0; i < 7; i++) {
+    const currentDate = new Date(startDate);
+    currentDate.setDate(currentDate.getDate() + i);
+
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    const dateString = `${year}-${month}-${day}`;
+
+    result.push({
+      date: dateString,
+      trainings: [],
+    });
+  }
+
+  return result;
 }

@@ -56,10 +56,10 @@ export default function Calendar() {
 
         const futureTrainings = await getFutureTrainings(token, weekStart);
 
-        const filledTrainings = fillMissingTrainingDays([
-          ...pastTrainings,
-          ...futureTrainings,
-        ]);
+        const filledTrainings = fillMissingTrainingDays(
+          [...pastTrainings, ...futureTrainings],
+          weekStart
+        );
 
         const splitData = splitPastFuture(filledTrainings);
 
