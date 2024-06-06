@@ -70,7 +70,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
           {calendarDayData.trainings ? (
             calendarDayData.trainings.map((training) => (
               <Box key={training.trainingId}>
-                <Typography fontWeight={"bold"}>
+                <Typography fontWeight={"bold"} sx={{ my: 1 }}>
                   {training.trainingName}
                 </Typography>
                 <Divider />
