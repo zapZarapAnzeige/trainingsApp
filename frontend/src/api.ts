@@ -48,7 +48,7 @@ export const getUsers = (
 };
 
 export const signUp = async (username: string, password: string) => {
-  await axiosInstance.post(
+  return await axiosInstance.post(
     "/api/v1/signUp",
     new URLSearchParams({ username: username, password: password })
   );

@@ -164,15 +164,9 @@ async def get_chat_content(
     return await get_content_of_chat(partner_id, current_user.get("user_id"))
 
 
-# delete
-
-
 @app.post("/video")
 async def upload_file(file: UploadFile = File(...)):
     return await upload_video(file)
-
-
-# delete
 
 
 @app.get(
@@ -300,8 +294,9 @@ async def get_future_trainings(
         return []
 
     return get_future_trainings_from_cur_date(
-        current_user.get("user_id"), cur_date -
-        start_date < timedelta(days=0), start_date
+        current_user.get("user_id"),
+        cur_date - start_date < timedelta(days=0),
+        start_date,
     )
 
 

@@ -52,8 +52,7 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
             if d.weekday not in obj["on_days"] and d.weekday:
                 obj["on_days"].append(d.weekday)
             if (
-                d.exercise_id not in [ex["exercise_id"]
-                                      for ex in obj["exercises"]]
+                d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]
                 and d.exercise_id
             ):
                 obj["exercises"].append(
@@ -194,8 +193,10 @@ def parse_past_or_future_trainings(
     return formatted_data
 
 
-def get_date_from_weekday(day: Union[datetime, str], date_of_monday: datetime = datetime.now()):
-    if not day in WEEKDAY_MAP.keys():
+def get_date_from_weekday(
+    day: Union[datetime, str], date_of_monday: datetime = datetime.now()
+):
+    if day not in WEEKDAY_MAP.keys():
         return day
 
     dif_from_curdate = WEEKDAY_MAP.get(day) - datetime.today().weekday()
@@ -211,8 +212,7 @@ def parse_exercise_for_dialog(data, exercise_id: int):
         if d["exercise_id"] == exercise_id:
             in_training[d["training_id"]] = d
         else:
-            not_in_training[d["training_id"]] = {
-                **d, "exercise_id": exercise_id}
+            not_in_training[d["training_id"]] = {**d, "exercise_id": exercise_id}
 
     for k in list(not_in_training.keys()):
         if k in in_training.keys():
