@@ -17,12 +17,19 @@ import {
 import { useAppDispatch } from "../../../hooks";
 import FormLabel from "@mui/joy/FormLabel";
 import CreateIcon from "@mui/icons-material/Create";
-import { Training } from "../../../types";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DismissDialogType, Training } from "../../../types";
 import { FC, useState } from "react";
 import TrainingScheduleDialog from "./TrainingScheduleDialog";
 import { weekdaysAbbreviation, weekdaysNames } from "../../../constants";
-import { setTraining } from "../../../redux/reducers/trainingScheduleDialogSlice";
+import {
+  setReloadTrainingScheduleContent,
+  setTraining,
+} from "../../../redux/reducers/trainingScheduleDialogSlice";
 import { useIntl } from "react-intl";
+import { deleteTraining } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
+import DismissDialog from "../../../Common/DismissDialog";
 
 type TrainingScheduleEntryProps = {
   training: Training;
@@ -35,6 +42,9 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
 
   const dispatch = useAppDispatch();
   const intl = useIntl();
+  const auth = useAuthHeader();
+  const [isDeleteTrainingDialogOpen, setIsDeleteTrainingDialogOpen] =
+    useState<boolean>(false);
 
   const handleOpenEditDialog = () => {
     dispatch(setTraining(training));
@@ -62,7 +72,13 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
               <Grid>
                 <Typography level="h4">{training.name}</Typography>
               </Grid>
-              <Grid>
+              <Grid display={"flex"} flexDirection={"row"}>
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => setIsDeleteTrainingDialogOpen(true)}
+                >
+                  <DeleteIcon />
+                </IconButton>
                 <IconButton aria-label="edit" onClick={handleOpenEditDialog}>
                   <CreateIcon />
                 </IconButton>
@@ -79,12 +95,18 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
                     {"minutes" in exercise.exercise ? (
                       <ListItemContent>
-                        {intl.formatMessage({id: "calendar.label.min"}, {min: exercise.exercise.minutes})}
+                        {intl.formatMessage(
+                          { id: "calendar.label.min" },
+                          { min: exercise.exercise.minutes }
+                        )}
                       </ListItemContent>
                     ) : (
                       <ListItemContent>
                         {exercise.exercise.setAmount} x{" "}
-                        {intl.formatMessage({id: "calendar.label.rep"}, {rep: exercise.exercise.repetitionAmount})}
+                        {intl.formatMessage(
+                          { id: "calendar.label.rep" },
+                          { rep: exercise.exercise.repetitionAmount }
+                        )}
                       </ListItemContent>
                     )}
                   </ListItem>
@@ -121,6 +143,22 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
           </CardContent>
         </CardOverflow>
       </Card>
+      <DismissDialog
+        closeDismissDialog={() => setIsDeleteTrainingDialogOpen(false)}
+        dismissDialogType={DismissDialogType.WARNING}
+        dialogContent={intl.formatMessage(
+          {
+            id: "trainingsSchedule.confirmDelete",
+          },
+          { trainingName: training.name }
+        )}
+        open={isDeleteTrainingDialogOpen}
+        okAction={() =>
+          deleteTraining(auth(), training.trainingId).then(() =>
+            dispatch(setReloadTrainingScheduleContent(true))
+          )
+        }
+      />
     </>
   );
 };

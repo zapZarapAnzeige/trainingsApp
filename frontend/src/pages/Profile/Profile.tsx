@@ -280,7 +280,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
               sx={{ borderTop: "1px solid", borderColor: "divider" }}
             >
               <CardActions sx={{ alignSelf: "flex-end", pt: 2 }}>
-                <Button
+                <IconButton
                   disabled={!isDataDirty}
                   size="sm"
                   variant="outlined"
@@ -298,8 +298,8 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   }}
                 >
                   <CloseIcon />
-                </Button>
-                <Button
+                </IconButton>
+                <IconButton
                   disabled={!isDataDirty}
                   size="sm"
                   variant="solid"
@@ -329,7 +329,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   }}
                 >
                   <CheckIcon />
-                </Button>
+                </IconButton>
               </CardActions>
             </CardOverflow>
           )}

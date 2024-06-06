@@ -240,3 +240,10 @@ export const postCalendar = async (
     }
   );
 };
+
+export const deleteTraining = (token: string, trainingId: number) => {
+  return axiosInstance.delete("/trainingSchedule", {
+    ...addAuth(token),
+    params: { training_id: trainingId },
+  });
+};

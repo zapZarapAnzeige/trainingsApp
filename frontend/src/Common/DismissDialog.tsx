@@ -11,12 +11,16 @@ import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { DismissDialogType } from "../types";
+import { IconButton } from "@mui/joy";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 
 type DismissDialogProps = {
   open: boolean;
   dismissDialogType: DismissDialogType;
   closeDismissDialog: VoidFunction;
   dialogContent: string | ReactNode;
+  okAction?: () => void;
 };
 
 const DismissDialog: FC<DismissDialogProps> = ({
@@ -24,6 +28,7 @@ const DismissDialog: FC<DismissDialogProps> = ({
   dismissDialogType,
   closeDismissDialog,
   dialogContent,
+  okAction,
 }) => {
   const intl = useIntl();
 
@@ -43,13 +48,13 @@ const DismissDialog: FC<DismissDialogProps> = ({
   function getDialogTitle(dismissDialogType: DismissDialogType) {
     switch (dismissDialogType) {
       case DismissDialogType.INFO:
-        return intl.formatMessage({id: "dismissDialog.label.note"});
+        return intl.formatMessage({ id: "dismissDialog.label.note" });
       case DismissDialogType.WARNING:
-        return intl.formatMessage({id: "dismissDialog.label.warning"});
+        return intl.formatMessage({ id: "dismissDialog.label.warning" });
       case DismissDialogType.ERROR:
-        return intl.formatMessage({id: "dismissDialog.label.error"});
+        return intl.formatMessage({ id: "dismissDialog.label.error" });
       default:
-        return intl.formatMessage({id: "dismissDialog.label.error"});
+        return intl.formatMessage({ id: "dismissDialog.label.error" });
     }
   }
 
@@ -63,9 +68,34 @@ const DismissDialog: FC<DismissDialogProps> = ({
         <Divider />
         <DialogContent>{dialogContent}</DialogContent>
         <DialogActions>
-          <Button onClick={closeDismissDialog} variant="solid" color="neutral">
-            {intl.formatMessage({ id: "dismissDialog.close" })}
-          </Button>
+          {okAction ? (
+            <IconButton
+              onClick={() => {
+                okAction();
+                closeDismissDialog();
+              }}
+              variant="solid"
+            >
+              <CheckIcon />
+            </IconButton>
+          ) : (
+            <Button
+              onClick={closeDismissDialog}
+              variant="solid"
+              color="neutral"
+            >
+              {intl.formatMessage({ id: "dismissDialog.close" })}
+            </Button>
+          )}
+          {okAction && (
+            <IconButton
+              onClick={closeDismissDialog}
+              variant="solid"
+              color="neutral"
+            >
+              <CloseIcon />
+            </IconButton>
+          )}
         </DialogActions>
       </ModalDialog>
     </Modal>

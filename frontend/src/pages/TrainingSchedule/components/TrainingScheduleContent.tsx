@@ -12,7 +12,7 @@ import { setReloadTrainingScheduleContent } from "../../../redux/reducers/traini
 
 export default function ExercisesContent() {
   const auth = useAuthHeader();
-  const [trainingData, setTrainingData] = useState<Training[]>();
+  const [trainingData, setTrainingData] = useState<Training[]>([]);
 
   const reloadTrainingScheduleContent = useAppSelector(
     (state) => state.trainingScheduleDialog.reloadTrainingScheduleContent
@@ -42,7 +42,7 @@ export default function ExercisesContent() {
       sx={{ width: "100%", height: "100%", p: 2, overflow: "auto" }}
     >
       <Grid container spacing={4}>
-        {trainingData?.map((trainingScheduleEntryData) => {
+        {trainingData.map((trainingScheduleEntryData) => {
           return (
             <Grid xs={4} key={trainingScheduleEntryData.trainingId}>
               <TrainingScheduleEntry training={trainingScheduleEntryData} />
