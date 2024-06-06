@@ -21,6 +21,7 @@ import {
   ListItem,
   ListItemContent,
   Select,
+  Typography,
 } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -322,9 +323,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
             {trainingScheduleDialog.exercises.map((exercise, index) => {
               return (
                 <List key={exercise.exerciseId}>
-                  <ListItem
-                    sx={{ display: "flex", justifyContent: "space-between" }}
-                  >
+                  <ListItem sx={{ display: "flex" }}>
                     <ListItemContent sx={{ m: "auto" }}>
                       <IconButton
                         onClick={() => {
@@ -338,22 +337,21 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
                     <ListItemContent sx={{ m: "auto" }}>
                       {exercise.exerciseName}
                     </ListItemContent>
-                    {"minutes" in exercise.exercise ? (
-                      <ListItemContent sx={{ m: "auto" }}>
-                        {intl.formatMessage(
-                          { id: "calendar.label.min" },
-                          { min: exercise.exercise.minutes }
-                        )}
-                      </ListItemContent>
-                    ) : (
-                      <ListItemContent sx={{ m: "auto" }}>
-                        {exercise.exercise.setAmount} x{" "}
-                        {intl.formatMessage(
-                          { id: "calendar.label.rep" },
-                          { rep: exercise.exercise.repetitionAmount }
-                        )}
-                      </ListItemContent>
-                    )}
+                    <ListItemContent sx={{ display: "flex" }}>
+                      <Typography sx={{ ml: "auto" }}>
+                        {"minutes" in exercise.exercise
+                          ? intl.formatMessage(
+                              { id: "calendar.label.min" },
+                              { min: exercise.exercise.minutes }
+                            )
+                          : exercise.exercise.setAmount +
+                            " x " +
+                            intl.formatMessage(
+                              { id: "calendar.label.rep" },
+                              { rep: exercise.exercise.repetitionAmount }
+                            )}
+                      </Typography>
+                    </ListItemContent>
                   </ListItem>
                   {index < trainingScheduleDialog.exercises.length - 1 && (
                     <ListDivider inset="gutter" />
