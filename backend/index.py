@@ -162,7 +162,7 @@ async def get_chat_content(
 
 
 @app.get(
-    "/trainingsVideo", responses={200: {"content": {"application/octet-stream": {}}}}
+    "/trainingVideo", responses={200: {"content": {"application/octet-stream": {}}}}
 )
 async def get_video(exercise_id: int, current_user=Depends(get_current_active_user)):
     exercise_name = get_exercise_name_by_id(exercise_id)
