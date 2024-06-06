@@ -164,8 +164,7 @@ async def get_chat_content(
 @app.get(
     "/trainingVideo", responses={200: {"content": {"application/octet-stream": {}}}}
 )
-async def get_video(exercise_id: int, current_user=Depends(get_current_active_user)):
-    exercise_name = get_exercise_name_by_id(exercise_id)
+async def get_video(exercise_name: str, current_user=Depends(get_current_active_user)):
     return await get_video_by_name(exercise_name)
 
 
@@ -231,7 +230,7 @@ async def get_exercise_add(
 async def get_exercise_info(
     exercise_id: int, current_user=Depends(get_current_active_user)
 ):
-    return (get_general_exercise_info(exercise_id, current_user.get("user_id")),)
+    return get_general_exercise_info(exercise_id, current_user.get("user_id"))
 
 
 @app.get("/trainingSchedule", response_model=List[formatted_trainingsdata])

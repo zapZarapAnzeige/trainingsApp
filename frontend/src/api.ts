@@ -247,3 +247,17 @@ export const deleteTraining = (token: string, trainingId: number) => {
     params: { training_id: trainingId },
   });
 };
+
+export const getVideo = async (token: string, exerciseName: string) => {
+  const res = await axiosInstance.get("/trainingVideo", {
+    ...addAuth(token),
+    params: { exercise_name: exerciseName },
+    responseType: "blob",
+  });
+  console.log(res.data);
+  if (res.data) {
+    return URL.createObjectURL(res.data);
+  } else {
+    return undefined;
+  }
+};

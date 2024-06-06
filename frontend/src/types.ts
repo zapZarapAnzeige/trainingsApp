@@ -82,7 +82,6 @@ export type ExercisesAddDialog = Exercise & ExerciseAdd;
 export type ExerciseInfo = {
   exerciseName: string;
   exerciseText: string;
-  video: string;
   userRating: number;
 };
 

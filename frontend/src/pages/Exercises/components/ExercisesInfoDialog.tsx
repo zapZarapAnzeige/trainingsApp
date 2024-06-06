@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import * as React from "react";
 import Modal from "@mui/joy/Modal";
 import ModalDialog from "@mui/joy/ModalDialog";
@@ -17,6 +17,8 @@ import Chip from "@mui/joy/Chip";
 import Rating from "@mui/material/Rating";
 import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from "@mui/material/styles";
 import { useIntl } from "react-intl";
+import { getVideo } from "../../../api";
+import { useAuthHeader } from "react-auth-kit";
 
 type ExercisesInfoDialogProps = {
   open: boolean;
@@ -30,12 +32,28 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
   const exercisesInfoDialog = useAppSelector(
     (state) => state.exercisesInfoDialog.value
   );
+
   const dispatch = useAppDispatch();
   const intl = useIntl();
-  const video = "data:video/mp4;base64," + exercisesInfoDialog.video;
+  const [video, setVideo] = useState<undefined | string>(undefined);
+  const auth = useAuthHeader();
+  useEffect(() => {
+    if (open && exercisesInfoDialog.exerciseName) {
+      getVideo(auth(), exercisesInfoDialog.exerciseName).then((url) => {
+        setVideo(url);
+      });
+    }
+  }, [exercisesInfoDialog.exerciseName]);
 
   return (
-    <Modal open={open} onClose={() => setOpen(false)}>
+    <Modal
+      open={open}
+      onClose={() => {
+        dispatch(clearAll());
+        setOpen(false);
+        setVideo(undefined);
+      }}
+    >
       <ModalDialog>
         <Stack
           direction="row"
@@ -47,20 +65,25 @@ const ExercisesInfoDialog: FC<ExercisesInfoDialogProps> = ({
           <IconButton
             onClick={() => {
               dispatch(clearAll());
+              setVideo(undefined);
               setOpen(false);
             }}
           >
             <CloseIcon />
           </IconButton>
         </Stack>
-        <Divider />
-        <AspectRatio minHeight="120px" maxHeight="200px">
-          <video controls>
-            <source src={video} type="video/mp4" />
-            Ihr Browser unterstützt das Video-Tag nicht.
-          </video>
-        </AspectRatio>
-        <Divider />
+        {video && (
+          <>
+            <Divider />
+            <AspectRatio minHeight="120px" maxHeight="200px">
+              <video controls>
+                <source src={video} type="video/mp4" />
+                Ihr Browser unterstützt das Video-Tag nicht.
+              </video>
+            </AspectRatio>
+            <Divider />
+          </>
+        )}
         <Stack direction="row" spacing={2}>
           <Typography>
             {intl.formatMessage({ id: "exercises.label.yourRating" })}

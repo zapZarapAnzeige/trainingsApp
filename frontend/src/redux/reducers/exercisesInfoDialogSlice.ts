@@ -10,7 +10,6 @@ const initialState: ExercisesInfoDialogState = {
   value: {
     exerciseName: "",
     exerciseText: "",
-    video: "",
     userRating: 0,
     primaryTags: [],
     secondaryTags: [],
@@ -36,7 +35,6 @@ const exercisesInfoDialogSlice = createSlice({
         exerciseName: "",
         exerciseText: "",
         userRating: 0,
-        video: "",
         primaryTags: [],
         secondaryTags: [],
       };
