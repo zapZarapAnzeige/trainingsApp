@@ -147,6 +147,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                             required
                             type="number"
                             placeholder="KG"
+                            disabled={!completable}
                             value={exercise.exercise.weight}
                             onChange={(e) => {
                               dispatch(setIsDataDirty(true));
