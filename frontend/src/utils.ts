@@ -386,7 +386,6 @@ export function splitPastFuture(data: CalendarDayData[]): {
   const pastTrainings: CalendarDayData[] = [];
   const futureTrainings: CalendarDayData[] = [];
   data.forEach((d) => {
-    // 32 works because every Month is shorter than 32 days because of that Months are prioritised compared to the days
     if (new Date(d.date).getTime() <= today.getTime()) {
       pastTrainings.push(d);
     } else {
