@@ -198,10 +198,7 @@ def get_date_from_weekday(
 ):
     if day not in WEEKDAY_MAP.keys():
         return day
-
-    dif_from_curdate = WEEKDAY_MAP.get(day) - datetime.today().weekday()
-    if dif_from_curdate < 0:
-        dif_from_curdate += 7
+    dif_from_curdate = WEEKDAY_MAP.get(day) - date_of_monday.weekday()
     return date_of_monday.date() + timedelta(days=dif_from_curdate)
 
 
