@@ -180,7 +180,6 @@ class formatted_history_trainings_data(BaseModel):
 
 
 class response_model_exercisesInfo(BaseModel):
-    video: Optional[str]
     exercise_id: int
     exercise_name: str
     exercise_text: Optional[str]
@@ -273,10 +272,7 @@ class In_training(BaseModel):
 class Post_ExercisesAdd(BaseModel):
     in_training: List[In_training_camel_case]
     exercise_id: int
-    exercise: Union[
-        Exercise_cardio_frontend,
-        Exercise_weighted_frontend
-    ]
+    exercise: Union[Exercise_cardio_frontend, Exercise_weighted_frontend]
 
 
 class Response_model_ExercisesAdd(BaseModel):

@@ -1,13 +1,11 @@
 from datetime import datetime
 from typing import Dict
 from db_connection import database
-from fastapi import Response, UploadFile, HTTPException, status
+from fastapi import Response, status
 from db_connection import grid_fs_bucket
 from fastapi.responses import StreamingResponse
 from io import BytesIO
-from bson import ObjectId
 from pymongo.results import UpdateResult
-import base64
 
 
 chats = database.get_collection("chats")
@@ -76,17 +74,6 @@ async def unblock_user(user_id: int, partner_id: int):
     return update.matched_count
 
 
-async def upload_video(file: UploadFile):
-    contents = await file.read()
-    grid_fs_upload_stream = grid_fs_bucket.open_upload_stream(
-        file.filename, metadata={"contentType": file.content_type}
-    )
-    await grid_fs_upload_stream.write(contents)
-    await grid_fs_upload_stream.close()
-    # TODO: insert id into mysql
-    return {"filename": file.filename, "id": str(grid_fs_upload_stream._id)}
-
-
 async def get_video_by_name(file_name: str):
     try:
         video_info = await database.get_collection("videos.files").find_one(
@@ -97,26 +84,12 @@ async def get_video_by_name(file_name: str):
                 video_info["_id"]
             )
             file_data = await download_stream.read()
-            return base64.b64encode(file_data).decode("utf-8")
+            return StreamingResponse(BytesIO(file_data), media_type="video/mp4")
         else:
             return None
     except Exception as e:
         print(e)
         return None
-
-
-async def get_video_by_id(file_id: str):
-    try:
-        grid_fs_download_stream = await grid_fs_bucket.open_download_stream(
-            ObjectId(file_id)
-        )
-        file_data = await grid_fs_download_stream.read()
-        return StreamingResponse(
-            BytesIO(file_data), media_type="application/octet-stream"
-        )
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=404, detail="File not found")
 
 
 async def get_all_chats_from_user(user_id: int):

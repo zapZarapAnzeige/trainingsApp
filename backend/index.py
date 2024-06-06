@@ -4,7 +4,6 @@ from fastapi import FastAPI, Depends, WebSocket, UploadFile, File, status, Respo
 from fastapi.middleware.cors import CORSMiddleware
 from sql import (
     get_overview,
-    get_profile_pic,
     find_trainingspartner,
     update_user_data,
     save_exercise_rating,
@@ -55,8 +54,6 @@ from no_sql import (
     get_all_chats_from_user,
     get_content_of_chat,
     insert_new_partner,
-    upload_video,
-    get_video_by_id,
     block_user,
     unblock_user,
     get_video_by_name,
@@ -164,24 +161,12 @@ async def get_chat_content(
     return await get_content_of_chat(partner_id, current_user.get("user_id"))
 
 
-@app.post("/video")
-async def upload_file(file: UploadFile = File(...)):
-    return await upload_video(file)
-
-
 @app.get(
-    "/files/{file_id}", responses={200: {"content": {"application/octet-stream": {}}}}
+    "/trainingsVideo", responses={200: {"content": {"application/octet-stream": {}}}}
 )
-async def get_video(file_id: str):
-    return await get_video_by_id(file_id)
-
-
-@app.get(
-    "/picture",
-    responses={200: {"content": {"image/png": {}}}},
-)
-async def get_users(current_user=Depends(get_current_active_user)):
-    return get_profile_pic(current_user.get("user_id"))
+async def get_video(exercise_id: int, current_user=Depends(get_current_active_user)):
+    exercise_name = get_exercise_name_by_id(exercise_id)
+    return await get_video_by_name(exercise_name)
 
 
 @app.post("/api/v1/signUp", response_model=bool)
@@ -246,11 +231,7 @@ async def get_exercise_add(
 async def get_exercise_info(
     exercise_id: int, current_user=Depends(get_current_active_user)
 ):
-    exercise_name = get_exercise_name_by_id(exercise_id)
-    return {
-        "video": await get_video_by_name(exercise_name),
-        **get_general_exercise_info(exercise_id, current_user.get("user_id")),
-    }
+    return (get_general_exercise_info(exercise_id, current_user.get("user_id")),)
 
 
 @app.get("/trainingSchedule", response_model=List[formatted_trainingsdata])
