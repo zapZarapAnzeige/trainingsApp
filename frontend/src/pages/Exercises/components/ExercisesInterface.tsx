@@ -1,6 +1,10 @@
 import { Box, Chip, ChipDelete, Select, Stack, Option } from "@mui/joy";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { addTag, removeTag } from "../../../redux/reducers/tagsSlice";
+import {
+  addTag,
+  removeAllTags,
+  removeTag,
+} from "../../../redux/reducers/tagsSlice";
 import { arraysEqual } from "../../../utils";
 import { useEffect, useState } from "react";
 import { getTags } from "../../../api";
@@ -11,6 +15,7 @@ export default function ExercisesInterface() {
   const [tags, setTags] = useState<string[]>([]);
   const currentTags = useAppSelector((state) => state.tags.value);
   const dispatch = useAppDispatch();
+  const currentPage = useAppSelector((state) => state.currentPage.value);
 
   useEffect(() => {
     getTags(auth())
@@ -21,6 +26,10 @@ export default function ExercisesInterface() {
         console.error("Error fetching data", error);
       });
   }, []);
+
+  useEffect(() => {
+    dispatch(removeAllTags());
+  }, [currentPage]);
 
   return (
     <Box
