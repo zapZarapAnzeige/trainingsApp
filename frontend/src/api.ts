@@ -254,7 +254,6 @@ export const getVideo = async (token: string, exerciseName: string) => {
     params: { exercise_name: exerciseName },
     responseType: "blob",
   });
-  console.log(res.data);
   if (res.data) {
     return URL.createObjectURL(res.data);
   } else {
