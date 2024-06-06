@@ -346,9 +346,8 @@ export function fillMissingTrainingDays(
   if (data.length === 0) return generateEmptyCalendarDays(empty);
 
   const result: CalendarDayData[] = [];
-  const inputDates = data.map((d) => new Date(d.date));
-  const minDate = new Date(Math.min(...inputDates.map((d) => d.getTime())));
-  const monday = new Date(minDate);
+
+  const monday = new Date(empty);
   const dayOfWeek = monday.getUTCDay();
   const diffToMonday = (dayOfWeek + 6) % 7;
   monday.setUTCDate(monday.getUTCDate() - diffToMonday);
@@ -382,12 +381,18 @@ export function splitPastFuture(data: CalendarDayData[]): {
   pastTrainings: CalendarDayData[];
   futureTrainings: CalendarDayData[];
 } {
-  const today = new Date().getDate();
+  const today = new Date();
 
-  const pastTrainings = data.filter((d) => new Date(d.date).getDate() <= today);
-  const futureTrainings = data.filter(
-    (d) => new Date(d.date).getDate() > today
-  );
+  const pastTrainings: CalendarDayData[] = [];
+  const futureTrainings: CalendarDayData[] = [];
+  data.forEach((d) => {
+    // 32 works because every Month is shorter than 32 days because of that Months are prioritised compared to the days
+    if (new Date(d.date).getTime() <= today.getTime()) {
+      pastTrainings.push(d);
+    } else {
+      futureTrainings.push(d);
+    }
+  });
 
   return { pastTrainings, futureTrainings };
 }
