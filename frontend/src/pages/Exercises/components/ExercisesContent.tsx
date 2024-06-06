@@ -26,14 +26,21 @@ export default function ExercisesContent() {
   function sortExerciseEntriesByTags(
     exerciseEntryData: ExercisesEntryData[]
   ): ExercisesEntryData[] {
-    return exerciseEntryData.sort((a, b) => {
+    if (currentTags.length === 0) {
+      return exerciseEntryData;
+    }
+    const filteredEntries = exerciseEntryData.filter(
+      (entry) => countPrimaryMatches(entry.primaryTags, currentTags) > 0
+    );
+
+    return filteredEntries.sort((a, b) => {
       const matchCountA = countPrimaryMatches(a.primaryTags, currentTags);
       const matchCountB = countPrimaryMatches(b.primaryTags, currentTags);
 
       if (matchCountA !== matchCountB) {
         return matchCountB - matchCountA;
       } else {
-        return b.rating - a.rating; // Sortiere nach Bewertung
+        return b.rating - a.rating;
       }
     });
   }

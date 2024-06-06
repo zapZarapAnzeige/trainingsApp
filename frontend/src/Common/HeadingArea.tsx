@@ -25,7 +25,7 @@ export default function HeadingArea() {
           <Link underline="none" color="neutral" href="/" aria-label="Home">
             <HomeRoundedIcon />
           </Link>
-          <Typography color="primary" fontWeight={500} fontSize={12}>
+          <Typography color="success" fontWeight={500} fontSize={12}>
             {getPageName(currentPage, intl)}
           </Typography>
         </Breadcrumbs>

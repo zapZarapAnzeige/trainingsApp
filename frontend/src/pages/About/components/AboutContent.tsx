@@ -1,4 +1,13 @@
-import { Sheet, Grid, Typography, Card, AspectRatio, Box } from "@mui/joy";
+import {
+  Sheet,
+  Grid,
+  Typography,
+  Card,
+  AspectRatio,
+  Box,
+  Link,
+  Stack,
+} from "@mui/joy";
 
 export default function AboutContent() {
   return (
@@ -88,6 +97,20 @@ export default function AboutContent() {
             <Typography>
               Kontaktiere uns hier ganz einfach per E-Mail!
             </Typography>
+            <Stack direction="column">
+              <Link color="success" href="mailto:mira.falk@fom-net.de">
+                mira.falk@fom-net.de
+              </Link>
+              <Link color="success" href="mailto:jennifer.witte@fom-net.de">
+                jennifer.witte@fom-net.de
+              </Link>
+              <Link color="success" href="mailto:clemens.burger@fom-net.de">
+                clemens.burger@fom-net.de
+              </Link>
+              <Link color="success" href="mailto:daniel.jaufmann@fom-net.de">
+                daniel.jaufmann@fom-net.de
+              </Link>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
