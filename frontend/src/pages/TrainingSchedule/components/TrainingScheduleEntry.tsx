@@ -93,22 +93,21 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                 <Box key={exercise.exerciseId}>
                   <ListItem>
                     <ListItemContent>{exercise.exerciseName}</ListItemContent>
-                    {"minutes" in exercise.exercise ? (
-                      <ListItemContent>
-                        {intl.formatMessage(
-                          { id: "calendar.label.min" },
-                          { min: exercise.exercise.minutes }
-                        )}
-                      </ListItemContent>
-                    ) : (
-                      <ListItemContent>
-                        {exercise.exercise.setAmount} x{" "}
-                        {intl.formatMessage(
-                          { id: "calendar.label.rep" },
-                          { rep: exercise.exercise.repetitionAmount }
-                        )}
-                      </ListItemContent>
-                    )}
+                    <ListItemContent sx={{ display: "flex" }}>
+                      <Typography sx={{ ml: "auto" }}>
+                        {"minutes" in exercise.exercise
+                          ? intl.formatMessage(
+                              { id: "calendar.label.min" },
+                              { min: exercise.exercise.minutes }
+                            )
+                          : exercise.exercise.setAmount +
+                            " x " +
+                            intl.formatMessage(
+                              { id: "calendar.label.rep" },
+                              { rep: exercise.exercise.repetitionAmount }
+                            )}
+                      </Typography>
+                    </ListItemContent>
                   </ListItem>
                   {index < training.exercises.length - 1 && (
                     <ListDivider inset="gutter" />
