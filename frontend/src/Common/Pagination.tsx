@@ -40,7 +40,6 @@ export default function Pagination() {
         color="neutral"
         startDecorator={<KeyboardArrowLeftIcon />}
         onClick={() => {
-          dispatch(resetCalendar());
           dispatch(decreaseCW());
           dispatch(setIsDataDirty(false));
         }}
@@ -60,7 +59,6 @@ export default function Pagination() {
         color="neutral"
         endDecorator={<KeyboardArrowRightIcon />}
         onClick={() => {
-          dispatch(resetCalendar());
           dispatch(increaseCW());
           dispatch(setIsDataDirty(false));
         }}
