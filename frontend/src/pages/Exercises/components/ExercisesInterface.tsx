@@ -54,23 +54,25 @@ export default function ExercisesInterface() {
             ))}
         </Select>
         <Stack direction="row" spacing={2}>
-          {currentTags.map((tag, i) => {
-            return (
-              <Chip
-                key={i}
-                variant="outlined"
-                endDecorator={
-                  <ChipDelete
-                    onDelete={() => {
-                      dispatch(removeTag(tag));
-                    }}
-                  />
-                }
-              >
-                {tag}
-              </Chip>
-            );
-          })}
+          <Box sx={{ overflow: "auto" }}>
+            {currentTags.map((tag, i) => {
+              return (
+                <Chip
+                  key={i}
+                  variant="outlined"
+                  endDecorator={
+                    <ChipDelete
+                      onDelete={() => {
+                        dispatch(removeTag(tag));
+                      }}
+                    />
+                  }
+                >
+                  {tag}
+                </Chip>
+              );
+            })}
+          </Box>
         </Stack>
       </Stack>
     </Box>

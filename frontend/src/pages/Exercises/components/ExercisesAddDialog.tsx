@@ -64,6 +64,9 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
   };
 
   const isDataValid = () => {
+    if (exercisesAddDialog.inTraining.length === 0) {
+      return false;
+    }
     if ("minutes" in exercisesAddDialog.exercise) {
       return exercisesAddDialog.exercise.minutes != 0;
     } else {
@@ -143,7 +146,7 @@ const ExercisesAddDialog: FC<ExercisesAddDialogProps> = ({ open, setOpen }) => {
         <Typography sx={{ mx: "auto" }} fontSize="lg">
           {intl.formatMessage({ id: "exercises.label.addExercise" })}
         </Typography>
-        <List>
+        <List sx={{ overflow: "auto" }}>
           {exercisesAddDialog.inTraining
             .concat(exercisesAddDialog.notInTraining)
             .sort((a, b) => a.trainingId - b.trainingId)
