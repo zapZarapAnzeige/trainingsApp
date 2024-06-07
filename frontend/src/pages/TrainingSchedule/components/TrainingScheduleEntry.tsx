@@ -80,7 +80,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                   <DeleteIcon />
                 </IconButton>
                 <IconButton aria-label="edit" onClick={handleOpenEditDialog}>
-                  <EditIcon color="success"/>
+                  <EditIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>

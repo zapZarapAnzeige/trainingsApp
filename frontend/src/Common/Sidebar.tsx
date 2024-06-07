@@ -218,6 +218,7 @@ export default function Sidebar() {
         <Button
           sx={{ flexGrow: 1 }}
           variant="plain"
+          color="neutral"
           onClick={() => {
             dispatch(changePage("user"));
           }}

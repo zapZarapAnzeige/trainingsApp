@@ -18,6 +18,8 @@ import {
   Button,
   Avatar,
   Switch,
+  extendTheme,
+  useTheme,
 } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -30,6 +32,7 @@ import { useAuthHeader } from "react-auth-kit";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/reducers/userSlice";
 import { NumericFormatAdapter } from "../../Common/PlzFormatAdapter";
+import { theme } from "../../Layout";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;
@@ -170,7 +173,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     boxShadow: "sm",
                   }}
                 >
-                  <EditRoundedIcon color="success"/>
+                  <EditRoundedIcon color="primary" />
                   <input
                     type="file"
                     accept="image/*"
@@ -303,7 +306,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   disabled={!isDataDirty}
                   size="sm"
                   variant="solid"
-                  color="success"
+                  color="primary"
                   onClick={() => {
                     changeUserData(
                       auth(),

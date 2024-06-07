@@ -34,7 +34,7 @@ export default function TrainingScheduleInterface() {
             startDecorator={<AddIcon />}
             onClick={() => setOpen(true)}
           >
-            {intl.formatMessage({id: "trainingSchedule.label.addTraining"})}
+            {intl.formatMessage({ id: "trainingSchedule.label.addTraining" })}
           </Button>
         </Box>
         <Box>
@@ -43,7 +43,7 @@ export default function TrainingScheduleInterface() {
             size="lg"
             onClick={() => dispatch(changePage("tips"))}
           >
-            <HelpOutlineIcon color="success" />
+            <HelpOutlineIcon color="primary" />
           </IconButton>
         </Box>
       </Box>

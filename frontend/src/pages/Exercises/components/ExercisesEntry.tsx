@@ -143,7 +143,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             </Stack>
             <IconButton
               variant="outlined"
-              color="success"
+              color="primary"
               sx={{ width: "100%" }}
               onClick={() => setOpenAddDialog(true)}
             >
@@ -151,11 +151,11 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             </IconButton>
             <IconButton
               variant="outlined"
-              color="success"
+              color="primary"
               sx={{ width: "100%" }}
               onClick={() => setOpenInfoDialog(true)}
             >
-              <InfoOutlined color="success"/>
+              <InfoOutlined color="primary" />
             </IconButton>
           </Stack>
         </CardContent>

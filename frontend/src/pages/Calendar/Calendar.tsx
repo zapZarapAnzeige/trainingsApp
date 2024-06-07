@@ -141,13 +141,13 @@ export default function Calendar() {
                 {intl.formatMessage({ id: "calendar.label.dailyGoal" }) +
                   roundToTwoDecimalPlaces(dayGoal) +
                   "%"}
-                <LinearProgress color="success" determinate value={dayGoal} />
+                <LinearProgress color="primary" determinate value={dayGoal} />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
                 {intl.formatMessage({ id: "calendar.label.weeklyGoal" }) +
                   roundToTwoDecimalPlaces(weekGoal) +
                   "%"}
-                <LinearProgress color="success" determinate value={weekGoal} />
+                <LinearProgress color="primary" determinate value={weekGoal} />
               </Sheet>
               <IconButton
                 variant="solid"

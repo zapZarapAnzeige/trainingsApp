@@ -96,7 +96,14 @@ export default function AboutContent() {
               Hast du Fragen oder Anmerkungen?
             </Typography>
             <Typography>
-              Kontaktiere uns <Link color="success" href="mailto:mira.falk@fom-net.de;jennifer.witte@fom-net.de;clemens.burger@fom-net.de;daniel.jaufmann@fom-net.de">hier</Link> ganz einfach per E-Mail!
+              Kontaktiere uns{" "}
+              <Link
+                color="primary"
+                href="mailto:mira.falk@fom-net.de;jennifer.witte@fom-net.de;clemens.burger@fom-net.de;daniel.jaufmann@fom-net.de"
+              >
+                hier
+              </Link>{" "}
+              ganz einfach per E-Mail!
             </Typography>
           </Box>
         </Grid>

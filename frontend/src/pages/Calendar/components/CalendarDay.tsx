@@ -89,7 +89,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                                 handleInfoClick(exercise.exerciseName)
                               }
                             >
-                              <InfoOutlinedIcon color="success"/>
+                              <InfoOutlinedIcon color="primary" />
                             </IconButton>
                           </Stack>
                         </ListItemContent>
@@ -144,7 +144,6 @@ const CalendarDay: FC<CalendarDayProps> = ({
                       {isExerciseWeighted(exercise.exercise) && (
                         <FormControl>
                           <Input
-                            required
                             type="number"
                             placeholder="KG"
                             disabled={!completable}
