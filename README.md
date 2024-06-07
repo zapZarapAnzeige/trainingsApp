@@ -13,14 +13,14 @@ backend: sudo ./backendStart.sh
 - docker compose
   
 ## Initial Setup for Linux Mint
-Sudo apt update
-Sudo apt upgrade -y
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+- Sudo apt update
+- Sudo apt upgrade -y
+- curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-git clone 
-cd [path]/backend
-sudo ./installBackend.sh
-sudo ./startBackend.sh
-cd ../frontend
-npm install
-npm start
+- git clone https://github.com/zapZarapAnzeige/trainingsApp.git
+- cd [path]/backend
+- sudo ./installBackend.sh
+- sudo ./startBackend.sh
+- cd ../frontend
+- npm install
+- npm start
