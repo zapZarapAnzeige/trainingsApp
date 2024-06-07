@@ -2,7 +2,6 @@ import {
   Box,
   Divider,
   FormControl,
-  FormLabel,
   IconButton,
   Input,
   List,

@@ -1,6 +1,6 @@
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
+import { AspectRatio, IconButton, Stack, Typography } from "@mui/joy";
 import { ExerciseAdd, ExerciseInfo, ExercisesEntryData } from "../../../types";
 import { FC, useEffect, useState } from "react";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
@@ -22,12 +22,7 @@ import {
   setQuickInfo,
 } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
-import { changePage } from "../../../redux/reducers/currentPageSlice";
 import { useIntl } from "react-intl";
-
-// TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
-//import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
-//import exercisesInfoDialogData from "../../../example/exampleExercisesInfoDialog.json";
 
 type ExercisesEntryProps = {
   exercisesEntryData: ExercisesEntryData;
@@ -59,7 +54,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
                   exerciseId: exercisesEntryData.exerciseId,
                   exerciseType: exercisesEntryData.exerciseType,
                   exercise:
-                    exercisesEntryData.exerciseType == "Min"
+                    exercisesEntryData.exerciseType === "Min"
                       ? { minutes: 0 }
                       : { repetitionAmount: 0, setAmount: 0 },
                 })

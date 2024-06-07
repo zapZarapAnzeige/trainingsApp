@@ -15,11 +15,8 @@ import {
   FormControl,
   Input,
   CardActions,
-  Button,
   Avatar,
   Switch,
-  extendTheme,
-  useTheme,
 } from "@mui/joy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -32,7 +29,6 @@ import { useAuthHeader } from "react-auth-kit";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/reducers/userSlice";
 import { NumericFormatAdapter } from "../../Common/PlzFormatAdapter";
-import { theme } from "../../Layout";
 
 type ProfileProps = {
   setViewProfile?: (viewProfile: boolean) => void;

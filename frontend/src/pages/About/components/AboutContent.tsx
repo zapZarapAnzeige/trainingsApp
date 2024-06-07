@@ -1,14 +1,4 @@
-import {
-  Sheet,
-  Grid,
-  Typography,
-  Card,
-  AspectRatio,
-  Box,
-  Link,
-  Stack,
-  Button,
-} from "@mui/joy";
+import { Sheet, Grid, Typography, AspectRatio, Box, Link } from "@mui/joy";
 
 export default function AboutContent() {
   return (

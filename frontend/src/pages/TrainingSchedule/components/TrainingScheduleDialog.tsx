@@ -10,7 +10,7 @@ import DialogTitle from "@mui/joy/DialogTitle";
 import Stack from "@mui/joy/Stack";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Exercise, Training, TrainingExercise } from "../../../types";
+import { Exercise, TrainingExercise } from "../../../types";
 import Option from "@mui/joy/Option";
 import {
   Checkbox,
@@ -64,7 +64,7 @@ const TrainingScheduleDialog: FC<TrainingScheduleDialogProps> = ({
   const [isDataDirty, setIsDataDirty] = useState<boolean>(false);
   const [exercises, setExercises] = useState<TrainingExercise[]>([]);
 
-  // Excerise Dialog States
+  // Exercise Dialog States
   const [selectedExercise, setSelectedExercise] = useState<Exercise>();
   const [minutes, setMinutes] = useState<number>(0);
   const [repetitions, setRepetitions] = useState<number>(0);

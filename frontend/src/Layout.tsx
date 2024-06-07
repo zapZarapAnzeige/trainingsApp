@@ -10,7 +10,7 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import { Login } from "./Login/Login";
 import { AuthProvider } from "react-auth-kit";
 
-import { CssVarsThemeOptions, extendTheme } from "@mui/joy/styles";
+import { extendTheme } from "@mui/joy/styles";
 import { ColorSystemOptions } from "@mui/joy/styles/extendTheme";
 
 const primaryPalette: ColorSystemOptions = {

@@ -37,7 +37,6 @@ export const getChatsOverview = (token: string) => {
   return axiosInstance.get("/chats", addAuth(token));
 };
 
-// TODO I think unused
 export const getUsers = (
   token: string,
   onSuccess: (res: AxiosResponse) => void
