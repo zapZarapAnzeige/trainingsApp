@@ -57,7 +57,7 @@ class Unformatted_exercises(BaseModel):
     minutes: Optional[int]
     number_of_repetition: Optional[int]
     number_of_sets: Optional[int]
-    value_trackable_unit_of_measure: Optional[float]
+    value_trackable_unit_of_measure: Optional[Union[float, int]]
     trackable_unit_of_measure: Optional[str]
     tag_name: Optional[str]
     is_primary_tag: Optional[bool]
@@ -79,17 +79,17 @@ class Exercise_weighted_formatted(BaseModel):
 
 class Exercise_weighted_formatted_trackable_measurement(Exercise_weighted_formatted):
     trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    value_trackable_unit_of_measure: Optional[Union[float, int]]
 
 
 class Exercise_weighted_trackable_measurement(Exercise_weighted):
     trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    value_trackable_unit_of_measure: Optional[Union[float, int]]
 
 
 class Exercise_cardio_trackable_measurement(Exercise_weighted):
     trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    value_trackable_unit_of_measure: Optional[Union[float, int]]
 
 
 class Base_exercise(TypedDict):
@@ -150,7 +150,7 @@ class unformatted_past_or_future_trainings_data(BaseModel):
     number_of_repetition: Optional[int]
     number_of_sets: int
     trackable_unit_of_measure: Optional[str]
-    value_trackable_unit_of_measure: Optional[float]
+    value_trackable_unit_of_measure: Optional[Union[float, int]]
 
 
 class exercise_history(BaseModel):
@@ -159,12 +159,12 @@ class exercise_history(BaseModel):
     exercise_type: str
     completed: bool
     exercise: Union[
-        Exercise_cardio,
-        Exercise_weighted_formatted,
-        Exercise_weighted,
         Exercise_cardio_trackable_measurement,
         Exercise_weighted_formatted_trackable_measurement,
         Exercise_weighted_trackable_measurement,
+        Exercise_weighted,
+        Exercise_cardio,
+        Exercise_weighted_formatted,
     ]
 
 

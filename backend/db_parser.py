@@ -52,7 +52,8 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
             if d.weekday not in obj["on_days"] and d.weekday:
                 obj["on_days"].append(d.weekday)
             if (
-                d.exercise_id not in [ex["exercise_id"] for ex in obj["exercises"]]
+                d.exercise_id not in [ex["exercise_id"]
+                                      for ex in obj["exercises"]]
                 and d.exercise_id
             ):
                 obj["exercises"].append(
@@ -65,7 +66,7 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
 
 def get_exercise_formatted(d, additional_exercise_data={}, additional_data={}):
     return {
-        **additional_data,
+        **additional_exercise_data,
         "exercise_id": d.exercise_id,
         "exercise_name": d.exercise_name,
         "exercise": {"minutes": d.minutes, **additional_exercise_data}
@@ -155,15 +156,14 @@ def parse_past_or_future_trainings(
             **get_exercise_formatted(
                 d,
                 {
-                    "trackable_unit_of_measure": d["trackable_unit_of_measure"],
-                    "value_trackable_unit_of_measure": d[
-                        "value_trackable_unit_of_measure"
-                    ],
+                    "trackable_unit_of_measure": d.trackable_unit_of_measure,
+                    "value_trackable_unit_of_measure": d.value_trackable_unit_of_measure,
                 },
             ),
             "exercise_type": d["constant_unit_of_measure"],
             "completed": d["completed"],
         }
+
         trainings_obj = {
             "training_name": d["training_name"],
             "training_id": d["training_id"],
@@ -189,7 +189,6 @@ def parse_past_or_future_trainings(
                     "trainings": [trainings_obj],
                 }
             )
-
     return formatted_data
 
 
@@ -209,7 +208,8 @@ def parse_exercise_for_dialog(data, exercise_id: int):
         if d["exercise_id"] == exercise_id:
             in_training[d["training_id"]] = d
         else:
-            not_in_training[d["training_id"]] = {**d, "exercise_id": exercise_id}
+            not_in_training[d["training_id"]] = {
+                **d, "exercise_id": exercise_id}
 
     for k in list(not_in_training.keys()):
         if k in in_training.keys():
