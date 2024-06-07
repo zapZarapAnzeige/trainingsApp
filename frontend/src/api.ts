@@ -53,8 +53,8 @@ export const signUp = async (username: string, password: string) => {
   );
 };
 
-export const login = async (username: string, password: string) => {
-  return await axiosInstance.post(
+export const login = (username: string, password: string) => {
+  return axiosInstance.post(
     "/api/v1/login",
     new URLSearchParams({ username: username, password: password })
   );
