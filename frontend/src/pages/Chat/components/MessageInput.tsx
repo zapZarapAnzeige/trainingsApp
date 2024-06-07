@@ -57,6 +57,7 @@ export const MessageInput: FC<MessageInputProps> = (
                 sx={{ alignSelf: "center", borderRadius: "sm", ml: "auto" }}
                 endDecorator={<SendRoundedIcon />}
                 onClick={handleClick}
+                disabled={textAreaValue.trim() === ""}
               >
                 {intl.formatMessage({ id: "chat.label.send" })}
               </Button>
