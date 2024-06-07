@@ -66,7 +66,7 @@
   "trainingSchedule.label.exercise": "Exercise",
   "trainingSchedule.label.name": "Name",
   "trainingSchedule.label.addTraining": "Add new training",
-  "trainingsSchedule.confirmDelete": "Do you really want to delete the training {trainingName}?",
+  "trainingSchedule.confirmDelete": "Do you really want to delete the training {trainingName}?",
   "dismissDialog.label.note": "Note",
   "dismissDialog.label.warning": "Warning",
   "dismissDialog.label.error": "Error",

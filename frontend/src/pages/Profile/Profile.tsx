@@ -170,7 +170,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     boxShadow: "sm",
                   }}
                 >
-                  <EditRoundedIcon />
+                  <EditRoundedIcon color="success"/>
                   <input
                     type="file"
                     accept="image/*"
@@ -303,6 +303,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   disabled={!isDataDirty}
                   size="sm"
                   variant="solid"
+                  color="success"
                   onClick={() => {
                     changeUserData(
                       auth(),

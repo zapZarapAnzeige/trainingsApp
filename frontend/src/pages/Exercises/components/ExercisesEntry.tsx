@@ -3,7 +3,7 @@ import CardContent from "@mui/joy/CardContent";
 import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
 import { ExerciseAdd, ExerciseInfo, ExercisesEntryData } from "../../../types";
 import { FC, useEffect, useState } from "react";
-import InfoIcon from "@mui/icons-material/Info";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import Rating from "@mui/material/Rating";
 import AddIcon from "@mui/icons-material/Add";
 import ExercisesAddDialog from "./ExercisesAddDialog";
@@ -151,11 +151,11 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             </IconButton>
             <IconButton
               variant="outlined"
-              color="neutral"
+              color="success"
               sx={{ width: "100%" }}
               onClick={() => setOpenInfoDialog(true)}
             >
-              <InfoIcon />
+              <InfoOutlined color="success"/>
             </IconButton>
           </Stack>
         </CardContent>

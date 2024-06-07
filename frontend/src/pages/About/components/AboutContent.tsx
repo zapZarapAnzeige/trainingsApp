@@ -7,6 +7,7 @@ import {
   Box,
   Link,
   Stack,
+  Button,
 } from "@mui/joy";
 
 export default function AboutContent() {
@@ -95,22 +96,8 @@ export default function AboutContent() {
               Hast du Fragen oder Anmerkungen?
             </Typography>
             <Typography>
-              Kontaktiere uns hier ganz einfach per E-Mail!
+              Kontaktiere uns <Link color="success" href="mailto:mira.falk@fom-net.de;jennifer.witte@fom-net.de;clemens.burger@fom-net.de;daniel.jaufmann@fom-net.de">hier</Link> ganz einfach per E-Mail!
             </Typography>
-            <Stack direction="column">
-              <Link color="success" href="mailto:mira.falk@fom-net.de">
-                mira.falk@fom-net.de
-              </Link>
-              <Link color="success" href="mailto:jennifer.witte@fom-net.de">
-                jennifer.witte@fom-net.de
-              </Link>
-              <Link color="success" href="mailto:clemens.burger@fom-net.de">
-                clemens.burger@fom-net.de
-              </Link>
-              <Link color="success" href="mailto:daniel.jaufmann@fom-net.de">
-                daniel.jaufmann@fom-net.de
-              </Link>
-            </Stack>
           </Box>
         </Grid>
       </Grid>

@@ -28,7 +28,7 @@ export const CalendarCheckbox: FC<CalendarCheckboxProps> = ({
   return (
     <Checkbox
       disabled={!completable}
-      color={completable ? "primary" : "neutral"}
+      color={completable ? "success" : "neutral"}
       checked={exercise.completed}
       onClick={() => {
         if (completable) {

@@ -89,7 +89,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                                 handleInfoClick(exercise.exerciseName)
                               }
                             >
-                              <InfoOutlinedIcon />
+                              <InfoOutlinedIcon color="success"/>
                             </IconButton>
                           </Stack>
                         </ListItemContent>
