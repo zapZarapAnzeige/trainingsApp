@@ -60,6 +60,7 @@
   "exercises.label.rating": "Rating",
   "exercises.label.ratings": "Ratings",
   "exercises.label.yourRating": "Your rating:",
+  "exercises.label.dismiss": "This exercise is already part of all your trainings",
   "trainingSchedule.label.editTraining": "Edit training",
   "trainingSchedule.label.createTraining": "Create new training",
   "trainingSchedule.label.addExercise": "Add exercise",

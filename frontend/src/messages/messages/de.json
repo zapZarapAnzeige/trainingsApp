@@ -60,6 +60,7 @@
   "exercises.label.rating": "Bewertung",
   "exercises.label.ratings": "Bewertungen",
   "exercises.label.yourRating": "Deine Bewertung:",
+  "exercises.label.dismiss": "Diese Übung ist bereits in all deinen Trainingspläne enthalten",
   "trainingSchedule.label.editTraining": "Training bearbeiten",
   "trainingSchedule.label.createTraining": "Neues Training erstellen",
   "trainingSchedule.label.addExercise": "Übung hinzufügen",
