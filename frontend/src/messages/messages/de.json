@@ -36,7 +36,7 @@
   "chat.placeholder.message": "Hier Nachricht eingeben…",
   "chat.timestamp": "vor {count} {unit}",
   "chat.label.you": "Du",
-  "chat.error.plzIncorrect": "Plz muss 5 Zahlen lang sein",
+  "chat.error.plzIncorrect": "PLZ muss 5 Zahlen lang sein",
   "chat.error.blocked": "Chat existiert nicht oder ein Nutzer wurde vom anderen Blockiert",
   "chat.info.newPartner": "\uD83C\uDF89 neuer Trainingspartner: {partnerName} \uD83C\uDF89",
   "profile.label.name": "Name",
