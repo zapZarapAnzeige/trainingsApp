@@ -71,7 +71,6 @@ async def handle_session(websocket: WebSocket, user_id: int):
                 data.get("content"), user_id, data.get("recipient_id"), timestamp
             )
             if is_inserted.get("error"):
-                # TODO: watch out for this error in frontend
                 await websocket.send_json(
                     {
                         "error": "message was not send successfully",

@@ -51,7 +51,6 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
     isUserData(userData) ? userData.plz ?? "" : ""
   );
 
-  // TODO: can be done with 1 useState
   const [profilePicture, setProfilePicture] = useState<
     string | undefined | File
   >(userData.profilePicture);

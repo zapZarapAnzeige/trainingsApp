@@ -1,6 +1,7 @@
 -- Active: 1709628091053@@127.0.0.1@3306@trainings_DB
-DELIMITER //
-USE trainings_DB //
+DELIMITER / /
+
+USE trainings_DB / /
 
 CREATE TRIGGER after_insert_individual_rating AFTER 
 INSERT ON Individual_rating FOR EACH ROW 
@@ -19,6 +20,7 @@ DELETE ON Individual_rating FOR EACH ROW
 BEGIN 
 	CALL change_average_rating_by_exercise_id (OLD.exercise_id);
 END //
+
 CREATE TRIGGER after_update_training_plan AFTER 
 UPDATE ON Training_plan FOR EACH ROW 
 BEGIN 
@@ -44,7 +46,6 @@ BEGIN
     END IF;
 END //
 
-
 CREATE TRIGGER before_delete_day BEFORE 
 DELETE ON Day FOR EACH ROW 
 BEGIN 
@@ -54,7 +55,6 @@ BEGIN
 		DELETE FROM Training_plan_history WHERE day = CURDATE() AND user_id=OLD.user_id AND training_id=OLD.training_id LIMIT 1;
     END IF;
 END //
-
 
 CREATE TRIGGER after_insert_user_current_performance AFTER 
 INSERT ON User_current_performance FOR EACH ROW 
@@ -102,7 +102,6 @@ BEGIN
     DELETE ex FROM Exercise_history ex INNER JOIN Training_plan_history tph ON ex.training_plan_history_id = tph.training_plan_history_id WHERE ex.exercise_id = OLD.exercise_id AND tph.training_id = OLD.training_id AND day=CURDATE();
 END //
 
-
 CREATE TRIGGER after_insert_user AFTER 
 INSERT ON User FOR EACH ROW 
 BEGIN 
@@ -125,5 +124,4 @@ BEGIN
     (SELECT exercise_id, NEW.user_id, last_inserted_training_id, NULL AS minutes, 10 AS number_of_repetition, 3 AS number_of_sets FROM `Exercise` WHERE exercise_name IN ("Beinpresse", "Latzug", "Breites Rudern", "Hyperextension", "Schrägbankdrücken", "Crunchmaschine", "Seitheben"));
 END //
 
--- TODO testing
-DELIMITER ;
+DELIMITER;

@@ -321,8 +321,6 @@ def get_base_exercises(user_id: int):
     )
 
 
-# here todo
-
 
 def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
     end_date = start_date + timedelta(days=6)
