@@ -270,7 +270,7 @@ async def get_future_trainings(
     cur_date = datetime.strptime(
         f"{cur_datetime.year}-{cur_datetime.month}-{cur_datetime.day}", "%Y-%m-%d"
     )
-    if (cur_date - start_date) > timedelta(days=7):
+    if (cur_date - start_date) > timedelta(days=6):
         return []
 
     return get_future_trainings_from_cur_date(
