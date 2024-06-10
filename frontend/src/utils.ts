@@ -434,7 +434,7 @@ export function generateEmptyCalendarDays(
   return result;
 }
 
-export function replaceTrackableUnitOfMeasure(
+export function replaceValueTrackableUnitOfMeasure(
   data: CalendarDayData[]
 ): CalendarDayData[] {
   return data.map((day) => ({
@@ -444,11 +444,11 @@ export function replaceTrackableUnitOfMeasure(
       exercises: training.exercises.map((exercise) => ({
         ...exercise,
         exercise:
-          "trackableUnitOfMeasure" in exercise.exercise
+          "valueTrackableUnitOfMeasure" in exercise.exercise
             ? {
                 ...exercise.exercise,
-                weight: (exercise.exercise as any).trackableUnitOfMeasure,
-                trackableUnitOfMeasure: undefined,
+                weight: (exercise.exercise as any).valueTrackableUnitOfMeasure,
+                valueTrackableUnitOfMeasure: undefined,
               }
             : exercise.exercise,
       })),

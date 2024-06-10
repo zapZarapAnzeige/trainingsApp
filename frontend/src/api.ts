@@ -12,7 +12,7 @@ import {
 import {
   keysToCamelCase,
   modifyDateKeys,
-  replaceTrackableUnitOfMeasure,
+  replaceValueTrackableUnitOfMeasure,
 } from "./utils";
 
 export const axiosInstance = axios.create({
@@ -123,12 +123,12 @@ export const getPastTrainings = async (token: string, week: string) => {
   });
 
   console.log(
-    replaceTrackableUnitOfMeasure(
+    replaceValueTrackableUnitOfMeasure(
       modifyDateKeys(keysToCamelCase(response.data))
     )
   );
 
-  return replaceTrackableUnitOfMeasure(
+  return replaceValueTrackableUnitOfMeasure(
     modifyDateKeys(keysToCamelCase(response.data))
   ) as CalendarDayData[];
 };
@@ -139,7 +139,7 @@ export const getFutureTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return replaceTrackableUnitOfMeasure(
+  return replaceValueTrackableUnitOfMeasure(
     modifyDateKeys(keysToCamelCase(response.data))
   ) as CalendarDayData[];
 };
