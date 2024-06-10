@@ -106,6 +106,7 @@ class Tags(TypedDict):
 class ExerciseDetail(BaseModel):
     exercise_id: int
     exercise_name: str
+    exercise_type: Optional[str]
     exercise: Union[
         Exercise_cardio,
         Exercise_weighted_formatted,

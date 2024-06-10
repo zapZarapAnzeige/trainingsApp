@@ -66,7 +66,7 @@ def parse_trainings(data: List[Unformatted_trainingsdata]):
 
 def get_exercise_formatted(d, additional_exercise_data={}, additional_data={}):
     return {
-        **additional_exercise_data,
+        **additional_data,
         "exercise_id": d.exercise_id,
         "exercise_name": d.exercise_name,
         "exercise": {"minutes": d.minutes, **additional_exercise_data}
