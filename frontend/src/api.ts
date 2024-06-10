@@ -122,12 +122,6 @@ export const getPastTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  console.log(
-    replaceValueTrackableUnitOfMeasure(
-      modifyDateKeys(keysToCamelCase(response.data))
-    )
-  );
-
   return replaceValueTrackableUnitOfMeasure(
     modifyDateKeys(keysToCamelCase(response.data))
   ) as CalendarDayData[];
