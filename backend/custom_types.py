@@ -231,7 +231,7 @@ class Exercise_weighted_frontend(BaseModel):
 class post_trainingSchedule_Exercises(BaseModel):
     exerciseName: str
     exerciseId: int
-    exerciseType: str
+    exerciseType: Optional[str]
     exercise: Union[Exercise_cardio_frontend, Exercise_weighted_frontend]
 
 
