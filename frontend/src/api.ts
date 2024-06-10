@@ -9,7 +9,11 @@ import {
   Training,
   TrainingExercise,
 } from "./types";
-import { keysToCamelCase, modifyDateKeys } from "./utils";
+import {
+  keysToCamelCase,
+  modifyDateKeys,
+  replaceTrackableUnitOfMeasure,
+} from "./utils";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -118,7 +122,15 @@ export const getPastTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
+  console.log(
+    replaceTrackableUnitOfMeasure(
+      modifyDateKeys(keysToCamelCase(response.data))
+    )
+  );
+
+  return replaceTrackableUnitOfMeasure(
+    modifyDateKeys(keysToCamelCase(response.data))
+  ) as CalendarDayData[];
 };
 
 export const getFutureTrainings = async (token: string, week: string) => {
@@ -127,7 +139,9 @@ export const getFutureTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
+  return replaceTrackableUnitOfMeasure(
+    modifyDateKeys(keysToCamelCase(response.data))
+  ) as CalendarDayData[];
 };
 
 export const getTrainingData = async (token: string) => {
