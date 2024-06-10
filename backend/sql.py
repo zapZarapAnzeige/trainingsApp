@@ -75,7 +75,8 @@ async def update_user_data(
     if profile_picture:
         max_size_bytes = 16 * 1024 * 1024  # 16 MB max size for medium blob
         if profile_picture.size > max_size_bytes:
-            raise HTTPException(status_code=413, detail="Image size exceeds 16 MB")
+            raise HTTPException(
+                status_code=413, detail="Image size exceeds 16 MB")
         image_data = bytes(await profile_picture.read())
         user_data["profile_picture"] = image_data
     try:
@@ -89,7 +90,8 @@ async def update_user_data(
 
 
 def get_user(name):
-    result = session.execute(select(User).where(User.c.username == name)).fetchone()
+    result = session.execute(select(User).where(
+        User.c.username == name)).fetchone()
     if result is not None:
         return result._asdict()
 
@@ -321,20 +323,15 @@ def get_base_exercises(user_id: int):
     )
 
 
-
 def get_past_trainings_from_start_date(start_date: datetime, user_id: int):
     end_date = start_date + timedelta(days=6)
-    print(end_date)
-    cur_date = datetime.now()
-    # if cur_date < end_date:
-    # not neccessary but makes query faster
-    # end_date = cur_date
     return parse_past_or_future_trainings(
         session.execute(
             select(
                 Training_plan_history.c.day,
                 Training_plan_history.c.training_name,
-                Training_plan_history.c.training_plan_history_id.label("training_id"),
+                Training_plan_history.c.training_plan_history_id.label(
+                    "training_id"),
                 Exercise_history.c.excercise_history_id.label("exercise_id"),
                 Exercise.c.exercise_name,
                 Exercise_history.c.completed,
@@ -688,7 +685,8 @@ def save_calendar_data(
 
 def get_exercise_name_by_id(exercise_id: int):
     return session.execute(
-        select(Exercise.c.exercise_name).where(Exercise.c.exercise_id == exercise_id)
+        select(Exercise.c.exercise_name).where(
+            Exercise.c.exercise_id == exercise_id)
     ).scalar_one()
 
 
