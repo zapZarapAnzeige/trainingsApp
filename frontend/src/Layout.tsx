@@ -11,26 +11,36 @@ import { Login } from "./Login/Login";
 import { AuthProvider } from "react-auth-kit";
 
 import { extendTheme } from "@mui/joy/styles";
+import { ColorSystemOptions } from "@mui/joy/styles/extendTheme";
+
+const primaryPalette: ColorSystemOptions = {
+  palette: {
+    primary: {
+      50: "#ddedc9",
+      100: "#ddedc9",
+      200: "#ddedc9",
+      300: "#438d3f",
+      400: "#438d3f",
+      500: "#438d3f",
+      600: "#438d3f",
+      700: "#438d3f",
+      800: "#245D23",
+      900: "#245D23",
+      solidBg: "#388E3C",
+      solidHoverBg: "#388E3C",
+      solidActiveBg: "#2E7D32",
+    },
+  },
+};
+
+export const theme = extendTheme({
+  colorSchemes: {
+    dark: primaryPalette,
+    light: primaryPalette,
+  },
+});
 
 export const Layout: FC = () => {
-  const primaryPalette = {
-    primary: {
-      solidBg: "#438d3f",
-      solidHoverBg: "#3b7e37",
-      solidActiveBg: "#336f2f",
-    },
-  };
-  const theme = extendTheme({
-    colorSchemes: {
-      dark: {
-        palette: primaryPalette,
-      },
-      light: {
-        palette: primaryPalette,
-      },
-    },
-  });
-
   return (
     <AuthProvider
       authType={"cookie"}

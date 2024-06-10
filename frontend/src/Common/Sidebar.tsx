@@ -1,6 +1,4 @@
-import React from "react";
 import GlobalStyles from "@mui/joy/GlobalStyles";
-import Avatar from "@mui/joy/Avatar";
 import Box from "@mui/joy/Box";
 import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
@@ -11,7 +9,6 @@ import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
 
 // Icons for sidebar
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -218,6 +215,7 @@ export default function Sidebar() {
         <Button
           sx={{ flexGrow: 1 }}
           variant="plain"
+          color="neutral"
           onClick={() => {
             dispatch(changePage("user"));
           }}

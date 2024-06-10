@@ -75,7 +75,7 @@ const DismissDialog: FC<DismissDialogProps> = ({
                 closeDismissDialog();
               }}
               variant="solid"
-              color="success"
+              color="primary"
             >
               <CheckIcon />
             </IconButton>
@@ -92,7 +92,7 @@ const DismissDialog: FC<DismissDialogProps> = ({
             <IconButton
               onClick={closeDismissDialog}
               variant="solid"
-              color="danger"
+              color="neutral"
             >
               <CloseIcon />
             </IconButton>

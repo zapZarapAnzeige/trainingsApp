@@ -1,19 +1,10 @@
-import {
-  Box,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Sheet,
-  Stack,
-  Typography,
-  VariantProp,
-} from "@mui/joy";
+import { Box, Grid, IconButton, LinearProgress, Sheet, Stack } from "@mui/joy";
 import Pagination from "../../Common/Pagination";
 import CalendarDay from "./components/CalendarDay";
 import CheckIcon from "@mui/icons-material/Check";
 import HeadingArea from "../../Common/HeadingArea";
-import { CalendarData, CalendarDayData } from "../../types";
-import { useEffect, useState } from "react";
+import { CalendarDayData } from "../../types";
+import { useEffect } from "react";
 import {
   calculateDayGoal,
   calculateWeekGoal,
@@ -23,9 +14,6 @@ import {
   splitPastFuture,
 } from "../../utils";
 
-// TESTDATEN // Benötigt wird eine KW des Typen CalendarDayData[] der Größe 7
-//import pastCalendar from "../../example/examplePastCalendar.json";
-//import futureCalendar from "../../example/exampleFutureCalendar.json";
 import { useAppSelector } from "../../hooks";
 import { useDispatch } from "react-redux";
 import {
@@ -141,13 +129,13 @@ export default function Calendar() {
                 {intl.formatMessage({ id: "calendar.label.dailyGoal" }) +
                   roundToTwoDecimalPlaces(dayGoal) +
                   "%"}
-                <LinearProgress color="success" determinate value={dayGoal} />
+                <LinearProgress color="primary" determinate value={dayGoal} />
               </Sheet>
               <Sheet variant="outlined" sx={{ mb: 1, borderRadius: 5, p: 2 }}>
                 {intl.formatMessage({ id: "calendar.label.weeklyGoal" }) +
                   roundToTwoDecimalPlaces(weekGoal) +
                   "%"}
-                <LinearProgress color="success" determinate value={weekGoal} />
+                <LinearProgress color="primary" determinate value={weekGoal} />
               </Sheet>
               <IconButton
                 variant="solid"

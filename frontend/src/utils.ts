@@ -433,3 +433,25 @@ export function generateEmptyCalendarDays(
 
   return result;
 }
+
+export function replaceValueTrackableUnitOfMeasure(
+  data: CalendarDayData[]
+): CalendarDayData[] {
+  return data.map((day) => ({
+    ...day,
+    trainings: day.trainings.map((training) => ({
+      ...training,
+      exercises: training.exercises.map((exercise) => ({
+        ...exercise,
+        exercise:
+          "valueTrackableUnitOfMeasure" in exercise.exercise
+            ? {
+                ...exercise.exercise,
+                weight: (exercise.exercise as any).valueTrackableUnitOfMeasure,
+                valueTrackableUnitOfMeasure: undefined,
+              }
+            : exercise.exercise,
+      })),
+    })),
+  }));
+}

@@ -1,9 +1,14 @@
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import { AspectRatio, Box, IconButton, Stack, Typography } from "@mui/joy";
-import { ExerciseAdd, ExerciseInfo, ExercisesEntryData } from "../../../types";
+import { AspectRatio, IconButton, Stack, Typography } from "@mui/joy";
+import {
+  DismissDialogType,
+  ExerciseAdd,
+  ExerciseInfo,
+  ExercisesEntryData,
+} from "../../../types";
 import { FC, useEffect, useState } from "react";
-import InfoIcon from "@mui/icons-material/Info";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import Rating from "@mui/material/Rating";
 import AddIcon from "@mui/icons-material/Add";
 import ExercisesAddDialog from "./ExercisesAddDialog";
@@ -22,12 +27,8 @@ import {
   setQuickInfo,
 } from "../../../redux/reducers/exercisesInfoDialogSlice";
 import { useAuthHeader } from "react-auth-kit";
-import { changePage } from "../../../redux/reducers/currentPageSlice";
 import { useIntl } from "react-intl";
-
-// TESTDATEN // Benötigt werden Daten vom Typ ExercisesAddDialog // API Aufruf Simulieren
-//import exercisesAddDialogData from "../../../example/exampleExercisesAddDialog.json";
-//import exercisesInfoDialogData from "../../../example/exampleExercisesInfoDialog.json";
+import DismissDialog from "../../../Common/DismissDialog";
 
 type ExercisesEntryProps = {
   exercisesEntryData: ExercisesEntryData;
@@ -38,6 +39,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
   const intl = useIntl();
   const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
   const [openInfoDialog, setOpenInfoDialog] = useState<boolean>(false);
+  const [openDismissDialog, setOpenDismissDialog] = useState<boolean>(false);
 
   const quickInfo = useAppSelector(
     (state) => state.exercisesInfoDialog.quickInfo
@@ -49,21 +51,24 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
     if (openAddDialog) {
       getExercisesAdd(auth(), exercisesEntryData.exerciseId)
         .then((exercisesAddDialogData: ExerciseAdd) => {
-          exercisesAddDialogData.notInTraining.length === 0
-            ? setOpenAddDialog(false)
-            : dispatch(
-                setExercisesAddDialog({
-                  ...exercisesAddDialogData,
-                  inTraining: [],
-                  exerciseName: exercisesEntryData.exerciseName,
-                  exerciseId: exercisesEntryData.exerciseId,
-                  exerciseType: exercisesEntryData.exerciseType,
-                  exercise:
-                    exercisesEntryData.exerciseType == "Min"
-                      ? { minutes: 0 }
-                      : { repetitionAmount: 0, setAmount: 0 },
-                })
-              );
+          if (exercisesAddDialogData.notInTraining.length === 0) {
+            setOpenAddDialog(false);
+            setOpenDismissDialog(true);
+          } else {
+            dispatch(
+              setExercisesAddDialog({
+                ...exercisesAddDialogData,
+                inTraining: [],
+                exerciseName: exercisesEntryData.exerciseName,
+                exerciseId: exercisesEntryData.exerciseId,
+                exerciseType: exercisesEntryData.exerciseType,
+                exercise:
+                  exercisesEntryData.exerciseType === "Min"
+                    ? { minutes: 0 }
+                    : { repetitionAmount: 0, setAmount: 0 },
+              })
+            );
+          }
         })
         .catch((error) => {
           console.error("Error fetching data", error);
@@ -99,6 +104,12 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
 
   return (
     <>
+      <DismissDialog
+        dialogContent={intl.formatMessage({ id: "exercises.label.dismiss" })}
+        closeDismissDialog={() => setOpenDismissDialog(false)}
+        dismissDialogType={DismissDialogType.INFO}
+        open={openDismissDialog}
+      />
       <ExercisesAddDialog open={openAddDialog} setOpen={setOpenAddDialog} />
       <ExercisesInfoDialog open={openInfoDialog} setOpen={setOpenInfoDialog} />
       <Card>
@@ -143,7 +154,7 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             </Stack>
             <IconButton
               variant="outlined"
-              color="success"
+              color="primary"
               sx={{ width: "100%" }}
               onClick={() => setOpenAddDialog(true)}
             >
@@ -151,11 +162,11 @@ const ExercisesEntry: FC<ExercisesEntryProps> = ({ exercisesEntryData }) => {
             </IconButton>
             <IconButton
               variant="outlined"
-              color="neutral"
+              color="primary"
               sx={{ width: "100%" }}
               onClick={() => setOpenInfoDialog(true)}
             >
-              <InfoIcon />
+              <InfoOutlined color="primary" />
             </IconButton>
           </Stack>
         </CardContent>

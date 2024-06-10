@@ -9,7 +9,11 @@ import {
   Training,
   TrainingExercise,
 } from "./types";
-import { keysToCamelCase, modifyDateKeys } from "./utils";
+import {
+  keysToCamelCase,
+  modifyDateKeys,
+  replaceValueTrackableUnitOfMeasure,
+} from "./utils";
 
 export const axiosInstance = axios.create({
   validateStatus: function (status) {
@@ -37,7 +41,6 @@ export const getChatsOverview = (token: string) => {
   return axiosInstance.get("/chats", addAuth(token));
 };
 
-// TODO I think unused
 export const getUsers = (
   token: string,
   onSuccess: (res: AxiosResponse) => void
@@ -54,8 +57,8 @@ export const signUp = async (username: string, password: string) => {
   );
 };
 
-export const login = async (username: string, password: string) => {
-  return await axiosInstance.post(
+export const login = (username: string, password: string) => {
+  return axiosInstance.post(
     "/api/v1/login",
     new URLSearchParams({ username: username, password: password })
   );
@@ -119,7 +122,15 @@ export const getPastTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
+  console.log(
+    replaceValueTrackableUnitOfMeasure(
+      modifyDateKeys(keysToCamelCase(response.data))
+    )
+  );
+
+  return replaceValueTrackableUnitOfMeasure(
+    modifyDateKeys(keysToCamelCase(response.data))
+  ) as CalendarDayData[];
 };
 
 export const getFutureTrainings = async (token: string, week: string) => {
@@ -128,7 +139,9 @@ export const getFutureTrainings = async (token: string, week: string) => {
     params: { start_date: week },
   });
 
-  return modifyDateKeys(keysToCamelCase(response.data)) as CalendarDayData[];
+  return replaceValueTrackableUnitOfMeasure(
+    modifyDateKeys(keysToCamelCase(response.data))
+  ) as CalendarDayData[];
 };
 
 export const getTrainingData = async (token: string) => {

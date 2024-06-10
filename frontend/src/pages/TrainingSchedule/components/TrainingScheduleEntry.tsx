@@ -16,7 +16,7 @@ import {
 } from "@mui/joy";
 import { useAppDispatch } from "../../../hooks";
 import FormLabel from "@mui/joy/FormLabel";
-import CreateIcon from "@mui/icons-material/Create";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DismissDialogType, Training } from "../../../types";
 import { FC, useState } from "react";
@@ -80,7 +80,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
                   <DeleteIcon />
                 </IconButton>
                 <IconButton aria-label="edit" onClick={handleOpenEditDialog}>
-                  <CreateIcon />
+                  <EditIcon color="primary" />
                 </IconButton>
               </Grid>
             </Grid>
@@ -147,7 +147,7 @@ const TrainingScheduleEntry: FC<TrainingScheduleEntryProps> = ({
         dismissDialogType={DismissDialogType.WARNING}
         dialogContent={intl.formatMessage(
           {
-            id: "trainingsSchedule.confirmDelete",
+            id: "trainingSchedule.confirmDelete",
           },
           { trainingName: training.name }
         )}

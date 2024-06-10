@@ -15,7 +15,6 @@ import {
   FormControl,
   Input,
   CardActions,
-  Button,
   Avatar,
   Switch,
 } from "@mui/joy";
@@ -52,7 +51,6 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
     isUserData(userData) ? userData.plz ?? "" : ""
   );
 
-  // TODO: can be done with 1 useState
   const [profilePicture, setProfilePicture] = useState<
     string | undefined | File
   >(userData.profilePicture);
@@ -170,7 +168,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                     boxShadow: "sm",
                   }}
                 >
-                  <EditRoundedIcon />
+                  <EditRoundedIcon color="primary" />
                   <input
                     type="file"
                     accept="image/*"
@@ -303,6 +301,7 @@ export const Profile: FC<ProfileProps> = ({ setViewProfile, userData }) => {
                   disabled={!isDataDirty}
                   size="sm"
                   variant="solid"
+                  color="primary"
                   onClick={() => {
                     changeUserData(
                       auth(),

@@ -1,8 +1,5 @@
 import { Sheet, Grid } from "@mui/joy";
 import TrainingScheduleEntry from "./TrainingScheduleEntry";
-
-// TESTDATEN // Benötigt werden Daten vom Typ Training
-// import trainingTestData from "../../../example/trainingSchedule.json";
 import { Training } from "../../../types";
 import { useEffect, useState } from "react";
 import { getTrainingData } from "../../../api";

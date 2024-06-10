@@ -1,4 +1,3 @@
-import { Exercise } from "./types";
 
 export const weekdays: string[] = [
   "Montag",

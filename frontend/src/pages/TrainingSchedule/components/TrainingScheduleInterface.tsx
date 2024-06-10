@@ -34,15 +34,16 @@ export default function TrainingScheduleInterface() {
             startDecorator={<AddIcon />}
             onClick={() => setOpen(true)}
           >
-            {intl.formatMessage({id: "trainingSchedule.label.addTraining"})}
+            {intl.formatMessage({ id: "trainingSchedule.label.addTraining" })}
           </Button>
         </Box>
         <Box>
           <IconButton
             aria-label="Info"
+            size="lg"
             onClick={() => dispatch(changePage("tips"))}
           >
-            <HelpOutlineIcon />
+            <HelpOutlineIcon color="primary" />
           </IconButton>
         </Box>
       </Box>

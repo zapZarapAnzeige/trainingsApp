@@ -1,15 +1,12 @@
-import React, { ReactNode, useEffect } from "react";
-import ReactDOM from "react-dom/client";
+import { ReactNode, useEffect } from "react";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 
 import Sidebar from "./Common/Sidebar";
 import Header from "./Common/Header";
-import HeadingArea from "./Common/HeadingArea";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import Calendar from "./pages/Calendar/Calendar";
 import { ApiErrorInterceptor } from "./Provider/ApiErrorInterceptor";
-import { useDispatch } from "react-redux";
 import { Chat } from "./pages/Chat/Chat";
 import { WebSocketProvider } from "./Provider/WebSocketProvider";
 import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";

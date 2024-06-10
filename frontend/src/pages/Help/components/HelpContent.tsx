@@ -1,16 +1,11 @@
 import {
   Sheet,
-  Grid,
-  Typography,
-  Card,
   AccordionSummary,
   AccordionDetails,
   Accordion,
   AccordionGroup,
 } from "@mui/joy";
 
-// TESTDATEN // Benötigt werden Daten vom Typ Help
-import helpTestData from "../../../example/exampleHelp.json";
 import { useState } from "react";
 
 export default function HelpContent() {

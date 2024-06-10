@@ -2,7 +2,6 @@ import {
   Box,
   Divider,
   FormControl,
-  FormLabel,
   IconButton,
   Input,
   List,
@@ -89,7 +88,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                                 handleInfoClick(exercise.exerciseName)
                               }
                             >
-                              <InfoOutlinedIcon />
+                              <InfoOutlinedIcon color="primary" />
                             </IconButton>
                           </Stack>
                         </ListItemContent>
@@ -113,6 +112,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                                 calendarData={calendarData}
                                 exercise={exercise}
                                 training={training}
+                                calendarDayData={calendarDayData}
                               />
                             </Stack>
                           </ListItemContent>
@@ -136,6 +136,7 @@ const CalendarDay: FC<CalendarDayProps> = ({
                                 calendarData={calendarData}
                                 exercise={exercise}
                                 training={training}
+                                calendarDayData={calendarDayData}
                               />
                             </Stack>
                           </ListItemContent>
@@ -144,7 +145,6 @@ const CalendarDay: FC<CalendarDayProps> = ({
                       {isExerciseWeighted(exercise.exercise) && (
                         <FormControl>
                           <Input
-                            required
                             type="number"
                             placeholder="KG"
                             disabled={!completable}
@@ -154,31 +154,39 @@ const CalendarDay: FC<CalendarDayProps> = ({
                               dispatch(
                                 setCalendarData({
                                   pastTrainings: calendarData.pastTrainings.map(
-                                    (day) => ({
-                                      ...day,
-                                      trainings: day.trainings.map((t) => ({
-                                        ...t,
-                                        exercises:
-                                          t.trainingId === training.trainingId
-                                            ? t.exercises.map((ex) => ({
-                                                ...ex,
-                                                exercise:
-                                                  exercise.exerciseId ===
-                                                    ex.exerciseId &&
-                                                  isExerciseWeighted(
-                                                    ex.exercise
-                                                  )
-                                                    ? {
-                                                        ...ex.exercise,
-                                                        weight: parseInt(
-                                                          e.target.value
-                                                        ),
-                                                      }
-                                                    : ex.exercise,
-                                              }))
-                                            : t.exercises,
-                                      })),
-                                    })
+                                    (day) =>
+                                      calendarDayData.date === day.date
+                                        ? {
+                                            ...day,
+                                            trainings: day.trainings.map(
+                                              (t) => ({
+                                                ...t,
+                                                exercises:
+                                                  t.trainingId ===
+                                                  training.trainingId
+                                                    ? t.exercises.map((ex) => ({
+                                                        ...ex,
+                                                        exercise:
+                                                          exercise.exerciseId ===
+                                                            ex.exerciseId &&
+                                                          isExerciseWeighted(
+                                                            ex.exercise
+                                                          )
+                                                            ? {
+                                                                ...ex.exercise,
+                                                                weight:
+                                                                  parseInt(
+                                                                    e.target
+                                                                      .value
+                                                                  ),
+                                                              }
+                                                            : ex.exercise,
+                                                      }))
+                                                    : t.exercises,
+                                              })
+                                            ),
+                                          }
+                                        : day
                                   ),
                                   futureTrainings: calendarData.futureTrainings,
                                 })
