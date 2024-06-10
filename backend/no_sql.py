@@ -148,7 +148,6 @@ async def save_new_message(message: str, sender_id: int, recipient_id: int, time
         )
 
     if not chat:
-        # TODO: maybe change to custom error in future
         return {
             "error": True,
             "error_message": "Chat does not exist or one party blocked the other",

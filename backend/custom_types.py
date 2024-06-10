@@ -87,7 +87,7 @@ class Exercise_weighted_trackable_measurement(Exercise_weighted):
     value_trackable_unit_of_measure: Optional[Union[float, int]]
 
 
-class Exercise_cardio_trackable_measurement(Exercise_weighted):
+class Exercise_cardio_trackable_measurement(Exercise_cardio):
     trackable_unit_of_measure: Optional[str]
     value_trackable_unit_of_measure: Optional[Union[float, int]]
 
@@ -106,7 +106,6 @@ class Tags(TypedDict):
 class ExerciseDetail(BaseModel):
     exercise_id: int
     exercise_name: str
-    exercise_type: str
     exercise: Union[
         Exercise_cardio,
         Exercise_weighted_formatted,
@@ -125,9 +124,6 @@ class Formatted_exercises(Base_exercise, Tags):
         Exercise_cardio,
         Exercise_weighted_formatted,
         Exercise_weighted,
-        Exercise_cardio_trackable_measurement,
-        Exercise_weighted_formatted_trackable_measurement,
-        Exercise_weighted_trackable_measurement,
     ]
 
 

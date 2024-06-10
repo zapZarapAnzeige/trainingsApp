@@ -14,7 +14,7 @@ export default function AboutContent() {
               Was bietet die Trainingsapp?
             </Typography>
             <Typography>
-              "Die Trainingsapp ist dein Wegbegleiter zu einem gesünderen
+              Die Trainingsapp ist dein Wegbegleiter zu einem gesünderen
               Lebensstil. Wir legen dabei einen besonderen Fokus auf
               Krafttraining und unterstützen dich dabei deine Fitnessziele
               effektiv und nachhaltig zu erreichen. Unsere Trainingsapp umfasst
@@ -29,7 +29,7 @@ export default function AboutContent() {
               und tausche Tipps und Erfahrungen aus. - Einfaches Tracking deiner
               Fortschritte: Trage im Rahmen deines Kalenders deine im Training
               verwendeten Gewichte ein. So kannst du deine Fortschritte
-              verfolgen und sehen wie weit du schon gekommen bist."
+              verfolgen und sehen wie weit du schon gekommen bist.
             </Typography>
           </Box>
           <Box mb={1}>

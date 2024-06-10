@@ -1,3 +1,4 @@
+# Inspired by ChatGPT
 import os
 import asyncio
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorGridFSBucket
@@ -17,7 +18,8 @@ async def upload_file(fs, filename, file_data):
 
 
 async def upload_files(
-    directory=os.path.dirname(os.path.realpath(__file__)) + "/ressources/videos",
+    directory=os.path.dirname(os.path.realpath(
+        __file__)) + "/ressources/videos",
     db_name="mydatabase",
     bucket_name="videos",
 ):
