@@ -253,7 +253,7 @@ async def get_exercises(current_user=Depends(get_current_active_user)):
     return get_base_exercises(current_user.get("user_id"))
 
 
-@app.get("/pastTrainings", response_model=List[formatted_history_trainings_data])
+@app.get("/pastTrainings")
 async def get_past_trainings(
     start_date: datetime = Depends(validate_date),
     current_user=Depends(get_current_active_user),
