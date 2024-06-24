@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Training1",
+    "day": "Mo.",
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        },
+        "done": false
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exercise": {
+          "minutes": 15
+        },
+        "done": true
+      }
+    ]
+  },
+  { "name": "", "day": "Di.", "exercises": [] },
+  { "name": "", "day": "Mi.", "exercises": [] },
+  {
+    "name": "Training2",
+    "day": "Do.",
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        },
+        "done": false
+      }
+    ]
+  },
+  { "name": "", "day": "Fr.", "exercises": [] },
+  { "name": "", "day": "Sa.", "exercises": [] },
+  { "name": "", "day": "So.", "exercises": [] }
+]

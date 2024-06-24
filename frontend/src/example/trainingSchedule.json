@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Training1",
+    "onDays": ["Mo."],
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "weighted",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      }
+    ]
+  },
+  {
+    "name": "Training2",
+    "onDays": ["Mo.", "Mi.", "Do.", "Fr.", "Sa.", "So."],
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "weighted",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "Training1",
+    "onDays": ["Mo."],
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "weighted",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      }
+    ]
+  },
+  {
+    "name": "Training1",
+    "onDays": ["Mo."],
+    "exercises": [
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "weighted",
+        "exercise": {
+          "repetitionAmount": 15,
+          "setAmount": 5,
+          "weight": 3
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      },
+      {
+        "exerciseName": "Irgendwas",
+        "exerciseType": "cardio",
+        "exercise": {
+          "minutes": 15
+        }
+      }
+    ]
+  }
+]

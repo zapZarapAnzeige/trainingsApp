@@ -1,0 +1,64 @@
+[
+  {
+    "date": "2024-05-13",
+    "trainings": [
+      {
+        "name": "Cardio Training",
+        "trainingId": 1,
+        "onDays": ["2024-05-13"],
+        "exercises": [
+          {
+            "exerciseName": "test",
+            "exerciseId": 1,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 30
+            },
+            "completed": false
+          }
+        ]
+      },
+      {
+        "name": "HIIT Training",
+        "trainingId": 3,
+        "onDays": ["2024-05-15"],
+        "exercises": [
+          {
+            "exerciseName": "c",
+            "exerciseId": 301,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 15
+            },
+            "completed": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2024-05-14",
+    "trainings": []
+  },
+  {
+    "date": "2024-05-15",
+    "trainings": [
+      {
+        "name": "HIIT Training",
+        "trainingId": 3,
+        "onDays": ["2024-05-15"],
+        "exercises": [
+          {
+            "exerciseName": "qew",
+            "exerciseId": 301,
+            "exerciseType": "Cardio",
+            "exercise": {
+              "minutes": 15
+            },
+            "completed": true
+          }
+        ]
+      }
+    ]
+  }
+]
